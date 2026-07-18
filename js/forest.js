@@ -617,5 +617,63 @@ async function ignoreWildBees(){const {data:{user}}=await supabaseClient.auth.ge
 /* OAK WOODCUTTING - unlocked after tutorial */
 const oakButton=document.getElementById('chop-oak');
 async function loadOakTree(){const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;const {data:p}=await supabaseClient.from('players').select('oak_unlocked').eq('id',user.id).single();if(p?.oak_unlocked&&oakButton){document.getElementById('oak-card')?.classList.remove('locked');document.getElementById('oak-image').innerHTML='🌳';oakButton.disabled=false;oakButton.innerText='🪓 Chop Oak';const oakLog=document.getElementById('oak-log');if(oakLog&&!oakLog.dataset.hasAction)oakLog.innerText='Ready to chop Oak.';}}
-async function chopOakTree(){const oakLog=document.getElementById('oak-log');const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;const {data:p,error:playerError}=await supabaseClient.from('players').select('energy,oak_unlocked').eq('id',user.id).single();if(playerError||!p){if(oakLog)oakLog.innerText='❌ Player failed to load.';return;}if(!p.oak_unlocked)return;if(Number(p.energy)<10){if(oakLog){oakLog.dataset.hasAction='true';oakLog.innerText='⚡ You need 10 energy.';}return;}const item=await getItemByName(ITEM_NAMES.OAK_LOG);if(!item){if(oakLog)oakLog.innerText='❌ Oak Log item is missing.';return;}const amount=Math.floor(Math.random()*6)+3;let cart=false;try{cart=await addResourceToCartOrInventory(user.id,item.id,amount);}catch(e){if(oakLog)oakLog.innerText='❌ '+e.message;return;}if(!cart)await addInventoryById(user.id,item.id,amount);const {error:updateError}=await supabaseClient.from('players').update({energy:Number(p.energy)-10,last_action:new Date().toISOString()}).eq('id',user.id);if(updateError){if(oakLog)oakLog.innerText='❌ Energy failed to update: '+updateError.message;return;}await damageEquippedTool('axe',1);await addVillageReputation(amount*2);const message=`🌳 You spend <strong>10 energy</strong> chopping Oak.<br><br>🪵 You gather <strong>${amount} Oak Logs</strong>.<br><br>${cart?'🛒 Loaded into your cart.':'🎒 Placed in your inventory.'}`;if(oakLog){oakLog.dataset.hasAction='true';oakLog.innerHTML=message;}let history=JSON.parse(localStorage.getItem('forestHistory'))||[];history.unshift(message);history=history.slice(0,5);localStorage.setItem('forestHistory',JSON.stringify(history));const forestLog=document.getElementById('forest-log');if(forestLog)forestLog.innerHTML=history.join('<hr>');await loadToolBeltAxe();if(typeof loadHomePage==='function')await loadHomePage();if(typeof loadCartCard==='function')await loadCartCard();}
+async function chopOakTree(){
+ const oakLog=document.getElementById('oak-log');
+ const setOakMessage=(html)=>{if(oakLog){oakLog.dataset.hasAction='true';oakLog.innerHTML=html;}};
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user)return;
+
+ const {data:p,error:playerError}=await supabaseClient.from('players')
+   .select('energy,oak_unlocked').eq('id',user.id).single();
+ if(playerError||!p){setOakMessage('❌ Player failed to load: '+(playerError?.message||'Unknown error.'));return;}
+ if(!p.oak_unlocked){setOakMessage('🔒 Oak cutting is not unlocked yet.');return;}
+
+ const {data:axe,error:axeError}=await supabaseClient.from('equipment')
+   .select('id,durability,max_durability').eq('player_id',user.id)
+   .eq('slot','axe').eq('is_equipped',true).maybeSingle();
+ if(axeError){setOakMessage('❌ Axe failed to load: '+axeError.message);return;}
+ if(!axe){setOakMessage('❌ You need to equip an axe before chopping Oak.');return;}
+ if(Number(axe.durability)<=0){setOakMessage('💀 Your axe is broken.<br><br>Visit the Blacksmith to repair it.');return;}
+ if(Number(p.energy)<10){setOakMessage('⚡ You do not have enough energy.<br><br>You need 10 energy to chop Oak.');return;}
+
+ const item=await getItemByName(ITEM_NAMES.OAK_LOG);
+ if(!item){setOakMessage('❌ Oak Log item is missing.');return;}
+ const amount=Math.floor(Math.random()*6)+3;
+ let sentToCart=false;
+ try{
+   if(typeof addResourceToCartOrInventory==='function'){
+     sentToCart=await addResourceToCartOrInventory(user.id,item.id,amount);
+   }
+   if(!sentToCart)await addInventoryById(user.id,item.id,amount);
+ }catch(e){setOakMessage('❌ Logs failed to enter storage: '+e.message);return;}
+
+ const newEnergy=Number(p.energy)-10;
+ const newDurability=Math.max(Number(axe.durability)-1,0);
+ const {error:updateError}=await supabaseClient.from('players')
+   .update({energy:newEnergy,last_action:new Date().toISOString()}).eq('id',user.id);
+ if(updateError){setOakMessage('❌ Energy failed to update: '+updateError.message);return;}
+
+ const {error:durabilityError}=await supabaseClient.from('equipment')
+   .update({durability:newDurability}).eq('id',axe.id);
+
+ let message=`🌳 You spend <strong>10 energy</strong> chopping Oak.<br><br>`+
+   `🪵 You gather <strong>${amount} Oak Logs</strong>.<br><br>`+
+   `${sentToCart?'🛒 Loaded into your cart.':'🎒 Placed in your inventory.'}<br><br>`+
+   `🪓 Axe durability: <strong>${newDurability}/${axe.max_durability}</strong>.`;
+ if(durabilityError)message+='<br><br>⚠️ Axe durability failed to save: '+durabilityError.message;
+ if(newDurability===0)message+='<br><br>💀 <strong>Your axe has broken!</strong> Visit the Blacksmith to repair it.';
+ setOakMessage(message);
+
+ let history=JSON.parse(localStorage.getItem('forestHistory'))||[];
+ history.unshift(message);history=history.slice(0,5);
+ localStorage.setItem('forestHistory',JSON.stringify(history));
+ const forestLog=document.getElementById('forest-log');
+ if(forestLog)forestLog.innerHTML=history.join('<hr>');
+
+ try{if(typeof addWoodcuttingXP==='function')await addWoodcuttingXP(WOODCUTTING_XP_PER_BIRCH||1);}catch(e){console.warn('Oak XP failed',e);}
+ try{if(typeof addVillageReputation==='function')await addVillageReputation(amount*2);}catch(e){console.warn('Oak reputation failed',e);}
+ await loadToolBeltAxe();
+ if(typeof loadHomePage==='function')await loadHomePage();
+ if(typeof loadCartCard==='function')await loadCartCard();
+}
 oakButton?.addEventListener('click',chopOakTree);loadOakTree();
