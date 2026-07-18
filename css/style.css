@@ -1020,3 +1020,306 @@ body.forest-data-loading .forest-loading-screen {
 .forest-loading-icon {
     font-size: 28px;
 }
+
+/* =====================================
+   PUBLIC LANDING + LOGIN PAGES
+===================================== */
+.landing-body {
+    min-height: 100vh;
+    background: #080808;
+}
+
+.landing-page {
+    width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 14px 0 24px;
+}
+
+.landing-hero {
+    min-height: 410px;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid #6d4b20;
+    background:
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.88)),
+        url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1800&q=85");
+    background-size: cover;
+    background-position: center;
+}
+
+.landing-hero-overlay {
+    width: 100%;
+    padding: 42px;
+    text-align: center;
+}
+
+.landing-kicker {
+    margin: 0 0 7px;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.landing-hero h1,
+.login-story-panel h1 {
+    margin: 0;
+    color: gold;
+    font-size: clamp(34px, 6vw, 62px);
+}
+
+.landing-tagline {
+    max-width: 700px;
+    margin: 13px auto 24px;
+    font-size: 18px;
+}
+
+.landing-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.landing-primary-button,
+.landing-secondary-button {
+    display: inline-block;
+    padding: 11px 19px;
+    border: 1px solid gold;
+    font-weight: bold;
+}
+
+.landing-primary-button {
+    background: #6d3b12;
+    color: white;
+}
+
+.landing-secondary-button {
+    background: #151515;
+    color: gold;
+}
+
+.landing-primary-button:hover,
+.landing-secondary-button:hover {
+    background: #8f5425;
+    color: white;
+}
+
+.landing-grid,
+.login-layout {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.landing-panel,
+.login-story-panel {
+    padding: 22px;
+    background: #111;
+    border: 1px solid #6d4b20;
+}
+
+.landing-panel h2,
+.auth-box-modern h2 {
+    margin: 0 0 12px;
+    color: gold;
+}
+
+.landing-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.landing-features span {
+    padding: 9px;
+    text-align: center;
+    background: #181818;
+    border: 1px solid #3a2a13;
+    color: #f5e6c8;
+}
+
+.landing-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.landing-stat {
+    min-height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+    background: #181818;
+    border: 1px solid #3a2a13;
+}
+
+.landing-stat strong {
+    color: gold;
+    font-size: clamp(27px, 4vw, 43px);
+    line-height: 1;
+}
+
+.landing-stat span {
+    margin-top: 8px;
+    color: #cdb68a;
+    font-size: 12px;
+}
+
+.landing-status {
+    margin: 14px 0 0;
+}
+
+.landing-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #45b649;
+    box-shadow: 0 0 8px rgba(69,182,73,.8);
+}
+
+.landing-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 12px;
+    padding: 13px 3px 0;
+    border-top: 1px solid #3a2a13;
+    color: #9d9d9d;
+    font-size: 12px;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.login-brand {
+    color: gold;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.login-layout {
+    min-height: 610px;
+    align-items: stretch;
+}
+
+.login-story-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background:
+        linear-gradient(rgba(0,0,0,.32), rgba(0,0,0,.92)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=85");
+    background-size: cover;
+    background-position: center;
+}
+
+.login-story-panel h1 {
+    font-size: clamp(35px, 5vw, 56px);
+}
+
+.login-story-panel > p:not(.landing-kicker):not(.landing-status) {
+    max-width: 620px;
+    font-size: 17px;
+}
+
+.login-stats {
+    margin-top: 25px;
+}
+
+.auth-box-modern {
+    width: auto;
+    padding: 32px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-box-modern input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 15px;
+}
+
+.auth-label {
+    color: #f5e6c8;
+    font-size: 13px;
+}
+
+.auth-submit-button {
+    width: 100%;
+    min-height: 45px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.auth-message {
+    min-height: 20px;
+    color: #ffb4a8;
+}
+
+.auth-switch {
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .landing-grid,
+    .login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-hero {
+        min-height: 360px;
+    }
+
+    .landing-hero-overlay {
+        padding: 26px 17px;
+    }
+
+    .landing-features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .login-layout {
+        min-height: 0;
+    }
+
+    .login-story-panel {
+        min-height: 430px;
+    }
+}
+
+@media (max-width: 520px) {
+    .landing-page {
+        width: min(100% - 16px, 1180px);
+    }
+
+    .landing-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-stat {
+        min-height: 76px;
+    }
+
+    .login-header,
+    .landing-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

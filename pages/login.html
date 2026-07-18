@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Login - Midgard Legacy</title>
-
     <link rel="stylesheet" href="../css/style.css">
 </head>
+<body class="landing-body">
+    <main class="landing-page">
+        <header class="login-header">
+            <a href="index.html" class="login-brand">⚔ Midgard Legacy ⚔</a>
+            <a href="signup.html" class="landing-secondary-button">Create an Account</a>
+        </header>
 
-<body>
-<div class="auth-page">
-    <div class="auth-box">
+        <section class="login-layout">
+            <article class="login-story-panel">
+                <p class="landing-kicker">Your saga awaits</p>
+                <h1>Welcome Back, Viking</h1>
+                <p>Return to Midgard, continue building your home and strengthen the skills that will shape your legacy.</p>
 
-    <h1>⚔ Welcome Back, Viking ⚔</h1>
+                <div class="landing-stat-grid login-stats">
+                    <div class="landing-stat">
+                        <strong id="landing-online-now">…</strong>
+                        <span>Online now</span>
+                    </div>
+                    <div class="landing-stat">
+                        <strong id="landing-last-hour">…</strong>
+                        <span>Active last hour</span>
+                    </div>
+                    <div class="landing-stat">
+                        <strong id="landing-accounts">…</strong>
+                        <span>Accounts made</span>
+                    </div>
+                </div>
+                <p class="landing-status"><span class="landing-status-dot"></span> Server status: <strong id="landing-server-status">Checking…</strong></p>
+            </article>
 
-    <p>Enter your details to continue your saga.</p>
+            <section class="auth-box auth-box-modern" aria-labelledby="login-title">
+                <h2 id="login-title">Enter Midgard</h2>
+                <p>Enter your details to continue your saga.</p>
 
-    <br>
+                <label class="auth-label" for="login-email">Email</label>
+                <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com">
 
-    <input id="login-email" type="email" placeholder="Email">
-<br><br>
+                <label class="auth-label" for="login-password">Password</label>
+                <input id="login-password" type="password" autocomplete="current-password" placeholder="Your password">
 
-<input id="login-password" type="password" placeholder="Password">
-<br><br>
+                <button id="login-button" class="auth-submit-button" type="button">Login</button>
+                <p id="login-message" class="auth-message" aria-live="polite"></p>
 
-<button id="login-button">Login</button>
+                <p class="auth-switch">New to Midgard? <a href="signup.html">Create a New Viking</a></p>
+            </section>
+        </section>
 
-<p id="login-message"></p>
-
-    <br><br>
-
-    <a href="signup.html">
-        Create a New Viking
-    </a>
+        <footer class="landing-footer">
+            <span>© Midgard Legacy 2026</span>
+            <span>Alpha Build</span>
+        </footer>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/landing-stats.js"></script>
     <script src="../js/auth.js"></script>
-
-</div>
-</div>
 </body>
-
 </html>

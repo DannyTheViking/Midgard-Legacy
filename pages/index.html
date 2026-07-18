@@ -1,32 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Midgard Legacy</title>
-
     <link rel="stylesheet" href="../css/style.css">
 </head>
+<body class="landing-body">
+    <main class="landing-page">
+        <section class="landing-hero">
+            <div class="landing-hero-overlay">
+                <p class="landing-kicker">A Viking browser MMORPG</p>
+                <h1>⚔ Midgard Legacy ⚔</h1>
+                <p class="landing-tagline">Gather. Craft. Build. Conquer. Write your saga across Midgard.</p>
+                <div class="landing-actions">
+                    <a class="landing-primary-button" href="login.html">Enter Midgard</a>
+                    <a class="landing-secondary-button" href="signup.html">Create an Account</a>
+                </div>
+            </div>
+        </section>
 
-<body>
+        <section class="landing-grid">
+            <article class="landing-panel landing-about">
+                <h2>About Midgard Legacy</h2>
+                <p>Midgard Legacy is a Viking browser MMORPG where you gather resources, train skills, craft equipment, improve your property and rise from Thrall to legend.</p>
+                <div class="landing-features">
+                    <span>🌲 Woodcutting</span>
+                    <span>⛏️ Mining</span>
+                    <span>⚒️ Smithing</span>
+                    <span>🍯 Beekeeping</span>
+                    <span>🍺 Brewing</span>
+                    <span>🏡 Property</span>
+                </div>
+            </article>
 
-<div class="auth-page">
-    <div class="auth-box">
+            <article class="landing-panel">
+                <h2>Midgard Activity</h2>
+                <div class="landing-stat-grid">
+                    <div class="landing-stat">
+                        <strong id="landing-online-now">…</strong>
+                        <span>Online now</span>
+                    </div>
+                    <div class="landing-stat">
+                        <strong id="landing-last-hour">…</strong>
+                        <span>Active last hour</span>
+                    </div>
+                    <div class="landing-stat">
+                        <strong id="landing-accounts">…</strong>
+                        <span>Accounts made</span>
+                    </div>
+                </div>
+                <p class="landing-status"><span class="landing-status-dot"></span> Server status: <strong id="landing-server-status">Checking…</strong></p>
+            </article>
+        </section>
 
-    <h1>⚔ Midgard Legacy ⚔</h1>
+        <footer class="landing-footer">
+            <span>© Midgard Legacy 2026</span>
+            <span>Alpha Build</span>
+        </footer>
+    </main>
 
-    <p>Welcome to the world of Midgard.</p>
-
-    <a href="login.html">
-    <button>Enter Midgard</button>
-</a>
-
-    <script src="../js/main.js"></script>
-</div>
-</div>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/landing-stats.js"></script>
 </body>
-
 </html>
