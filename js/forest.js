@@ -116,8 +116,7 @@ async function chopBirchTree() {
             "Visit the Blacksmith to repair it."
         );
 
-        await await maybeTriggerWildBeeEncounter();
-    loadToolBeltAxe();
+        await loadToolBeltAxe();
         return;
     }
 
@@ -309,17 +308,30 @@ async function chopBirchTree() {
     showForestMessage(actionMessage);
 
 
-    if (typeof addVillageReputation === "function") await addVillageReputation(logs);
-
     /* =====================================
        REFRESH PAGE DATA
     ===================================== */
 
-    if (typeof loadHomePage === "function") {
-        loadHomePage();
+    // Update the visible page immediately instead of waiting for a refresh.
+    const energyElement = document.getElementById("energy");
+    if (energyElement) {
+        energyElement.textContent = `${newEnergy} / 100`;
     }
 
-    await loadToolBeltAxe();
+    await Promise.all([
+        typeof updateTopBarPlayer === "function" ? updateTopBarPlayer() : Promise.resolve(),
+        typeof loadToolBeltAxe === "function" ? loadToolBeltAxe() : Promise.resolve(),
+        typeof loadCartCard === "function" ? loadCartCard() : Promise.resolve()
+    ]);
+
+    // Reputation is useful, but it must never block the chop result from appearing.
+    if (typeof addVillageReputation === "function") {
+        try {
+            await addVillageReputation(logs);
+        } catch (reputationError) {
+            console.error("Birch reputation failed:", reputationError);
+        }
+    }
 
 }
 
@@ -730,25 +742,37 @@ async function chopOakTree() {
         if (energyError) throw energyError;
         if (durabilityError) throw durabilityError;
 
-        if (typeof addVillageReputation === "function") {
-            await addVillageReputation(amount * 2);
-        }
-
         const brokenText = newDurability === 0
             ? "<br>💀 Your axe has broken."
             : `<br>🪓 Axe durability: <strong>${newDurability}/${Number(axe.max_durability || 0)}</strong>.`;
 
+        // Show the result before any optional reputation work can delay the UI.
         setOakMessage(
             `🌳 You spend <strong>10 energy</strong> and gather <strong>${amount} Oak Logs</strong>. ` +
             `${sentToCart ? "Loaded into your cart." : "Placed in your inventory."}${brokenText}`,
             true
         );
 
+        // Change the visible number instantly, then reload the authoritative values.
+        const energyElement = document.getElementById("energy");
+        if (energyElement) {
+            energyElement.textContent = `${newEnergy} / 100`;
+        }
+
         await Promise.all([
-            typeof loadHomePage === "function" ? loadHomePage() : Promise.resolve(),
+            typeof updateTopBarPlayer === "function" ? updateTopBarPlayer() : Promise.resolve(),
             typeof loadToolBeltAxe === "function" ? loadToolBeltAxe() : Promise.resolve(),
             typeof loadCartCard === "function" ? loadCartCard() : Promise.resolve()
         ]);
+
+        // Reputation must not prevent the successful chop message from appearing.
+        if (typeof addVillageReputation === "function") {
+            try {
+                await addVillageReputation(amount * 2);
+            } catch (reputationError) {
+                console.error("Oak reputation failed:", reputationError);
+            }
+        }
     } catch (error) {
         console.error("Oak chopping failed:", error);
         setOakMessage(`❌ Oak chopping failed: ${error.message}`, true);
