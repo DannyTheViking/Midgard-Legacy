@@ -173,7 +173,8 @@ async function updateTopBarPlayer() {
             stamina,
             max_stamina,
             courage,
-            max_courage
+            max_courage,
+            last_regen
         `)
         .eq("id", user.id)
         .single();
@@ -186,6 +187,38 @@ async function updateTopBarPlayer() {
         );
 
         return;
+    }
+
+    /* Apply passive regeneration before drawing the top bar.
+       One tick occurs every 5 minutes and restores 5 points. */
+    const now = new Date();
+    const lastRegen = player.last_regen
+        ? new Date(player.last_regen)
+        : now;
+
+    const elapsedMs = Math.max(0, now.getTime() - lastRegen.getTime());
+    const regenTicks = Math.floor(elapsedMs / (5 * 60 * 1000));
+
+    if (regenTicks > 0) {
+        const regenAmount = regenTicks * 5;
+        const regenerated = {
+            health: Math.min(Number(player.health || 0) + regenAmount, Number(player.max_health || 500)),
+            energy: Math.min(Number(player.energy || 0) + regenAmount, Number(player.max_energy || 100)),
+            stamina: Math.min(Number(player.stamina || 0) + regenAmount, Number(player.max_stamina || 100)),
+            courage: Math.min(Number(player.courage || 0) + regenAmount, Number(player.max_courage || 100)),
+            last_regen: new Date(lastRegen.getTime() + regenTicks * 5 * 60 * 1000).toISOString()
+        };
+
+        const { error: regenError } = await supabaseClient
+            .from("players")
+            .update(regenerated)
+            .eq("id", user.id);
+
+        if (regenError) {
+            console.error("Could not apply regeneration:", regenError);
+        } else {
+            Object.assign(player, regenerated);
+        }
     }
 
     const {
@@ -358,3 +391,11 @@ async function updatePlayerOnlineStatus() {
 
 }
 loadGameLayout();
+
+// Keep regenerated stats current while a player leaves a page open.
+if (!window.midgardTopBarRefreshTimer) {
+    window.midgardTopBarRefreshTimer = window.setInterval(() => {
+        updateTopBarPlayer();
+        updatePlayerOnlineStatus();
+    }, 60 * 1000);
+}
