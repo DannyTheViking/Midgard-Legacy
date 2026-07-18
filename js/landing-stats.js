@@ -14,31 +14,15 @@
         }
 
         const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        const now = Date.now();
-        const onlineSince = new Date(now - 5 * 60 * 1000).toISOString();
-        const hourSince = new Date(now - 60 * 60 * 1000).toISOString();
 
         try {
-            const [onlineResult, hourResult, accountsResult] = await Promise.all([
-                client
-                    .from("players")
-                    .select("id", { count: "exact", head: true })
-                    .gte("last_online", onlineSince),
-                client
-                    .from("players")
-                    .select("id", { count: "exact", head: true })
-                    .gte("last_online", hourSince),
-                client
-                    .from("players")
-                    .select("id", { count: "exact", head: true })
-            ]);
+            const { data, error } = await client.rpc("get_public_game_stats");
+            if (error) throw error;
 
-            const firstError = onlineResult.error || hourResult.error || accountsResult.error;
-            if (firstError) throw firstError;
-
-            setText("landing-online-now", Number(onlineResult.count || 0).toLocaleString());
-            setText("landing-last-hour", Number(hourResult.count || 0).toLocaleString());
-            setText("landing-accounts", Number(accountsResult.count || 0).toLocaleString());
+            const stats = Array.isArray(data) ? data[0] : data;
+            setText("landing-online-now", Number(stats?.online_now || 0).toLocaleString());
+            setText("landing-last-hour", Number(stats?.active_last_hour || 0).toLocaleString());
+            setText("landing-accounts", Number(stats?.accounts_created || 0).toLocaleString());
             setText("landing-server-status", "Online");
         } catch (error) {
             console.warn("Landing statistics could not be loaded:", error);

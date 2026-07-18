@@ -7,6 +7,14 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 ===================================== */
 async function logoutGame() {
     try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+            await supabaseClient
+                .from("players")
+                .update({ last_online: new Date().toISOString() })
+                .eq("id", user.id);
+        }
+
         const { error } = await supabaseClient.auth.signOut();
         if (error) throw error;
         window.location.href = "login.html";
@@ -29,7 +37,7 @@ if(signupButton) signupButton.addEventListener('click', async()=>{
  if(playerError){out.innerText=playerError.message;return;} await supabaseClient.from('skills').insert({player_id:data.user.id}); await supabaseClient.from('statistics').insert({player_id:data.user.id}); out.innerText='Your Viking has entered Midgard!';
 });
 const loginButton=document.getElementById('login-button');
-if(loginButton) loginButton.addEventListener('click', async()=>{ const email=document.getElementById('login-email').value, password=document.getElementById('login-password').value; const {error}=await supabaseClient.auth.signInWithPassword({email,password}); if(error){document.getElementById('login-message').innerText=error.message;return;} window.location.href='home.html'; });
+if(loginButton) loginButton.addEventListener('click', async()=>{ const email=document.getElementById('login-email').value, password=document.getElementById('login-password').value; const {data,error}=await supabaseClient.auth.signInWithPassword({email,password}); if(error){document.getElementById('login-message').innerText=error.message;return;} if(data.user){await supabaseClient.from('players').update({last_online:new Date().toISOString()}).eq('id',data.user.id);} window.location.href='home.html'; });
 
 async function loadHomePage(){
  const {data:{user}}=await supabaseClient.auth.getUser(); if(!user){ if(!location.pathname.endsWith('login.html')&&!location.pathname.endsWith('signup.html')) window.location.href='login.html'; return; }
