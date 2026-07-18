@@ -378,17 +378,14 @@ function loadSavedForestHistory() {
         return;
     }
 
-    const birchLog =
-        document.getElementById("birch-log");
-
     const forestLog =
         document.getElementById("forest-log");
 
-    if (birchLog) {
-        birchLog.innerHTML =
-            savedForestHistory[0];
-    }
-
+    /*
+        Saved history belongs only in Recent Loot.
+        Do not copy the newest Oak action into the Birch card.
+        Each tree card keeps its own current message.
+    */
     if (forestLog) {
         forestLog.innerHTML =
             savedForestHistory.join("<hr>");
