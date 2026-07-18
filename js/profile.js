@@ -265,24 +265,8 @@ async function loadProfile() {
     const reputation =
         Number(player.reputation || 0);
 
-    const {
-        data: skillsRow,
-        error: skillsError
-    } = await supabaseClient
-        .from("skills")
-        .select("*")
-        .eq("player_id", viewedPlayerId)
-        .maybeSingle();
-
-    if (skillsError) {
-        console.error("Could not load profile skills:", skillsError);
-    }
-
-    const playerLevel = 1 + Object.entries(skillsRow || {})
-        .filter(([key]) => key.endsWith("_level"))
-        .reduce((total, [, value]) => {
-            return total + Math.max(0, Number(value || 1) - 1);
-        }, 0);
+    const playerLevel =
+        Number(player.level || 1);
 
     const legacyValue =
         Number(player.net_worth || 0);

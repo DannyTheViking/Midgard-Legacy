@@ -979,3 +979,9 @@ input {
     }
 }
 
+
+
+/* Prevent async player data from briefly showing false defaults. */
+.oak-loading {
+    visibility: hidden;
+}

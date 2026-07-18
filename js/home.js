@@ -84,7 +84,7 @@ async function loadHomePlayer() {
     error: skillsError
 } = await supabaseClient
     .from("skills")
-    .select("*")
+    .select("level")
     .eq("player_id", user.id);
 
 if (skillsError) {
@@ -96,15 +96,23 @@ if (skillsError) {
 
 }
 
-const skillsRow = Array.isArray(playerSkills)
-    ? playerSkills[0]
-    : playerSkills;
+const playerLevel = 1 + (playerSkills || []).reduce(
 
-const playerLevel = 1 + Object.entries(skillsRow || {})
-    .filter(([key]) => key.endsWith("_level"))
-    .reduce((total, [, value]) => {
-        return total + Math.max(0, Number(value || 1) - 1);
-    }, 0);
+    (total, skill) => {
+
+        const skillLevel =
+            Number(skill.level || 1);
+
+        return total + Math.max(
+            0,
+            skillLevel - 1
+        );
+
+    },
+
+    0
+
+);
 
     const legacyValue =
         Number(player.net_worth || 0);
