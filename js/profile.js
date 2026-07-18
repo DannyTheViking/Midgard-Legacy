@@ -265,8 +265,31 @@ async function loadProfile() {
     const reputation =
         Number(player.reputation || 0);
 
-    const playerLevel =
-        Number(player.level || 1);
+    // Player level is derived from every skill level above level 1.
+    // This keeps the profile consistent with the top bar and home page.
+    const {
+        data: profileSkills,
+        error: profileSkillsError
+    } = await supabaseClient
+        .from("skills")
+        .select("level")
+        .eq("player_id", viewedPlayerId);
+
+    if (profileSkillsError) {
+        console.error(
+            "Could not load profile skills:",
+            profileSkillsError
+        );
+    }
+
+    const playerLevel = 1 +
+        (profileSkills || []).reduce(
+            (total, skill) => {
+                const skillLevel = Number(skill.level || 1);
+                return total + Math.max(0, skillLevel - 1);
+            },
+            0
+        );
 
     const legacyValue =
         Number(player.net_worth || 0);
