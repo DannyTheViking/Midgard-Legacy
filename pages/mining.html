@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Retskni Mines</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<!-- =========================
+     MAIN GAME LAYOUT
+========================= -->
+<div class="game-layout">
+
+    <!-- Sidebar loads here -->
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+
+        <!-- Topbar loads here -->
+        <div id="topbar"></div>
+
+
+        <!-- =========================
+             PAGE HEADER
+        ========================= -->
+        <section class="page-header">
+
+            <div class="page-title">
+                <h1>⛏️ Retskni Mines ⛏️</h1>
+                <p>The mines of Retskni provide iron, treasure and danger.</p>
+            </div>
+
+            <div class="skill-badge">
+                <div class="skill-circle">
+                    <span id="mining-level-circle">1</span>
+                </div>
+
+                <p>MINING</p>
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MINING PAGE
+        ========================= -->
+        <section class="forest-page">
+
+            <!-- =========================
+                 MINING CARDS
+            ========================= -->
+            <div class="forest-grid">
+
+                <!-- Bog Iron -->
+                <div class="tree-card unlocked" id="bog-iron-card">
+
+                    <div class="tree-image grass-bg"></div>
+
+                    <h2>Bog Iron</h2>
+
+                    <p>Level Required: <span class="green">1</span></p>
+                    <h2 id="mining-tool-name">⛏️ Hands</h2>
+                    <p id="mining-tool-description">Bog Iron can be gathered by hand.</p>
+                    <p>Energy Cost: <span class="green">5</span></p>
+                    <p>Reward: <span class="green">1 - 5 Bog Iron</span></p>
+
+                    <button id="gather-bog-iron">
+                        ⛏️ Gather Bog Iron
+                    </button>
+
+                    <div class="tree-message">
+                        <h4>Latest Action</h4>
+                        <p id="bog-iron-log">Ready to gather.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Locked Card 1 -->
+                <div class="tree-card locked">
+                    <div class="tree-image locked-bg">⛏️<br>🔒</div>
+                    <h2>Iron Vein</h2>
+                    <p>Level Required: 10</p>
+                    <p>Tool Required: Wooden Pickaxe+</p>
+                    <p>Energy Cost: 10</p>
+                    <p>Reward: Iron Ore</p>
+                </div>
+
+
+                <!-- Locked Card 2 -->
+                <div class="tree-card locked">
+                    <div class="tree-image locked-bg">⛏️<br>🔒</div>
+                    <h2>Coal Seam</h2>
+                    <p>Level Required: 20</p>
+                    <p>Tool Required: Iron Pickaxe+</p>
+                    <p>Energy Cost: 15</p>
+                    <p>Reward: Coal</p>
+                </div>
+
+
+                <!-- Locked Card 3 -->
+                <div class="tree-card locked">
+                    <div class="tree-image locked-bg">⛏️<br>🔒</div>
+                    <h2>Silver Vein</h2>
+                    <p>Level Required: 40</p>
+                    <p>Tool Required: Steel Pickaxe+</p>
+                    <p>Energy Cost: 20</p>
+                    <p>Reward: Silver Ore</p>
+                </div>
+
+
+                <!-- Locked Card 4 -->
+                <div class="tree-card locked">
+                    <div class="tree-image locked-bg">⛏️<br>🔒</div>
+                    <h2>Gold Vein</h2>
+                    <p>Level Required: 70</p>
+                    <p>Tool Required: Runic Pickaxe+</p>
+                    <p>Energy Cost: 25</p>
+                    <p>Reward: Gold Ore</p>
+                </div>
+
+
+                <!-- Secret Card -->
+                <div class="tree-card locked secret">
+                    <div class="tree-image secret-bg">?</div>
+                    <h2>???</h2>
+                    <p>Level Required: ???</p>
+                    <p>Tool Required: ???</p>
+                    <p>Energy Cost: ???</p>
+                    <p>Reward: ???</p>
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 RIGHT SIDE PANELS
+            ========================= -->
+            <aside class="forest-right">
+
+                <!-- Current Tool Panel -->
+                <div class="side-panel">
+                    <h3>🧰 Tool Belt</h3>
+
+                    <h4 class="tool-name">
+                        ⛏️ <span id="pickaxe-name">Hands</span>
+                    </h4>
+
+                    <p class="tool-description">
+                        Bog iron can be gathered by hand.
+                    </p>
+                </div>
+
+
+                <!-- Recent Loot Panel -->
+                <div class="side-panel">
+                    <h3>🪨 Recent Loot</h3>
+                    <p id="mining-log">Welcome to Retskni Mines.</p>
+                </div>
+                
+<div class="side-panel" id="resource-cart-card">  <resource-cart-card ></div>
+            
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================
+     SCRIPTS
+========================= -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script><script src="../js/constants.js"></script><script src="../js/cart.js"></script>
+<script src="../js/skills.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/mining.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+/* =====================================
+    MIDGARD LEGACY - TUTORIAL MANAGER
+===================================== */
+
+const TUTORIAL_STEPS = Object.freeze({
+    ASK_FOR_FREEDOM: 0,
+    CHOP_BIRCH: 1,
+    MAKE_PLANKS: 2,
+    GATHER_BOG_IRON: 3,
+    FORGE_IRON_BARS: 4,
+    FORGE_IRON_HOOPS: 5,
+    FORGE_IRON_NAILS: 6,
+    CRAFT_BUCKET: 7,
+    CRAFT_BARREL_PARTS: 8,
+    CRAFT_BIRCH_BARREL: 9,
+    BUILD_BEEHIVE: 10,
+    COLLECT_HONEY: 11,
+    FILL_WATER_BUCKET: 12,
+    BREW_YOUNG_MEAD: 13,
+    RETURN_TO_KING: 14,
+    COMPLETE: 15
+});
+
+const TUTORIAL_TARGETS = Object.freeze({
+    birch_logs: 38,
+    birch_planks: 76,
+    bog_iron: 50,
+    iron_bars: 10,
+    iron_hoops: 12,
+    iron_nails: 100,
+    empty_buckets: 2,
+    barrel_staves: 30,
+    barrel_lids: 1,
+    empty_barrels: 1,
+    beehives: 1,
+    honey_buckets: 1,
+    water_buckets: 1,
+    young_mead: 1
+});
+
+const TUTORIAL_OBJECTIVES = Object.freeze({
+    0: { title: "Ask for your freedom", text: "Visit the King's Longhall and ask the King to release you from thraldom.", route: "Village → King's Longhall", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "king-building-card" },
+    1: { title: "Gather Birch Logs", text: "Chop enough Birch to supply the entire tutorial crafting chain.", progressKey: "birch_logs", target: 38, unit: "Birch Logs", route: "Wilderness → Forest", href: "wildness.html", button: "🏞️ Open Wilderness", nav: "wildness.html", card: "forest-building-card" },
+    2: { title: "Saw Birch Planks", text: "Turn the Birch Logs into all the planks needed for buckets, a hive and the tutorial barrel.", progressKey: "birch_planks", target: 76, unit: "Birch Planks", route: "Village → Sawmill", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "sawmill-building-card" },
+    3: { title: "Gather Bog Iron", text: "Collect enough Bog Iron to forge ten Iron Bars.", progressKey: "bog_iron", target: 50, unit: "Bog Iron", route: "Wilderness → Mining", href: "wildness.html", button: "🏞️ Open Wilderness", nav: "wildness.html", card: "mining-building-card" },
+    4: { title: "Forge Iron Bars", text: "Forge ten Iron Bars. Six will become hoops and four will become nails.", progressKey: "iron_bars", target: 10, unit: "Iron Bars", route: "Village → Forge", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "forge-building-card" },
+    5: { title: "Forge Iron Hoops", text: "Forge six batches to make twelve hoops: six for two buckets and six for the barrel.", progressKey: "iron_hoops", target: 12, unit: "Iron Hoops", route: "Village → Forge", href: "forge.html", button: "🔥 Open Forge", nav: "village.html", card: "forge-building-card" },
+    6: { title: "Forge Iron Nails", text: "Use the remaining four Iron Bars to forge one hundred nails for the beehive.", progressKey: "iron_nails", target: 100, unit: "Iron Nails", route: "Village → Forge", href: "forge.html", button: "🔥 Open Forge", nav: "village.html", card: "forge-building-card" },
+    7: { title: "Craft Two Empty Buckets", text: "One bucket will collect honey and the other will be filled with water.", progressKey: "empty_buckets", target: 2, unit: "Empty Buckets", route: "Village → Carpenter", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "carpenter-building-card" },
+    8: { title: "Craft Barrel Parts", text: "Craft thirty Barrel Staves and one Barrel Lid.", route: "Village → Carpenter", href: "carpenter.html", button: "🪵 Open Carpenter", nav: "village.html", card: "carpenter-building-card", compound: true },
+    9: { title: "Build the Birch Barrel", text: "Combine the staves, lid and six hoops into the one-off tutorial barrel.", progressKey: "empty_barrels", target: 1, unit: "Birch Barrel", route: "Village → Carpenter", href: "carpenter.html", button: "🪵 Open Carpenter", nav: "village.html", card: "carpenter-building-card" },
+    10: { title: "Build the Village Beehive", text: "Use thirty planks and one hundred nails to build the tutorial hive.", progressKey: "beehives", target: 1, unit: "Beehive", route: "Village → Apiary", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "apiary-building-card" },
+    11: { title: "Collect Honey", text: "Wait until the hive is ready, then collect its honey with an Empty Bucket.", progressKey: "honey_buckets", target: 1, unit: "Honey Bucket", route: "Village → Apiary", href: "apiary.html", button: "🐝 Open Apiary", nav: "village.html", card: "apiary-building-card" },
+    12: { title: "Fill a Bucket with Water", text: "Open Inventory and use Fill With Water on the remaining Empty Bucket.", progressKey: "water_buckets", target: 1, unit: "Water Bucket", route: "Inventory", href: "inventory.html", button: "🎒 Open Inventory", nav: "inventory.html" },
+    13: { title: "Brew Young Mead", text: "Add the Birch Barrel, Honey Bucket and Water Bucket. Collect the mead when the timer finishes.", progressKey: "young_mead", target: 1, unit: "Young Mead", route: "Village → Mead Hall", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "mead-building-card" },
+    14: { title: "Return to the King", text: "Take the Young Mead to the King's Longhall and present it to earn your freedom.", route: "Village → King's Longhall", href: "king.html", button: "👑 Return to the King", nav: "village.html", card: "king-building-card" }
+});
+
+async function getTutorialProgress() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return null;
+    const { data, error } = await supabaseClient
+        .from("players")
+        .select("tutorial_step, tutorial_complete, tutorial_progress, is_free_man, kings_tax_rate")
+        .eq("id", user.id)
+        .single();
+    if (error) {
+        console.error("Tutorial load failed:", error);
+        return null;
+    }
+    return data;
+}
+
+async function advanceTutorial(expectedStep, nextStep) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return false;
+    const { data: player, error } = await supabaseClient
+        .from("players")
+        .select("tutorial_step, tutorial_complete")
+        .eq("id", user.id)
+        .single();
+    if (error || !player || player.tutorial_complete || player.tutorial_step !== expectedStep) return false;
+    const { error: updateError } = await supabaseClient
+        .from("players")
+        .update({ tutorial_step: nextStep })
+        .eq("id", user.id)
+        .eq("tutorial_step", expectedStep);
+    if (updateError) {
+        console.error("Tutorial update failed:", updateError);
+        return false;
+    }
+    await refreshTutorialUI();
+    return true;
+}
+
+async function addTutorialProgress(progressKey, amount, expectedStep, nextStep, target) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return null;
+    const { data: player, error } = await supabaseClient
+        .from("players")
+        .select("tutorial_step, tutorial_complete, tutorial_progress")
+        .eq("id", user.id)
+        .single();
+    if (error || !player || player.tutorial_complete || player.tutorial_step !== expectedStep) return null;
+    const progress = { ...(player.tutorial_progress || {}) };
+    const current = Math.min(Number(progress[progressKey] || 0) + Number(amount || 0), target);
+    progress[progressKey] = current;
+    const payload = { tutorial_progress: progress };
+    if (current >= target) payload.tutorial_step = nextStep;
+    const { error: updateError } = await supabaseClient.from("players").update(payload).eq("id", user.id);
+    if (updateError) {
+        console.error("Tutorial progress update failed:", updateError);
+        return null;
+    }
+    await refreshTutorialUI();
+    return { current, target, completed: current >= target };
+}
+
+async function setTutorialProgress(progressKey, current, expectedStep, nextStep, target) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return null;
+    const { data: player, error } = await supabaseClient.from("players")
+        .select("tutorial_step, tutorial_complete, tutorial_progress")
+        .eq("id", user.id).single();
+    if (error || !player || player.tutorial_complete || player.tutorial_step !== expectedStep) return null;
+    const progress = { ...(player.tutorial_progress || {}) };
+    const safeCurrent = Math.min(Number(current || 0), target);
+    progress[progressKey] = safeCurrent;
+    const payload = { tutorial_progress: progress };
+    if (safeCurrent >= target) payload.tutorial_step = nextStep;
+    const { error: updateError } = await supabaseClient.from("players").update(payload).eq("id", user.id);
+    if (updateError) return null;
+    await refreshTutorialUI();
+    return { current: safeCurrent, target, completed: safeCurrent >= target };
+}
+
+async function checkTutorialBarrelParts() {
+    const progress = await getTutorialProgress();
+    if (!progress || progress.tutorial_step !== TUTORIAL_STEPS.CRAFT_BARREL_PARTS) return null;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { data: inventory, error } = await supabaseClient.from("inventory")
+        .select("item_id, quantity").eq("player_id", user.id);
+    if (error) return null;
+    const count = id => inventory.find(row => row.item_id === id)?.quantity || 0;
+    const staves = Math.min(count(BARREL_STAVES), TUTORIAL_TARGETS.barrel_staves);
+    const lids = Math.min(count(BARREL_LID), TUTORIAL_TARGETS.barrel_lids);
+    const { data: player } = await supabaseClient.from("players").select("tutorial_progress").eq("id", user.id).single();
+    const updated = { ...(player?.tutorial_progress || {}), barrel_staves: staves, barrel_lids: lids };
+    const complete = staves >= 30 && lids >= 1;
+    await supabaseClient.from("players").update({
+        tutorial_progress: updated,
+        ...(complete ? { tutorial_step: TUTORIAL_STEPS.CRAFT_BIRCH_BARREL } : {})
+    }).eq("id", user.id);
+    await refreshTutorialUI();
+    return { staves, lids, completed: complete };
+}
+
+async function completeTutorial() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return false;
+    const { data: player } = await supabaseClient.from("players").select("reputation").eq("id", user.id).single();
+    const { error } = await supabaseClient.from("players").update({
+        tutorial_step: TUTORIAL_STEPS.COMPLETE,
+        tutorial_complete: true,
+        is_free_man: true,
+        kings_tax_rate: 0.01,
+        reputation: Number(player?.reputation || 0) + 100,
+        oak_unlocked: true
+    }).eq("id", user.id);
+    if (error) { console.error("Tutorial completion failed:", error); return false; }
+    clearTutorialHighlights();
+    return true;
+}
+
+async function refreshTutorialUI() {
+    const player = await getTutorialProgress();
+
+    if (!player || player.tutorial_complete) {
+        clearTutorialHighlights();
+        removeTutorialGuide();
+        stopTutorialObserver();
+        return;
+    }
+
+    renderTutorialGuide(player);
+    applyTutorialHighlights(player.tutorial_step);
+    startTutorialObserver(player.tutorial_step);
+}
+
+function removeTutorialGuide() {
+    document.getElementById("tutorial-guide")?.remove();
+}
+
+function getTutorialProgressDisplay(player, objective) {
+    if (!objective) return "";
+
+    const progress = player.tutorial_progress || {};
+
+    if (objective.compound) {
+        const staves = Math.min(Number(progress.barrel_staves || 0), TUTORIAL_TARGETS.barrel_staves);
+        const lids = Math.min(Number(progress.barrel_lids || 0), TUTORIAL_TARGETS.barrel_lids);
+
+        return `
+            <div class="tutorial-guide-progress-lines">
+                <div>${staves >= TUTORIAL_TARGETS.barrel_staves ? "✅" : "⬜"} Barrel Staves: <strong>${staves} / ${TUTORIAL_TARGETS.barrel_staves}</strong></div>
+                <div>${lids >= TUTORIAL_TARGETS.barrel_lids ? "✅" : "⬜"} Barrel Lid: <strong>${lids} / ${TUTORIAL_TARGETS.barrel_lids}</strong></div>
+            </div>
+        `;
+    }
+
+    if (!objective.progressKey) return "";
+
+    const current = Math.min(
+        Number(progress[objective.progressKey] || 0),
+        Number(objective.target || 0)
+    );
+    const target = Number(objective.target || 0);
+    const percent = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+
+    return `
+        <div class="tutorial-guide-progress-label">
+            Progress: <strong>${current} / ${target} ${objective.unit || ""}</strong>
+        </div>
+        <div class="tutorial-guide-progress-bar" aria-label="Tutorial progress">
+            <div style="width:${percent}%"></div>
+        </div>
+    `;
+}
+
+function renderTutorialGuide(player) {
+    const objective = TUTORIAL_OBJECTIVES[player.tutorial_step];
+    if (!objective) {
+        removeTutorialGuide();
+        return;
+    }
+
+    let guide = document.getElementById("tutorial-guide");
+
+    if (!guide) {
+        guide = document.createElement("section");
+        guide.id = "tutorial-guide";
+        guide.className = "tutorial-guide";
+
+        const mainArea = document.querySelector("main.main-area") || document.querySelector("main");
+        const topbar = document.getElementById("topbar");
+        const pageHeader = document.querySelector(".page-header");
+
+        if (pageHeader?.parentNode) {
+            pageHeader.parentNode.insertBefore(guide, pageHeader);
+        } else if (topbar?.parentNode) {
+            topbar.insertAdjacentElement("afterend", guide);
+        } else if (mainArea) {
+            mainArea.prepend(guide);
+        } else {
+            document.body.prepend(guide);
+        }
+    }
+
+    const currentPage = window.location.pathname.split("/").pop() || "home.html";
+    const destinationPage = String(objective.href || "").split("/").pop();
+    const alreadyAtDestination = currentPage === destinationPage;
+
+    guide.innerHTML = `
+        <div class="tutorial-guide-icon">📜</div>
+        <div class="tutorial-guide-content">
+            <div class="tutorial-guide-kicker">THE KING'S CHALLENGE</div>
+            <h2>${objective.title}</h2>
+            <p>${objective.text}</p>
+            ${getTutorialProgressDisplay(player, objective)}
+            <div class="tutorial-guide-route">
+                <span>Next location:</span>
+                <strong>${objective.route}</strong>
+            </div>
+        </div>
+        <a class="tutorial-guide-button${alreadyAtDestination ? " current-location" : ""}" href="${objective.href}">
+            ${alreadyAtDestination ? "📍 You are here" : objective.button}
+        </a>
+    `;
+}
+
+function clearTutorialHighlights() {
+    document.querySelectorAll(".tutorial-highlight").forEach(element => {
+        element.classList.remove("tutorial-highlight");
+    });
+}
+
+function highlightTutorialElement(element) {
+    if (element) element.classList.add("tutorial-highlight");
+}
+
+function applyTutorialHighlights(step) {
+    clearTutorialHighlights();
+
+    const objective = TUTORIAL_OBJECTIVES[step];
+    if (!objective) return;
+
+    // First guide the player through the main sidebar.
+    if (objective.nav) {
+        document.querySelectorAll(`.sidebar a[href='${objective.nav}']`).forEach(highlightTutorialElement);
+    }
+
+    // Then highlight the correct card inside Village or Wilderness.
+    if (objective.card) {
+        highlightTutorialElement(document.getElementById(objective.card));
+    }
+
+    const selectorsByStep = {
+        0: ["#king-dialogue-card", "#king-actions button"],
+        1: ["#birch-card", "#chop-birch"],
+        2: ["#saw-birch-button"],
+        3: ["#bog-iron-card", "#gather-bog-iron"],
+        4: ["#forge-iron-bar-button"],
+        5: ["#forge-hoop-button"],
+        6: ["#forge-nails-button"],
+        7: ["#craft-bucket-button"],
+        8: ["#craft-staves-button", "#craft-lid-button"],
+        9: ["#craft-barrel-button"],
+        10: ["#hive-slots", "#hive-slots button"],
+        11: ["#hive-slots", "#hive-slots button"],
+        12: ["#inventory-list", "#inventory-list button"],
+        13: ["#mead-shelves", "#mead-shelves button"],
+        14: ["#king-dialogue-card", "#king-actions button"]
+    };
+
+    (selectorsByStep[step] || []).forEach(selector => {
+        document.querySelectorAll(selector).forEach(highlightTutorialElement);
+    });
+}
+
+let tutorialMutationObserver = null;
+let observedTutorialStep = null;
+
+function stopTutorialObserver() {
+    tutorialMutationObserver?.disconnect();
+    tutorialMutationObserver = null;
+    observedTutorialStep = null;
+}
+
+function startTutorialObserver(step) {
+    if (tutorialMutationObserver && observedTutorialStep === step) return;
+
+    stopTutorialObserver();
+    observedTutorialStep = step;
+
+    tutorialMutationObserver = new MutationObserver(() => {
+        applyTutorialHighlights(step);
+    });
+
+    tutorialMutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Kept for older page scripts.
+function showTutorialNotice() {
+    refreshTutorialUI();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => refreshTutorialUI(), 50);
+    });
+} else {
+    setTimeout(() => refreshTutorialUI(), 50);
+}

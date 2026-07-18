@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Wildness</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="game-layout">
+
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+
+        <div id="topbar"></div>
+
+        <!-- =========================
+              HEADER
+        ========================= -->
+        <section class="page-header">
+            <div class="page-title">
+                <h1>🏘️ Retskni Wildness</h1>
+                <p>Visit the mines, forests, and other natural areas of Midgard.</p>
+            </div>
+        </section>
+
+        <!-- =========================
+             WILDNESS CARDS
+        ========================= -->
+        <section class="building-grid">
+
+            <a href="forest.html" id="forest-building-card" class="building-card">
+                <h2>⚒️ Forest</h2>
+                <p>Explore the dense woods and gather resources.</p>
+            </a>
+
+            <a href="mining.html" id="mining-building-card" class="building-card">
+                <h2>⛏️ Mining</h2>
+                <p>Extract ores and minerals from the earth.</p>
+            </a>
+
+            <a href="fishing.html" class="building-card locked">
+                <h2>🎣 Fishing</h2>
+                <p>Catch fish from rivers and lakes.</p>
+                <span>coming soon</span>
+            </a>
+
+              <a href="hunting.html" class="building-card locked">
+                <h2>🏹 Hunting</h2>
+                <p>Track and hunt wildlife in the wild.</p>
+                <span>coming soon</span>
+            </a>
+
+            <a href="digging.html" class="building-card locked">
+                <h2>⛏️ Digging</h2>
+                <p>Uncover artifacts and treasures in the earth.</p>
+                <span>coming soon</span>
+            </a>
+
+            <a href="Exploration.html" class="building-card locked">
+                <h2>🗺️ Exploration</h2>
+                <p>Discover new lands and hidden secrets.</p>
+                <span>coming soon</span>
+            </a>
+
+            <a href="Foraging.html" class="building-card locked">
+                <h2>🍒 Foraging</h2>
+                <p>Collect fruits, nuts, and other natural resources.</p>
+                <span>coming soon</span>
+            </a>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script><script src="../js/constants.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/wildness.js"></script>
+
+</body>
+</html>

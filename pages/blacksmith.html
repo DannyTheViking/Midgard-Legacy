@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Blacksmith</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="game-layout">
+
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+
+        <div id="topbar"></div>
+
+        <!-- =========================
+             BLACKSMITH HEADER
+        ========================= -->
+        <section class="page-header">
+            <div class="page-title">
+                <h1>⚒️ Blacksmith</h1>
+                <p>Repair your tools and prepare for the work ahead.</p>
+            </div>
+        </section>
+
+      <!--repair axe-->
+<section class="crafting-grid">
+
+    <div class="crafting-card">
+        <h3>🪓 Repair Axe</h3>
+
+        <h4 id="repair-axe-name">Loading...</h4>
+
+        <p>Durability</p>
+
+        <div class="durability-bar">
+            <div id="repair-axe-durability-fill" class="durability-fill"></div>
+        </div>
+
+        <p>Cost: <span class="green">25 Silver</span></p>
+
+        <button id="repair-axe-button">⚒️ Repair</button>
+
+        <p id="blacksmith-message">Ready for repairs.</p>
+    </div>
+
+<!--iron axe-->
+    <div class="crafting-card">
+        <h3>🪓 Iron Axe</h3>
+
+        <p>Requires: <span class="green">1 Wooden Shaft</span></p>
+        <p>Requires: <span class="green">1 Iron Axe Head</span></p>
+
+        <p>Produces: <span class="green">1 Iron Axe</span></p>
+
+        <button id="craft-iron-axe-button">⚒️ Craft</button>
+
+        <p id="craft-axe-message">Ready to craft.</p>
+    </div>
+
+</section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/constants.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/skills.js"></script>
+<script src="../js/blacksmith.js"></script>
+
+</body>
+</html>

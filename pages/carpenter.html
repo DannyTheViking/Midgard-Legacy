@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Carpenter</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="game-layout">
+
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+
+        <div id="topbar"></div>
+
+        <section class="page-header">
+            <div class="page-title">
+                <h1>🪵 Carpenter</h1>
+                <p>Welcome to my workshop <span id="home-username"></span>, here you can craft wooden parts and barrels.</p>
+            </div>
+        </section>
+
+        <section class="crafting-grid">
+
+            <!-- wooden shaft -->
+            <div class="crafting-card">
+                <h3>🪵 Wooden Shaft</h3>
+                <p>Requires: <span class="green">1 Birch Plank</span></p>
+                <p>Produces: <span class="green">1 Wooden Shaft</span></p>
+
+                <div class="craft-controls">
+                    <input class="craft-amount" id="shaft-amount" type="number" min="1" value="1">
+                    <button id="craft-shaft-button">🪵 Craft</button>
+                </div>
+
+                <p id="carpenter-message">Ready to carve.</p>
+            </div>
+
+            <!-- empty bucket -->
+<div class="crafting-card">
+    <h3>🪣 Empty Bucket</h3>
+
+    <p>Requires: <span id="lid-wood-label" class="green">5 Birch Planks</span></p>
+    <p>Requires: <span class="green">3 Iron Hoops</span></p>
+    <p>Produces: <span class="green">1 Empty Bucket</span></p>
+
+    <div class="craft-controls">
+        <input class="craft-amount" id="bucket-amount" type="number" min="1" value="1">
+        <button id="craft-bucket-button">🪵 Craft</button>
+    </div>
+
+    <p id="bucket-message"></p>
+</div>
+
+            <!-- barrel staves -->
+            <div class="crafting-card">
+                <h3 id="staves-title">🛢️ Birch Barrel Staves</h3>
+                <p>Requires: <span id="staves-wood-label" class="green">30 Birch Planks</span></p>
+                <p>Produces: <span class="green">30 Barrel Staves</span></p>
+
+                <div class="craft-controls">
+                    <input class="craft-amount" id="staves-amount" type="number" min="1" value="1">
+                    <button id="craft-staves-button">🪵 Craft</button>
+                </div>
+
+                <p id="staves-message"></p>
+            </div>
+
+            <!-- barrel lid -->
+            <div class="crafting-card">
+                <h3 id="lid-title">🛢️ Birch Barrel Lid</h3>
+                <p>Requires: <span class="green">5 Birch Planks</span></p>
+                <p>Produces: <span class="green">1 Barrel Lid</span></p>
+
+                <div class="craft-controls">
+                    <input class="craft-amount" id="lid-amount" type="number" min="1" value="1">
+                    <button id="craft-lid-button">🪵 Craft</button>
+                </div>
+
+                <p id="lid-message"></p>
+            </div>
+
+            <!-- empty barrel -->
+            <div class="crafting-card">
+                <h3 id="barrel-title">🛢️ Birch Barrel</h3>
+                <p>Requires: <span class="green">30 Barrel Staves</span></p>
+                <p>Requires: <span class="green">1 Barrel Lid</span></p>
+                <p>Requires: <span class="green">6 Iron Hoops</span></p>
+                <p>Produces: <span class="green">1 Empty Barrel</span></p>
+
+                <div class="craft-controls">
+                    <input class="craft-amount" id="barrel-amount" type="number" min="1" value="1">
+                    <button id="craft-barrel-button">🪵 Craft</button>
+                </div>
+
+                <p id="barrel-message"></p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script><script src="../js/constants.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/skills.js"></script>
+<script src="../js/carpenter.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Forge</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="game-layout">
+
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+
+        <div id="topbar"></div>
+
+        <section class="page-header">
+            <div class="page-title">
+                <h1>🔥 Forge</h1>
+                <p>Welcome to my forge <span id="home-username"></span>, here you can turn raw iron into useful metal.</p>
+            </div>
+        </section>
+
+        <section class="crafting-grid">
+
+            <!-- iron bar -->
+            <div class="crafting-card">
+                <h3>⚒️ Iron Bar</h3>
+                <p>Requires: <span class="green">5 Bog Iron</span></p>
+                <p>Produces: <span class="green">1 Iron Bar</span></p>
+                <button id="forge-iron-bar-button">🔥 Craft</button>
+                <p id="forge-message">Ready to forge.</p>
+            </div>
+
+            <!-- iron nails -->
+            <div class="crafting-card">
+                <h3>🔩 Iron Nails</h3>
+                <p>Requires: <span class="green">1 Iron Bar</span></p>
+                <p>Produces: <span class="green">25 Iron Nails</span></p>
+
+                <div class="craft-controls">
+                    <input class="craft-amount" id="nails-amount" type="number" min="1" value="1">
+                    <button id="forge-nails-button">🔥 Craft</button>
+                </div>
+
+                <p id="nails-message">Ready to forge.</p>
+            </div>
+
+            <!-- iron axe head -->
+            <div class="crafting-card">
+                <h3>🪓 Iron Axe Head</h3>
+                <p>Requires: <span class="green">2 Iron Bars</span></p>
+                <p>Produces: <span class="green">1 Iron Axe Head</span></p>
+                <button id="forge-axe-head-button">🔥 Craft</button>
+                <p id="axe-head-message">Ready to forge.</p>
+            </div>
+
+            <!-- iron hoop -->
+            <div class="crafting-card">
+                <h3>⭕ Iron Hoop</h3>
+                <p>Requires: <span class="green">1 Iron Bar</span></p>
+                <p>Produces: <span class="green">2 Iron Hoops</span></p>
+                <button id="forge-hoop-button">🔥 Craft</button>
+                <p id="hoop-message">Ready to forge.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script><script src="../js/constants.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/skills.js"></script>
+<script src="../js/forge.js"></script>
+
+</body>
+</html>

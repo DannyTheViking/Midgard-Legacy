@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Viking - Midgard Legacy</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+    <div class="auth-box">
+
+    <h1>⚔ Create Your Viking ⚔</h1>
+
+    <p>Begin your saga in Midgard.</p>
+
+  <input id="signup-username" type="text" placeholder="Username">
+<br><br>
+
+<input id="signup-email" type="email" placeholder="Email">
+<br><br>
+
+<select id="signup-gender"><option value="man">Man</option><option value="woman">Woman</option><option value="non_binary">Non-binary</option><option value="prefer_not_to_say" selected>Prefer not to say</option></select><br><br>
+<input id="signup-password" type="password" placeholder="Password">
+<br><br>
+
+<button id="signup-button">Create Viking</button>
+
+<p id="signup-message"></p>
+
+    <br><br>
+
+    <a href="login.html">Already have a saga? Login</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/auth.js"></script>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+async function configureVillage(){if(typeof refreshTutorialUI==='function')refreshTutorialUI();const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;const {data:p}=await supabaseClient.from('players').select('tutorial_complete').eq('id',user.id).single();if(p?.tutorial_complete)document.getElementById('apiary-building-card')?.remove();}configureVillage();

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Midgard Legacy - Sawmill</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="game-layout">
+    <div id="sidebar"></div>
+
+    <main class="main-area">
+        <div id="topbar"></div>
+
+        <section class="page-header">
+            <div class="page-title">
+                <h1>🪚 Sawmill</h1>
+                <p>Welcome to the sawmill <span id="home-username"></span> here you can Turn rough logs into usable planks.</p>
+            </div>
+        </section>
+
+       <!--birch planks-->
+<section class="crafting-grid">
+
+    <div class="crafting-card">
+        <h3>🪚 Birch Planks</h3>
+
+        <p>Requires: <span class="green">1 Birch Log</span></p>
+
+        <p>Produces: <span class="green">2 Birch Planks</span></p>
+
+        <button id="saw-birch-button">🪚 Craft</button>
+
+        <p id="sawmill-message">Ready to cut timber.</p>
+    </div>
+
+<div class="crafting-card locked" id="oak-sawmill-card"><h3>🪚 Oak Planks</h3><p>Requires: <span class="green">1 Oak Log</span></p><p>Produces: <span class="green">2 Oak Planks</span></p><button id="saw-oak-button" disabled>🔒 Earn Your Freedom</button><p id="oak-sawmill-message"></p></div></section>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/config.js"></script><script src="../js/constants.js"></script>
+<script src="../js/tutorial.js"></script>
+<script src="../js/skills.js"></script>
+<script src="../js/sawmill.js"></script>
+
+</body>
+</html>

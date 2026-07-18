@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Midgard Legacy - Property</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/property.css"
+    >
+</head>
+
+<body>
+
+    <div class="game-layout">
+
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+            <section class="page-header">
+
+                <div class="page-title">
+
+                    <h1>🏡 Your Homestead</h1>
+
+                    <p>
+                        Rebuild your home and grow your land into a prosperous
+                        Viking homestead.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- CURRENT PROPERTY -->
+
+            <section class="property-main-grid">
+
+                <article class="property-panel current-property-panel">
+
+                    <div class="panel-heading">
+
+                        <div>
+
+                            <span class="property-eyebrow">
+                                Current Property
+                            </span>
+
+                            <h2 id="current-property-name">
+                                Old Shack
+                            </h2>
+
+                        </div>
+
+                        <span
+                            id="current-property-level"
+                            class="property-level-badge"
+                        >
+                            Level 0
+                        </span>
+
+                    </div>
+
+                    <div class="current-property-image">
+
+                        <img
+                            id="current-property-image"
+                            src="../images/property/old shack.png"
+                            alt="A broken and run-down wooden shack"
+                        >
+
+                    </div>
+
+                    <div class="current-property-description">
+
+                        <p id="current-property-description">
+                            An abandoned shack with a damaged roof, broken
+                            timbers and unsafe walls. It is not much, but the
+                            land now belongs to you.
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="return-current-property"
+                        class="secondary-property-button"
+                        type="button"
+                        hidden
+                    >
+                        Return to Current Property
+                    </button>
+
+                </article>
+
+                <!-- NEXT UPGRADE -->
+
+                <article class="property-panel next-upgrade-panel">
+
+                    <span class="property-eyebrow">
+                        Next Upgrade
+                    </span>
+
+                    <h2>Rebuild Shack</h2>
+
+                    <p class="upgrade-summary">
+                        Replace the rotten wood, repair the roof and strengthen
+                        the walls to create a safe home.
+                    </p>
+
+                    <div class="upgrade-comparison">
+
+                        <div class="comparison-stage">
+
+                            <img
+                                src="../images/property/old shack.png"
+                                alt="Old broken shack"
+                            >
+
+                            <span>Old Shack</span>
+
+                        </div>
+
+                        <span class="comparison-arrow">
+                            ➜
+                        </span>
+
+                        <div class="comparison-stage">
+
+                            <img
+                                src="../images/property/upgraded shack.png"
+                                alt="Repaired wooden shack"
+                            >
+
+                            <span>Upgraded Shack</span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="active-upgrade-requirements">
+
+                        <h3>Required Materials</h3>
+
+                        <div class="material-row">
+
+                            <div class="material-name">
+                                <span>🪵</span>
+                                <span>Wooden Planks</span>
+                            </div>
+
+                            <strong>20</strong>
+
+                        </div>
+
+                        <div class="material-row future-material">
+
+                            <div class="material-name">
+                                <span>🪚</span>
+                                <span>Wooden Beams</span>
+                            </div>
+
+                            <div class="material-status">
+                                <strong>10</strong>
+                                <small>Coming soon</small>
+                            </div>
+
+                        </div>
+
+                        <div class="material-row future-material">
+
+                            <div class="material-name">
+                                <span>🔩</span>
+                                <span>Iron Nails</span>
+                            </div>
+
+                            <div class="material-status">
+                                <strong>20</strong>
+                                <small>Coming soon</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="property-upgrade-button"
+                        type="button"
+                        disabled
+                    >
+                        Upgrade System Coming After Testing
+                    </button>
+
+                    <p class="test-version-notice">
+                        Mining, woodworking and forging will provide these
+                        materials in a later update.
+                    </p>
+
+                </article>
+
+            </section>
+
+            <!-- PROPERTY PROGRESSION -->
+
+            <section class="property-progression-section" hidden>
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="property-eyebrow">
+                            Property Progression
+                        </span>
+
+                        <h2>Build Your Legacy</h2>
+
+                    </div>
+
+                    <p>
+                        Preview every stage of your future homestead.
+                    </p>
+
+                </div>
+
+                <div
+                    id="property-progression"
+                    class="property-progression"
+                >
+
+                    <!-- OLD SHACK -->
+
+                    <article
+                        class="property-stage current-stage"
+                        data-property-level="0"
+                    >
+
+                        <div class="stage-number">
+                            0
+                        </div>
+
+                        <div class="stage-image">
+
+                            <img
+                                src="../images/property/old shack.png"
+                                alt="Old broken shack"
+                            >
+
+                        </div>
+
+                        <div class="stage-content">
+
+                            <div class="stage-title-row">
+
+                                <h3>Old Shack</h3>
+
+                                <span class="stage-status current">
+                                    Current
+                                </span>
+
+                            </div>
+
+                            <p>
+                                A ruined shelter inherited when you earned your
+                                freedom.
+                            </p>
+
+                            <button
+                                class="preview-property-button"
+                                type="button"
+                                data-preview-level="0"
+                            >
+                                View Property
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                    <div class="progression-arrow">
+                        ↓
+                    </div>
+
+                    <!-- UPGRADED SHACK -->
+
+                    <article
+                        class="property-stage locked-stage"
+                        data-property-level="1"
+                    >
+
+                        <div class="stage-number">
+                            1
+                        </div>
+
+                        <div class="stage-image">
+
+                            <img
+                                src="../images/property/upgraded shack.png"
+                                alt="Repaired wooden shack"
+                            >
+
+                        </div>
+
+                        <div class="stage-content">
+
+                            <div class="stage-title-row">
+
+                                <h3>Upgraded Shack</h3>
+
+                                <span class="stage-status locked">
+                                    🔒 Locked
+                                </span>
+
+                            </div>
+
+                            <p>
+                                A repaired wooden shack with a secure roof,
+                                strengthened walls and a proper door.
+                            </p>
+
+                            <div class="stage-materials">
+
+                                <span>🪵 20 Planks</span>
+                                <span>🪚 10 Beams</span>
+                                <span>🔩 20 Nails</span>
+
+                            </div>
+
+                            <div class="stage-unlock">
+
+                                <strong>Unlocks:</strong>
+                                🐝 Apiary
+
+                            </div>
+
+                            <button
+                                class="preview-property-button"
+                                type="button"
+                                data-preview-level="1"
+                            >
+                                Preview Upgrade
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                    <div class="progression-arrow">
+                        ↓
+                    </div>
+
+                    <!-- SMALL HOUSE -->
+
+                    <article
+                        class="property-stage locked-stage"
+                        data-property-level="2"
+                    >
+
+                        <div class="stage-number">
+                            2
+                        </div>
+
+                        <div class="stage-image">
+
+                            <img
+                                src="../images/property/small house.png"
+                                alt="Small Viking wooden house"
+                            >
+
+                        </div>
+
+                        <div class="stage-content">
+
+                            <div class="stage-title-row">
+
+                                <h3>Small House</h3>
+
+                                <span class="stage-status locked">
+                                    🔒 Locked
+                                </span>
+
+                            </div>
+
+                            <p>
+                                A proper Viking home with more living space,
+                                stronger foundations and room for expansion.
+                            </p>
+
+                            <div class="stage-materials">
+
+                                <span>🪵 40 Planks</span>
+                                <span>🪚 20 Beams</span>
+                                <span>🔩 40 Nails</span>
+                                <span>🪨 50 Stone</span>
+
+                            </div>
+
+                            <div class="stage-unlock">
+
+                                <strong>Planned unlock:</strong>
+                                📦 Larger Storage
+
+                            </div>
+
+                            <button
+                                class="preview-property-button"
+                                type="button"
+                                data-preview-level="2"
+                            >
+                                Preview Upgrade
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                    <div class="progression-arrow">
+                        ↓
+                    </div>
+
+                    <!-- MEDIUM HOUSE -->
+
+                    <article
+                        class="property-stage locked-stage"
+                        data-property-level="3"
+                    >
+
+                        <div class="stage-number">
+                            3
+                        </div>
+
+                        <div class="stage-image">
+
+                            <img
+                                src="../images/property/med house.png"
+                                alt="Medium Viking house"
+                            >
+
+                        </div>
+
+                        <div class="stage-content">
+
+                            <div class="stage-title-row">
+
+                                <h3>Medium House</h3>
+
+                                <span class="stage-status locked">
+                                    🔒 Locked
+                                </span>
+
+                            </div>
+
+                            <p>
+                                A longer and more impressive homestead built
+                                from heavy timber and stone.
+                            </p>
+
+                            <div class="stage-materials">
+
+                                <span>🪵 80 Planks</span>
+                                <span>🪚 40 Beams</span>
+                                <span>🔩 80 Nails</span>
+                                <span>🪨 150 Stone</span>
+
+                            </div>
+
+                            <div class="stage-unlock">
+
+                                <strong>Planned unlock:</strong>
+                                🐴 Stable
+
+                            </div>
+
+                            <button
+                                class="preview-property-button"
+                                type="button"
+                                data-preview-level="3"
+                            >
+                                Preview Upgrade
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                    <div class="progression-arrow">
+                        ↓
+                    </div>
+
+                    <!-- LARGE HOUSE -->
+
+                    <article
+                        class="property-stage locked-stage"
+                        data-property-level="4"
+                    >
+
+                        <div class="stage-number">
+                            4
+                        </div>
+
+                        <div class="stage-image">
+
+                            <img
+                                src="../images/property/large house.png"
+                                alt="Large two-floor Viking house"
+                            >
+
+                        </div>
+
+                        <div class="stage-content">
+
+                            <div class="stage-title-row">
+
+                                <h3>Large House</h3>
+
+                                <span class="stage-status locked">
+                                    🔒 Locked
+                                </span>
+
+                            </div>
+
+                            <p>
+                                A large two-floor homestead worthy of a wealthy
+                                and respected Viking.
+                            </p>
+
+                            <div class="stage-materials">
+
+                                <span>🪵 150 Planks</span>
+                                <span>🪚 80 Beams</span>
+                                <span>🔩 150 Nails</span>
+                                <span>🪨 400 Stone</span>
+
+                            </div>
+
+                            <div class="stage-unlock">
+
+                                <strong>Planned unlock:</strong>
+                                🌾 Farm and Estate Expansion
+
+                            </div>
+
+                            <button
+                                class="preview-property-button"
+                                type="button"
+                                data-preview-level="4"
+                            >
+                                Preview Upgrade
+                            </button>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+            <!-- PROPERTY BUILDINGS -->
+
+            <section class="property-buildings-section">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="property-eyebrow">
+                            Your Land
+                        </span>
+
+                        <h2>Property Buildings</h2>
+
+                    </div>
+
+                </div>
+
+                <div class="property-building-grid">
+
+                    <article class="property-building locked">
+
+                        <div class="building-icon">
+                            🐝
+                        </div>
+
+                        <div>
+
+                            <h3>Apiary</h3>
+
+                            <p>
+                                Build beehives, install captured Queen Bees and
+                                harvest honey.
+                            </p>
+
+                            <span class="building-unlock-text">
+                                Unlocks after Upgraded Shack
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                    <a
+                        href="storage.html"
+                        class="property-building available"
+                    >
+
+                        <div class="building-icon">
+                            📦
+                        </div>
+
+                        <div>
+
+                            <h3>Storage Yard</h3>
+
+                            <p>
+                                Unload your cart and organise gathered
+                                resources.
+                            </p>
+
+                            <span class="building-unlock-text">
+                                Available
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                    <article class="property-building locked">
+
+                        <div class="building-icon">
+                            🐴
+                        </div>
+
+                        <div>
+
+                            <h3>Stable</h3>
+
+                            <p>
+                                Keep working horses and prepare racing horses.
+                            </p>
+
+                            <span class="building-unlock-text">
+                                Future update
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                    <article class="property-building locked">
+
+                        <div class="building-icon">
+                            🌾
+                        </div>
+
+                        <div>
+
+                            <h3>Farm</h3>
+
+                            <p>
+                                Grow crops and raise livestock on your land.
+                            </p>
+
+                            <span class="building-unlock-text">
+                                Future update
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+            <aside class="property-test-note">
+
+                <strong>🧪 Test Version:</strong>
+
+                Property upgrades are currently previews. Mining will provide
+                stone and ore, the Carpenter will produce planks and beams, and
+                the Forge will produce nails after the first playtest.
+
+            </aside>
+
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/property.js"></script>
+
+</body>
+
+</html>
