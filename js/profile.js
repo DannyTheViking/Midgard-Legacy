@@ -438,6 +438,13 @@ function loadOwnProfileActions() {
 
         <button
             type="button"
+            id="social-list-button"
+        >
+            Friends & Enemies
+        </button>
+
+        <button
+            type="button"
             id="logout-button"
         >
             Log Out
@@ -451,6 +458,12 @@ function loadOwnProfileActions() {
             alert(
                 "Profile editing is coming soon."
             );
+        });
+
+    document
+        .getElementById("social-list-button")
+        .addEventListener("click", () => {
+            window.location.href = "friends-enemies.html";
         });
 
     document
@@ -628,6 +641,9 @@ async function setRelation(type) {
 
             return;
         }
+
+        window.location.href = "friends-enemies.html";
+        return;
     }
 
     await loadProfile();

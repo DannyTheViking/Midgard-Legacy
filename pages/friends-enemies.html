@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Midgard Legacy - Friends &amp; Enemies</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="game-layout">
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+            <div id="topbar"></div>
+
+            <section class="page-header social-page-header">
+                <div class="page-title">
+                    <h1>🤝 Friends &amp; Enemies</h1>
+                    <p>Keep your allies close and your rivals closer.</p>
+                </div>
+            </section>
+
+            <div id="relations-message" class="social-message" role="status"></div>
+
+            <section class="social-section card">
+                <div class="social-section-heading">
+                    <h2>Friends <span id="friend-count">(0)</span></h2>
+                </div>
+                <div id="friends-list" class="social-list">
+                    <p>Loading friends...</p>
+                </div>
+            </section>
+
+            <section class="social-section card">
+                <div class="social-section-heading">
+                    <h2>Enemies <span id="enemy-count">(0)</span></h2>
+                </div>
+                <div id="enemies-list" class="social-list">
+                    <p>Loading enemies...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/friends-enemies.js"></script>
+</body>
+</html>

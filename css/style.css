@@ -1459,3 +1459,102 @@ body.forest-data-loading .forest-loading-screen {
 @media (min-width: 761px) {
     .mobile-nav-links { display: block !important; }
 }
+
+/* =====================================
+   FRIENDS & ENEMIES
+===================================== */
+.social-page-header {
+    min-height: 72px;
+}
+
+.social-section {
+    margin-top: 10px;
+}
+
+.social-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #5d421b;
+    margin-bottom: 8px;
+}
+
+.social-section-heading h2 {
+    margin: 0 0 10px;
+    color: #ffd700;
+}
+
+.social-list {
+    display: grid;
+    gap: 8px;
+}
+
+.social-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    background: #151515;
+    border: 1px solid #4b3518;
+}
+
+.social-player-name {
+    color: #f5d45f;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.social-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.social-actions button {
+    min-height: 38px;
+    margin: 0;
+}
+
+.social-status-button {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.danger-button {
+    border-color: #9a493c;
+}
+
+.social-message {
+    min-height: 22px;
+    margin: 8px 0;
+    padding: 0 4px;
+}
+
+.social-message-success { color: #a8e6a3; }
+.social-message-error { color: #ffaaa0; }
+.social-message-info { color: #f2d78c; }
+
+@media (max-width: 760px) {
+    .social-row {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .social-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-content: stretch;
+    }
+
+    .social-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .social-actions {
+        grid-template-columns: 1fr;
+    }
+}
