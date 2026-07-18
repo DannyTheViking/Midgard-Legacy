@@ -265,15 +265,15 @@ async function loadProfile() {
     const reputation =
         Number(player.reputation || 0);
 
-    // Player level is derived from every skill level above level 1.
-    // This keeps the profile consistent with the top bar and home page.
+    // Total Skill is the sum of every skill level.
     const {
         data: profileSkills,
         error: profileSkillsError
     } = await supabaseClient
         .from("skills")
-        .select("level")
-        .eq("player_id", viewedPlayerId);
+        .select("*")
+        .eq("player_id", viewedPlayerId)
+        .maybeSingle();
 
     if (profileSkillsError) {
         console.error(
@@ -282,14 +282,11 @@ async function loadProfile() {
         );
     }
 
-    const playerLevel = 1 +
-        (profileSkills || []).reduce(
-            (total, skill) => {
-                const skillLevel = Number(skill.level || 1);
-                return total + Math.max(0, skillLevel - 1);
-            },
-            0
-        );
+    const playerLevel = profileSkills
+        ? Object.entries(profileSkills)
+            .filter(([column]) => column.endsWith("_level"))
+            .reduce((total, [, value]) => total + Number(value || 1), 0)
+        : 0;
 
     const legacyValue =
         Number(player.net_worth || 0);
@@ -320,7 +317,7 @@ const freedomBadge = `
 
     const levelBadge = createRankBadge(
     "⭐",
-    `Player Level ${playerLevel}`,
+    `Total Skill ${playerLevel}`,
     "Combined Skill Levels",
     `${playerLevel}`
 );

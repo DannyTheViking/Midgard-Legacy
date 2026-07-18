@@ -80,47 +80,35 @@ async function chopBirchTree() {
     ===================================== */
 
     const {
-        data: axe,
-        error: axeError
-    } = await supabaseClient
-        .from("equipment")
-        .select(`
-            id,
-            durability,
-            max_durability
-        `)
-        .eq("player_id", user.id)
-        .eq("slot", "axe")
-        .eq("is_equipped", true)
-        .maybeSingle();
+    data: playerAxe,
+    error: axeError
+} = await supabaseClient
+    .from("players")
+    .select("has_rusty_axe, rusty_axe_durability")
+    .eq("id", user.id)
+    .single();
 
-    if (axeError) {
-        showForestMessage(
-            "❌ Axe failed to load: " +
-            axeError.message
-        );
-        return;
-    }
+if (axeError) {
+    showForestMessage(
+        "❌ Axe failed to load: " + axeError.message
+    );
+    return;
+}
 
-    if (!axe) {
-        showForestMessage(
-            "❌ You need to equip an axe before chopping."
-        );
-        return;
-    }
+if (
+    !playerAxe.has_rusty_axe ||
+    playerAxe.rusty_axe_durability <= 0
+) {
+    showForestMessage(
+        "❌ You need to build an Iron Axe before chopping."
+    );
+    return;
+}
 
-    if (axe.durability <= 0) {
-
-        showForestMessage(
-            "💀 Your axe is broken.<br><br>" +
-            "Visit the Blacksmith to repair it."
-        );
-
-        await loadToolBeltAxe();
-        return;
-    }
-
-
+const axe = {
+    durability: playerAxe.rusty_axe_durability,
+    max_durability: 100
+};
     /* =====================================
        CHECK ENERGY
     ===================================== */
@@ -217,7 +205,24 @@ async function chopBirchTree() {
        DAMAGE EQUIPPED AXE
     ===================================== */
 
-    await damageEquippedTool("axe", 1);
+    const newDurability =
+    Math.max(0, axe.durability - 1);
+
+const { error: durabilityError } =
+    await supabaseClient
+        .from("players")
+        .update({
+            rusty_axe_durability: newDurability,
+            has_rusty_axe: newDurability > 0
+        })
+        .eq("id", user.id);
+
+if (durabilityError) {
+    console.error(
+        "Rusty axe durability failed:",
+        durabilityError
+    );
+}
 
 
     /* =====================================

@@ -52,13 +52,13 @@ async function playerLevelBoard() {
 
     if (playerError) {
         console.error(
-            "Player Level board failed to load:",
+            "Total Skill board failed to load:",
             playerError
         );
 
         return `
             <section class="card">
-                <h3>Player Level</h3>
+                <h3>Total Skill</h3>
                 <p>Could not load rankings.</p>
             </section>
         `;
@@ -67,7 +67,7 @@ async function playerLevelBoard() {
     const { data: skills, error: skillsError } =
         await supabaseClient
             .from("skills")
-            .select("player_id, level");
+            .select("*");
 
     if (skillsError) {
         console.error(
@@ -79,31 +79,15 @@ async function playerLevelBoard() {
     const rankedPlayers = (players || [])
         .map(player => {
 
-            const playerSkills = (skills || [])
-                .filter(
-                    skill =>
-                        skill.player_id === player.id
-                );
+            const playerSkills = (skills || []).find(
+                skill => skill.player_id === player.id
+            );
 
-            const calculatedLevel =
-                1 +
-                playerSkills.reduce(
-                    (total, skill) => {
-
-                        const skillLevel =
-                            Number(skill.level || 1);
-
-                        return (
-                            total +
-                            Math.max(
-                                0,
-                                skillLevel - 1
-                            )
-                        );
-
-                    },
-                    0
-                );
+            const calculatedLevel = playerSkills
+                ? Object.entries(playerSkills)
+                    .filter(([column]) => column.endsWith("_level"))
+                    .reduce((total, [, value]) => total + Number(value || 1), 0)
+                : 0;
 
             return {
                 ...player,
@@ -120,7 +104,7 @@ async function playerLevelBoard() {
 
     return `
         <section class="card">
-            <h3>Player Level</h3>
+            <h3>Total Skill</h3>
 
             ${
                 rankedPlayers

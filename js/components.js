@@ -56,7 +56,7 @@ async function updateNavigation() {
             is_free_man
         `)
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
     if (error) {
 
@@ -177,15 +177,14 @@ async function updateTopBarPlayer() {
             last_regen
         `)
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
     if (playerError || !player) {
-
-        console.error(
-            "Could not load top-bar player:",
-            playerError
-        );
-
+        console.error("Could not load top-bar player:", playerError);
+        if (typeof ensureCurrentPlayerProfile === "function") {
+            const repairedPlayer = await ensureCurrentPlayerProfile();
+            if (repairedPlayer) return updateTopBarPlayer();
+        }
         return;
     }
 
@@ -226,26 +225,19 @@ async function updateTopBarPlayer() {
         error: skillsError
     } = await supabaseClient
         .from("skills")
-        .select("level")
-        .eq("player_id", user.id);
+        .select("*")
+        .eq("player_id", user.id)
+        .maybeSingle();
 
     if (skillsError) {
-
-        console.error(
-            "Could not load top-bar skills:",
-            skillsError
-        );
-
+        console.error("Could not load top-bar skills:", skillsError);
     }
 
-    const playerLevel = 1 +
-        (playerSkills || []).reduce(
-            (total, skill) => {
-                const skillLevel = Number(skill.level || 1);
-                return total + Math.max(0, skillLevel - 1);
-            },
-            0
-        );
+    const totalSkill = playerSkills
+        ? Object.entries(playerSkills)
+            .filter(([column]) => column.endsWith("_level"))
+            .reduce((total, [, value]) => total + Number(value || 1), 0)
+        : 0;
 
     const profileLink =
         document.getElementById(
@@ -281,7 +273,7 @@ async function updateTopBarPlayer() {
     if (levelElement) {
 
         levelElement.textContent =
-            `Level ${playerLevel}`;
+            `Total Skill ${totalSkill}`;
 
     }
 
@@ -306,6 +298,20 @@ async function updateTopBarPlayer() {
     document.getElementById("topbar")?.classList.add("topbar-ready");
 
 }
+
+
+/* Mobile navigation */
+function configureMobileNavigation() {
+    const toggle = document.getElementById("mobile-nav-toggle");
+    const links = document.getElementById("mobile-nav-links");
+    if (!toggle || !links) return;
+
+    toggle.addEventListener("click", () => {
+        const open = links.classList.toggle("mobile-nav-open");
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.textContent = open ? "✕ Close Menu" : "☰ Menu";
+    });
+}
 /* =====================================
    LOAD SIDEBAR AND TOP BAR
 ===================================== */
@@ -326,6 +332,7 @@ async function loadGameLayout() {
             )
         ]);
 
+        configureMobileNavigation();
         await updatePlayerOnlineStatus();
         await updateNavigation();
         await updateTopBarPlayer();

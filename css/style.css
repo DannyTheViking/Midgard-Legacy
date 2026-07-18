@@ -1323,3 +1323,139 @@ body.forest-data-loading .forest-loading-screen {
         flex-direction: column;
     }
 }
+
+
+/* =====================================
+   AUTH STATUS + MOBILE ALPHA POLISH
+===================================== */
+.auth-message {
+    display: block;
+    min-height: 22px;
+    margin: 12px 0 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+.auth-message-error { color: #ffb4a8; }
+.auth-message-success {
+    padding: 12px;
+    color: #d8f5be;
+    background: #132012;
+    border: 1px solid #5b8f4d;
+}
+.auth-message-info { color: #f2d78c; }
+.auth-box-modern select {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 15px;
+    padding: 11px;
+    background: #181818;
+    color: #f5e6c8;
+    border: 2px solid #9b741f;
+    font: inherit;
+}
+.mobile-nav-toggle { display: none; }
+
+@media (max-width: 760px) {
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body { font-size: 15px; }
+
+    .game-layout { display: block; min-height: 100vh; }
+    .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 3000;
+        width: auto;
+        padding: 7px 9px;
+        border-right: 0;
+        border-bottom: 2px solid #6d4b20;
+    }
+    .sidebar .logo { margin: 2px 0 7px; }
+    .mobile-nav-toggle {
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        margin: 0;
+        text-align: left;
+    }
+    .mobile-nav-links { display: none; }
+    .mobile-nav-links.mobile-nav-open { display: block; }
+    .nav { min-height: 26px; padding: 10px 12px; }
+
+    .main-area { width: auto; min-width: 0; padding: 6px; }
+    .top-bar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 8px;
+    }
+    .player-info { min-width: 0; }
+    .player-stats {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: 6px;
+    }
+    .top-stat {
+        padding: 6px;
+        text-align: center;
+        background: #181818;
+        border: 1px solid #3a2a13;
+        white-space: normal;
+    }
+    .top-icons { align-self: start; }
+
+    .page-header { min-height: 0; padding: 10px; }
+    .page-title { width: 100%; }
+    .page-title h1 { font-size: clamp(23px, 8vw, 30px); }
+
+    .forest-page { display: block; }
+    .forest-grid,
+    .building-grid,
+    .crafting-grid,
+    .home-grid,
+    .hof-grid,
+    .cards,
+    .landing-features { grid-template-columns: 1fr !important; }
+    .forest-right,
+    .resource-cart-card { width: auto; min-width: 0; margin: 10px 0 0; }
+    .tree-card,
+    .building-card,
+    .crafting-card,
+    .card,
+    .side-panel { box-sizing: border-box; max-width: 100%; }
+
+    .inventory-row { align-items: flex-start; gap: 10px; }
+    .item-left { min-width: 0; }
+    .item-description { overflow-wrap: anywhere; }
+
+    button,
+    input,
+    select,
+    textarea { font-size: 16px; }
+    input,
+    select,
+    textarea { max-width: 100%; box-sizing: border-box; }
+
+    .tutorial-guide {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 8px;
+    }
+    .tutorial-guide-icon { display: none; }
+    .tutorial-guide-button { grid-column: auto; min-width: 0; box-sizing: border-box; }
+
+    .login-header { flex-direction: row; align-items: center; }
+    .login-brand { font-size: 17px; }
+    .login-header .landing-secondary-button { padding: 9px 10px; }
+    .login-layout { display: flex; flex-direction: column; gap: 8px; }
+    .auth-box-modern { order: 1; padding: 20px 16px; }
+    .login-story-panel { order: 2; min-height: 260px; padding: 18px; }
+    .signup-story-panel { min-height: 220px; }
+    .landing-page { width: min(100% - 12px, 1180px); }
+    .landing-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+
+@media (min-width: 761px) {
+    .mobile-nav-links { display: block !important; }
+}

@@ -2,41 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Create Viking - Midgard Legacy</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="landing-body">
+    <main class="landing-page">
+        <header class="login-header">
+            <a href="index.html" class="login-brand">⚔ Midgard Legacy ⚔</a>
+            <a href="login.html" class="landing-secondary-button">Login</a>
+        </header>
 
-<div class="auth-page">
-    <div class="auth-box">
+        <section class="login-layout signup-layout">
+            <article class="login-story-panel signup-story-panel">
+                <p class="landing-kicker">Begin as a Thrall</p>
+                <h1>Create Your Viking</h1>
+                <p>Ask King Harald for your freedom, gather every resource yourself and brew the mead that begins your legacy.</p>
+                <div class="landing-features">
+                    <span>👑 Earn Freedom</span>
+                    <span>🌲 Gather</span>
+                    <span>⚒️ Craft</span>
+                    <span>🍺 Brew</span>
+                </div>
+            </article>
 
-    <h1>⚔ Create Your Viking ⚔</h1>
+            <section class="auth-box auth-box-modern" aria-labelledby="signup-title">
+                <h2 id="signup-title">Begin Your Saga</h2>
+                <p>Create your Viking account. You will need to confirm your email before entering Midgard.</p>
 
-    <p>Begin your saga in Midgard.</p>
+                <label class="auth-label" for="signup-username">Viking name</label>
+                <input id="signup-username" type="text" maxlength="30" autocomplete="username" placeholder="Choose your Viking name">
 
-  <input id="signup-username" type="text" placeholder="Username">
-<br><br>
+                <label class="auth-label" for="signup-email">Email</label>
+                <input id="signup-email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
 
-<input id="signup-email" type="email" placeholder="Email">
-<br><br>
+                <label class="auth-label" for="signup-gender">Identity</label>
+                <select id="signup-gender">
+                    <option value="man">Man</option>
+                    <option value="woman">Woman</option>
+                    <option value="non_binary">Non-binary</option>
+                    <option value="prefer_not_to_say" selected>Prefer not to say</option>
+                </select>
 
-<select id="signup-gender"><option value="man">Man</option><option value="woman">Woman</option><option value="non_binary">Non-binary</option><option value="prefer_not_to_say" selected>Prefer not to say</option></select><br><br>
-<input id="signup-password" type="password" placeholder="Password">
-<br><br>
+                <label class="auth-label" for="signup-password">Password</label>
+                <input id="signup-password" type="password" minlength="6" autocomplete="new-password" placeholder="At least 6 characters">
 
-<button id="signup-button">Create Viking</button>
+                <button id="signup-button" class="auth-submit-button" type="button">Create Viking</button>
+                <div id="signup-message" class="auth-message" aria-live="polite"></div>
 
-<p id="signup-message"></p>
+                <p class="auth-switch">Already have a saga? <a href="login.html">Login</a></p>
+            </section>
+        </section>
 
-    <br><br>
+        <footer class="landing-footer">
+            <span>© Midgard Legacy 2026</span>
+            <span>Alpha Build</span>
+        </footer>
+    </main>
 
-    <a href="login.html">Already have a saga? Login</a>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/auth.js"></script>
-</div>
-</div>
-
 </body>
 </html>
