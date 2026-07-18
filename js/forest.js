@@ -199,13 +199,18 @@ async function chopBirchTree() {
        GIVE XP
     ===================================== */
 
-    await addWoodcuttingXP(
-        WOODCUTTING_XP_PER_BIRCH
-    );
+    /* XP must never stop a successful chop from updating the page. */
+    try {
+        if (typeof addWoodcuttingXP === "function") {
+            await addWoodcuttingXP(WOODCUTTING_XP_PER_BIRCH);
+        }
 
-    await addPlayerXP(
-        PLAYER_XP_PER_BIRCH
-    );
+        if (typeof addPlayerXP === "function") {
+            await addPlayerXP(PLAYER_XP_PER_BIRCH);
+        }
+    } catch (xpError) {
+        console.error("Birch XP failed:", xpError);
+    }
 
 
     /* =====================================
@@ -305,7 +310,7 @@ async function chopBirchTree() {
        SHOW ACTION MESSAGE
     ===================================== */
 
-    showForestMessage(actionMessage);
+    setBirchMessage(actionMessage, true);
 
 
     /* =====================================
@@ -333,6 +338,37 @@ async function chopBirchTree() {
         }
     }
 
+}
+
+
+/* =====================================
+   BIRCH ACTION MESSAGE
+===================================== */
+
+function setBirchMessage(message, addToHistory = false) {
+    const birchLog = document.getElementById("birch-log");
+
+    if (birchLog) {
+        birchLog.innerHTML = message;
+    }
+
+    if (addToHistory) {
+        const forestLog = document.getElementById("forest-log");
+        let history =
+            JSON.parse(localStorage.getItem("forestHistory")) || [];
+
+        history.unshift(message);
+        history = history.slice(0, 5);
+
+        localStorage.setItem(
+            "forestHistory",
+            JSON.stringify(history)
+        );
+
+        if (forestLog) {
+            forestLog.innerHTML = history.join("<hr>");
+        }
+    }
 }
 
 
@@ -741,6 +777,39 @@ async function chopOakTree() {
 
         if (energyError) throw energyError;
         if (durabilityError) throw durabilityError;
+
+        /* Oak now awards both Woodcutting XP and Player XP.
+           Dedicated Oak constants are used when available; otherwise Oak
+           safely falls back to twice the Birch reward. */
+        try {
+            const oakWoodcuttingXP =
+                typeof WOODCUTTING_XP_PER_OAK !== "undefined"
+                    ? WOODCUTTING_XP_PER_OAK
+                    : (
+                        typeof WOODCUTTING_XP_PER_BIRCH !== "undefined"
+                            ? WOODCUTTING_XP_PER_BIRCH * 2
+                            : 2
+                    );
+
+            const oakPlayerXP =
+                typeof PLAYER_XP_PER_OAK !== "undefined"
+                    ? PLAYER_XP_PER_OAK
+                    : (
+                        typeof PLAYER_XP_PER_BIRCH !== "undefined"
+                            ? PLAYER_XP_PER_BIRCH * 2
+                            : 2
+                    );
+
+            if (typeof addWoodcuttingXP === "function") {
+                await addWoodcuttingXP(oakWoodcuttingXP);
+            }
+
+            if (typeof addPlayerXP === "function") {
+                await addPlayerXP(oakPlayerXP);
+            }
+        } catch (xpError) {
+            console.error("Oak XP failed:", xpError);
+        }
 
         const brokenText = newDurability === 0
             ? "<br>💀 Your axe has broken."
