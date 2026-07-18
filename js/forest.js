@@ -586,8 +586,7 @@ if (chopButton) {
    START FOREST PAGE
 ===================================== */
 
-loadSavedForestHistory();
-loadToolBeltAxe();
+
 
 /* WILD BEE ENCOUNTER - after tutorial only */
 async function maybeTriggerWildBeeEncounter(){
@@ -762,5 +761,23 @@ async function chopOakTree() {
 }
 
 oakButton?.addEventListener("click", chopOakTree);
-loadOakTree();
+
+/* Load all player-dependent forest data before showing the page. */
+async function initialiseForestPage() {
+    try {
+        loadSavedForestHistory();
+
+        await Promise.all([
+            loadToolBeltAxe(),
+            loadOakTree()
+        ]);
+    } catch (error) {
+        console.error("Forest failed to initialise:", error);
+    } finally {
+        document.body.classList.remove("forest-data-loading");
+        document.getElementById("forest-loading-screen")?.remove();
+    }
+}
+
+initialiseForestPage();
 

@@ -985,3 +985,38 @@ input {
 .oak-loading {
     visibility: hidden;
 }
+
+
+/* Forest data loading screen: prevents locked cards and placeholder stats flashing. */
+.forest-loading-screen {
+    display: none;
+}
+
+body.forest-data-loading .page-header,
+body.forest-data-loading .forest-page {
+    visibility: hidden;
+}
+
+body.forest-data-loading .forest-loading-screen {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    background: #080808;
+}
+
+.forest-loading-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border: 1px solid #d8b400;
+    color: #f3d500;
+    background: #111;
+}
+
+.forest-loading-icon {
+    font-size: 28px;
+}
