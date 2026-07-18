@@ -816,11 +816,29 @@ async function chopOakTree() {
             : `<br>🪓 Axe durability: <strong>${newDurability}/${Number(axe.max_durability || 0)}</strong>.`;
 
         // Show the result before any optional reputation work can delay the UI.
-        setOakMessage(
-            `🌳 You spend <strong>10 energy</strong> and gather <strong>${amount} Oak Logs</strong>. ` +
-            `${sentToCart ? "Loaded into your cart." : "Placed in your inventory."}${brokenText}`,
-            true
-        );
+        const oakActionMessage = `
+            🌳 You spend
+            <strong>10 energy</strong>
+            chopping down an Oak Tree.<br><br>
+
+            🪵 You gather
+            <strong>${amount} Oak Logs</strong>.<br><br>
+
+            Your Woodcutting skill improves.<br><br>
+
+            ${sentToCart
+                ? "🛒 The logs were loaded into your cart."
+                : "🎒 The logs were placed in your inventory."
+            }<br><br>
+
+            ${newDurability === 0
+                ? "💀 Your axe has broken."
+                : `🪓 Axe durability:
+                   <strong>${newDurability}/${Number(axe.max_durability || 0)}</strong>.`
+            }
+        `;
+
+        setOakMessage(oakActionMessage, true);
 
         // Change the visible number instantly, then reload the authoritative values.
         const energyElement = document.getElementById("energy");
