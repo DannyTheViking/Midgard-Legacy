@@ -147,12 +147,7 @@ async function updateTopBarPlayer() {
     } = await supabaseClient.auth.getUser();
 
     if (userError || !user) {
-
-        console.error(
-            "Could not load logged-in user:",
-            userError
-        );
-
+        console.error("Could not load logged-in user:", userError);
         return;
     }
 
@@ -164,92 +159,122 @@ async function updateTopBarPlayer() {
         .select(`
             username,
             tutorial_complete,
-            is_free_man
+            is_free_man,
+            silver,
+            health,
+            max_health,
+            energy,
+            max_energy,
+            stamina,
+            max_stamina,
+            courage,
+            max_courage,
+            last_regen
         `)
         .eq("id", user.id)
         .single();
 
     if (playerError || !player) {
-
-        console.error(
-            "Could not load top-bar player:",
-            playerError
-        );
-
+        console.error("Could not load top-bar player:", playerError);
         return;
     }
 
+    /* Existing accounts were originally created with 100 health.
+       Upgrade them to the intended 500-health starting system once. */
+    const oldMaxHealth = Number(player.max_health ?? 100);
+    if (oldMaxHealth < 500) {
+        const wasFullHealth = Number(player.health ?? oldMaxHealth) >= oldMaxHealth;
+        player.max_health = 500;
+        if (wasFullHealth) player.health = 500;
+
+        const { error: healthUpgradeError } = await supabaseClient
+            .from("players")
+            .update({
+                max_health: 500,
+                health: Number(player.health ?? 500)
+            })
+            .eq("id", user.id);
+
+        if (healthUpgradeError) {
+            console.warn("Could not upgrade player health defaults:", healthUpgradeError);
+        }
+    }
+
+    /* Apply the shared five-minute regeneration before displaying stats. */
+    const now = new Date();
+    const lastRegen = player.last_regen ? new Date(player.last_regen) : now;
+    const regenTicks = Math.floor((now.getTime() - lastRegen.getTime()) / (5 * 60 * 1000));
+
+    if (regenTicks > 0) {
+        const gain = regenTicks * 5;
+        const regenerated = {
+            health: Math.min(Number(player.health ?? 0) + gain, Number(player.max_health ?? 500)),
+            energy: Math.min(Number(player.energy ?? 0) + gain, Number(player.max_energy ?? 100)),
+            stamina: Math.min(Number(player.stamina ?? 0) + gain, Number(player.max_stamina ?? 100)),
+            courage: Math.min(Number(player.courage ?? 0) + gain, Number(player.max_courage ?? 100)),
+            last_regen: now.toISOString()
+        };
+
+        const { error: regenError } = await supabaseClient
+            .from("players")
+            .update(regenerated)
+            .eq("id", user.id);
+
+        if (!regenError) Object.assign(player, regenerated);
+        else console.warn("Could not regenerate top-bar stats:", regenError);
+    }
+
     const {
-        data: playerSkills,
+        data: skillsRow,
         error: skillsError
     } = await supabaseClient
         .from("skills")
-        .select("level")
-        .eq("player_id", user.id);
+        .select("*")
+        .eq("player_id", user.id)
+        .maybeSingle();
 
     if (skillsError) {
-
-        console.error(
-            "Could not load top-bar skills:",
-            skillsError
-        );
-
+        console.error("Could not load top-bar skills:", skillsError);
     }
 
-    const playerLevel =
-        (playerSkills || []).reduce(
-            (total, skill) => {
-                return total + Number(skill.level || 1);
-            },
-            0
-        );
+    /* Player Level starts at 1, then gains +1 whenever any skill gains a level. */
+    const skillLevels = Object.entries(skillsRow || {})
+        .filter(([key]) => key.endsWith("_level"))
+        .map(([, value]) => Math.max(1, Number(value || 1)));
 
-    const profileLink =
-        document.getElementById(
-            "topbar-profile-link"
-        );
+    const playerLevel = 1 + skillLevels.reduce(
+        (total, skillLevel) => total + Math.max(0, skillLevel - 1),
+        0
+    );
 
-    const levelElement =
-        document.getElementById(
-            "topbar-level"
-        );
+    const profileLink = document.getElementById("topbar-profile-link");
+    const levelElement = document.getElementById("topbar-level");
+    const rankElement = document.getElementById("topbar-rank");
 
-    const rankElement =
-        document.getElementById(
-            "topbar-rank"
-        );
-
-    const freedomRank =
-        player.tutorial_complete &&
-        player.is_free_man
-            ? "Freeman"
-            : "Thrall";
+    const freedomRank = player.tutorial_complete && player.is_free_man
+        ? "Freeman"
+        : "Thrall";
 
     if (profileLink) {
-
-        profileLink.textContent =
-            player.username || "Viking";
-
-        profileLink.href =
-            `profile.html?id=${encodeURIComponent(user.id)}`;
-
+        profileLink.textContent = player.username || "Viking";
+        profileLink.href = `profile.html?id=${encodeURIComponent(user.id)}`;
     }
 
-    if (levelElement) {
+    if (levelElement) levelElement.textContent = `Level ${playerLevel}`;
+    if (rankElement) rankElement.textContent = freedomRank;
 
-        levelElement.textContent =
-            `Level ${playerLevel}`;
+    const setStat = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    };
 
-    }
-
-    if (rankElement) {
-
-        rankElement.textContent =
-            freedomRank;
-
-    }
-
+    setStat("silver", Number(player.silver ?? 0).toLocaleString());
+    setStat("health", `${Number(player.health ?? 0)} / ${Number(player.max_health ?? 500)}`);
+    setStat("energy", `${Number(player.energy ?? 0)} / ${Number(player.max_energy ?? 100)}`);
+    setStat("stamina", `${Number(player.stamina ?? 0)} / ${Number(player.max_stamina ?? 100)}`);
+    setStat("courage", `${Number(player.courage ?? 0)} / ${Number(player.max_courage ?? 100)}`);
 }
+
 /* =====================================
    LOAD SIDEBAR AND TOP BAR
 ===================================== */

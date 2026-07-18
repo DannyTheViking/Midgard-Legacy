@@ -218,49 +218,32 @@ async function loadMiningTool() {
         .eq("is_equipped", true)
         .maybeSingle();
 
-    const toolName =
-        document.getElementById("mining-tool-name");
-
-    const toolDescription =
-        document.getElementById(
-            "mining-tool-description"
-        );
+    const cardToolName = document.getElementById("mining-tool-name");
+    const cardToolDescription = document.getElementById("mining-tool-description");
+    const beltToolName = document.getElementById("pickaxe-name");
+    const beltToolDescription = document.getElementById("pickaxe-description");
 
     if (error) {
-        console.error(
-            "Pickaxe failed to load:",
-            error
-        );
+        console.error("Pickaxe failed to load:", error);
         return;
     }
 
     if (!pickaxe) {
-
-        if (toolName) {
-            toolName.innerText = "⛏️ Hands";
-        }
-
-        if (toolDescription) {
-            toolDescription.innerText =
-                "Bog Iron can be gathered by hand.";
-        }
-
+        if (cardToolName) cardToolName.textContent = "⛏️ Hands";
+        if (cardToolDescription) cardToolDescription.textContent = "Bog Iron can be gathered by hand.";
+        if (beltToolName) beltToolName.textContent = "Hands";
+        if (beltToolDescription) beltToolDescription.textContent = "Bog Iron can be gathered by hand.";
         return;
     }
 
-    if (toolName) {
-        toolName.innerText =
-            "⛏️ " + pickaxe.items.name;
-    }
+    const name = pickaxe.items?.name || "Equipped Pickaxe";
+    const description = pickaxe.items?.description || "A mining tool.";
+    const durabilityText = `Durability: ${pickaxe.durability} / ${pickaxe.max_durability}`;
 
-    if (toolDescription) {
-        toolDescription.innerText =
-            pickaxe.items.description +
-            " Durability: " +
-            pickaxe.durability +
-            " / " +
-            pickaxe.max_durability;
-    }
+    if (cardToolName) cardToolName.textContent = `⛏️ ${name}`;
+    if (cardToolDescription) cardToolDescription.textContent = `${description} ${durabilityText}`;
+    if (beltToolName) beltToolName.textContent = name;
+    if (beltToolDescription) beltToolDescription.textContent = `${description} ${durabilityText}`;
 }
 
 /* =====================================
