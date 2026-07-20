@@ -66,53 +66,35 @@ async function loadCarpenterCardStock() {
 
     if (!user) return;
 
-    const [
-        oakPlankItem,
-        barrelStavesItem,
-        barrelLidItem,
-        emptyBarrelItem
-    ] = await Promise.all([
-        getItemByName(ITEM_NAMES.OAK_PLANK),
-        getItemByName("Oak Barrel Staves"),
-        getItemByName("Oak Barrel Lid"),
-        getItemByName("Empty Barrel")
-    ]);
-
-    const itemIds = [
-        BIRCH_PLANK,
-        IRON_HOOP,
-        oakPlankItem?.id,
-        barrelStavesItem?.id,
-        barrelLidItem?.id,
-        emptyBarrelItem?.id
-    ].filter(Boolean);
+    const barrelWood =
+        await getBarrelPlankForPlayer(user.id);
 
     const quantities =
         await getPlayerInventoryQuantities(
             user.id,
-            itemIds
+            [
+                BIRCH_PLANK,
+                IRON_HOOP,
+                barrelWood.id,
+                BARREL_STAVES,
+                BARREL_LID
+            ]
         );
 
     const birchPlanks =
-        quantities[BIRCH_PLANK] || 0;
+        Number(quantities[BIRCH_PLANK] || 0);
+
+    const barrelPlanks =
+        Number(quantities[barrelWood.id] || 0);
 
     const ironHoops =
-        quantities[IRON_HOOP] || 0;
-
-    const oakPlanks =
-        oakPlankItem
-            ? quantities[oakPlankItem.id] || 0
-            : 0;
+        Number(quantities[IRON_HOOP] || 0);
 
     const staves =
-        barrelStavesItem
-            ? quantities[barrelStavesItem.id] || 0
-            : 0;
+        Number(quantities[BARREL_STAVES] || 0);
 
     const lids =
-        barrelLidItem
-            ? quantities[barrelLidItem.id] || 0
-            : 0;
+        Number(quantities[BARREL_LID] || 0);
 
     setCraftingStock(
         "shaft-stock",
@@ -130,8 +112,8 @@ async function loadCarpenterCardStock() {
         "bucket-stock",
         [
             {
-                name: "Oak Planks",
-                quantity: oakPlanks
+                name: barrelWood.name,
+                quantity: barrelPlanks
             },
             {
                 name: "Iron Hoops",
@@ -140,7 +122,7 @@ async function loadCarpenterCardStock() {
         ],
         "Empty Buckets",
         Math.min(
-            Math.floor(oakPlanks / 5),
+            Math.floor(barrelPlanks / 5),
             Math.floor(ironHoops / 3)
         )
     );
@@ -149,24 +131,24 @@ async function loadCarpenterCardStock() {
         "staves-stock",
         [
             {
-                name: "Oak Planks",
-                quantity: oakPlanks
+                name: barrelWood.name,
+                quantity: barrelPlanks
             }
         ],
         "Barrel Staves",
-        Math.floor(oakPlanks / 30) * 30
+        Math.floor(barrelPlanks / 30) * 30
     );
 
     setCraftingStock(
         "lid-stock",
         [
             {
-                name: "Birch Planks",
-                quantity: birchPlanks
+                name: barrelWood.name,
+                quantity: barrelPlanks
             }
         ],
         "Barrel Lids",
-        Math.floor(birchPlanks / 5)
+        Math.floor(barrelPlanks / 5)
     );
 
     setCraftingStock(
