@@ -68,15 +68,15 @@ a {
 }
 
 .logo {
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1px 0;
 }
 
 .logo img {
-    height: 100px;
-    width: auto;
+    width: 180px;
+    height: auto;
     display: block;
 }
 /* =========================
