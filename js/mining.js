@@ -164,6 +164,20 @@ async function gatherBogIron() {
         await addVillageReputation(ore);
     }
 
+    /*
+        Record only after the ore and energy updates
+        have succeeded. The database RPC increments
+        atomically, so rapid clicks cannot overwrite
+        earlier mining actions.
+    */
+    if (typeof incrementGameStatistics === "function") {
+        await incrementGameStatistics({
+            ore_mined: ore,
+            resources_gathered: ore,
+            mining_actions: 1
+        });
+    }
+
     let miningProgress = null;
 
     try {

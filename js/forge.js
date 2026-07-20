@@ -167,11 +167,13 @@ async function forgeIronBar() {
 
     await addSmithingXP(12);
     await addPlayerXP(2);
-    await recordCraftingStatistics({
-        itemsCrafted: IRON_BARS_CREATED,
-        blacksmithItems: IRON_BARS_CREATED,
-        barsForged: IRON_BARS_CREATED
-    });
+    if (typeof recordCraftingStatistics === "function") {
+        await recordCraftingStatistics({
+            itemsCrafted: IRON_BARS_CREATED,
+            blacksmithItems: IRON_BARS_CREATED,
+            barsForged: IRON_BARS_CREATED
+        });
+    }
     document.getElementById("forge-message").innerHTML =
         "🔥 You forge <strong>5 Bog Iron</strong> into <strong>1 Iron Bar</strong>.";
 

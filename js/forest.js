@@ -327,6 +327,16 @@ async function chopBirchTree() {
     }
 
 
+    if (typeof incrementGameStatistics === "function") {
+        await incrementGameStatistics({
+            trees_chopped: 1,
+            logs_collected: logs,
+            resources_gathered: logs,
+            tool_uses: 1,
+            tool_durability_lost: 1
+        });
+    }
+
     /* =====================================
        CREATE ACTION MESSAGE
     ===================================== */
@@ -994,6 +1004,16 @@ async function chopOakTree() {
             : `<br>🪓 Axe durability: <strong>${newDurability}/${Number(axe.max_durability || 0)}</strong>.`;
 
         // Show the result before any optional reputation work can delay the UI.
+        if (typeof incrementGameStatistics === "function") {
+            await incrementGameStatistics({
+                trees_chopped: 1,
+                logs_collected: logs,
+                resources_gathered: logs,
+                tool_uses: 1,
+                tool_durability_lost: 1
+            });
+        }
+
         const oakActionMessage = `
             🌳 You spend
             <strong>10 energy</strong>
