@@ -122,7 +122,7 @@ async function loadBlacksmithCardStock() {
         axeStock.innerHTML = `
             <span>You have ${shafts.toLocaleString()} Wooden Shafts</span>
             <span>You have ${heads.toLocaleString()} Iron Axe Heads</span>
-            <span>You can make ${canMake.toLocaleString()}</span>
+            <span>You can make ${canMake.toLocaleString()} Iron Axes</span>
         `;
     }
 
@@ -134,14 +134,14 @@ async function loadBlacksmithCardStock() {
     if (repairStock) {
         repairStock.innerHTML = `
             <span>You have ${silver.toLocaleString()} Silver</span>
-            <span>You can repair ${
+            <span>You can afford ${
                 equipmentResult.data
                     ? Math.floor(
                         silver /
                         AXE_REPAIR_COST
                     )
                     : 0
-            }</span>
+            } Axe Repairs</span>
         `;
     }
 }

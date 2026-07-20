@@ -57,34 +57,59 @@ async function loadForgeCardStock() {
 
     setCraftingStock(
         "iron-bar-stock",
-        "Bog Iron",
-        bogIron,
-        Math.floor(bogIron / BOG_IRON_COST)
+        [
+            {
+                name: "Bog Iron",
+                quantity: bogIron
+            }
+        ],
+        "Iron Bars",
+        Math.floor(
+            bogIron / BOG_IRON_COST
+        ) * IRON_BARS_CREATED
     );
 
     setCraftingStock(
         "iron-nails-stock",
-        "Iron Bars",
-        bars,
-        bars
+        [
+            {
+                name: "Iron Bars",
+                quantity: bars
+            }
+        ],
+        "Iron Nails",
+        Math.floor(bars / 1) *
+            NAILS_PER_BAR
     );
 
     setCraftingStock(
         "axe-head-stock",
-        "Iron Bars",
-        bars,
+        [
+            {
+                name: "Iron Bars",
+                quantity: bars
+            }
+        ],
+        "Iron Axe Heads",
         Math.floor(
-            bars / IRON_BAR_COST_FOR_AXE_HEAD
-        )
+            bars /
+            IRON_BAR_COST_FOR_AXE_HEAD
+        ) * AXE_HEAD_CREATED
     );
 
     setCraftingStock(
         "iron-hoop-stock",
-        "Iron Bars",
-        bars,
+        [
+            {
+                name: "Iron Bars",
+                quantity: bars
+            }
+        ],
+        "Iron Hoops",
         Math.floor(
-            bars / IRON_BAR_COST_FOR_HOOPS
-        )
+            bars /
+            IRON_BAR_COST_FOR_HOOPS
+        ) * HOOPS_CREATED
     );
 }
 

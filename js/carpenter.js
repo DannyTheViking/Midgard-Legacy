@@ -116,15 +116,29 @@ async function loadCarpenterCardStock() {
 
     setCraftingStock(
         "shaft-stock",
-        "Birch Planks",
-        birchPlanks,
+        [
+            {
+                name: "Birch Planks",
+                quantity: birchPlanks
+            }
+        ],
+        "Wooden Shafts",
         birchPlanks
     );
 
     setCraftingStock(
         "bucket-stock",
-        "Oak Planks",
-        oakPlanks,
+        [
+            {
+                name: "Oak Planks",
+                quantity: oakPlanks
+            },
+            {
+                name: "Iron Hoops",
+                quantity: ironHoops
+            }
+        ],
+        "Empty Buckets",
         Math.min(
             Math.floor(oakPlanks / 5),
             Math.floor(ironHoops / 3)
@@ -133,22 +147,45 @@ async function loadCarpenterCardStock() {
 
     setCraftingStock(
         "staves-stock",
-        "Oak Planks",
-        oakPlanks,
-        Math.floor(oakPlanks / 30)
+        [
+            {
+                name: "Oak Planks",
+                quantity: oakPlanks
+            }
+        ],
+        "Barrel Staves",
+        Math.floor(oakPlanks / 30) * 30
     );
 
     setCraftingStock(
         "lid-stock",
-        "Birch Planks",
-        birchPlanks,
+        [
+            {
+                name: "Birch Planks",
+                quantity: birchPlanks
+            }
+        ],
+        "Barrel Lids",
         Math.floor(birchPlanks / 5)
     );
 
     setCraftingStock(
         "barrel-stock",
-        "Barrel Staves",
-        staves,
+        [
+            {
+                name: "Barrel Staves",
+                quantity: staves
+            },
+            {
+                name: "Barrel Lids",
+                quantity: lids
+            },
+            {
+                name: "Iron Hoops",
+                quantity: ironHoops
+            }
+        ],
+        "Empty Barrels",
         Math.min(
             Math.floor(staves / 30),
             lids,
