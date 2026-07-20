@@ -159,8 +159,26 @@ async function gatherBogIron() {
 
     }
 
-    if (typeof addVillageReputation === "function") await addVillageReputation(ore);
-    await addMiningXP(ore * 5); await addPlayerXP(Math.max(1, ore));
+    if (typeof addVillageReputation === "function") {
+        await addVillageReputation(ore);
+    }
+
+    let miningProgress = null;
+    try {
+        miningProgress = await addMiningXP(ore * 5);
+        if (typeof renderSkillProgress === "function") {
+            renderSkillProgress("mining", miningProgress);
+        }
+    } catch (xpError) {
+        console.error("Mining XP failed:", xpError);
+    }
+
+    if (miningProgress) {
+        message += `<br><br>⛏️ +${miningProgress.awardedXP} Mining XP`;
+        if (miningProgress.levelledUp) {
+            message += `<br><strong>🎉 Mining Level ${miningProgress.level}!</strong>`;
+        }
+    }
 
     showMiningMessage(message);
 
@@ -290,3 +308,6 @@ if (gatherButton) {
 ===================================== */
 
 loadMiningTool();
+if (typeof refreshSkillProgress === "function") {
+    refreshSkillProgress("mining");
+}

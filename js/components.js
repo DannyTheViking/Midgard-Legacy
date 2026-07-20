@@ -234,9 +234,7 @@ async function updateTopBarPlayer() {
     }
 
     const totalSkill = playerSkills
-        ? Object.entries(playerSkills)
-            .filter(([column]) => column.endsWith("_level"))
-            .reduce((total, [, value]) => total + Number(value || 1), 0)
+        ? totalSkillFromSkills(playerSkills)
         : 0;
 
     const profileLink =

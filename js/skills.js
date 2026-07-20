@@ -13,13 +13,15 @@ const SKILL_NAMES = Object.freeze([
 ]);
 
 function xpForLevel(level) {
-    const safe = Math.max(1, Number(level || 1));
-    return 100 * safe * safe;
+    return typeof skillXPForLevel === "function"
+        ? skillXPForLevel(level)
+        : Math.round(100 * Math.pow(Math.max(1, Number(level || 1)) - 1, 3));
 }
 
 function levelFromXP(xp) {
-    const safe = Math.max(0, Number(xp || 0));
-    return Math.max(1, Math.floor(Math.sqrt(safe / 100)) + 1);
+    return typeof skillLevelFromXP === "function"
+        ? skillLevelFromXP(xp)
+        : Math.max(1, Math.min(100, Math.floor(Math.cbrt(Math.max(0, Number(xp || 0)) / 100)) + 1));
 }
 
 async function ensureSkillsRow(playerId) {
@@ -52,7 +54,9 @@ async function ensureSkillsRow(playerId) {
 }
 
 async function addSkillXP(skillName, amount) {
-    if (!SKILL_NAMES.includes(skillName)) throw new Error(`Unknown skill: ${skillName}`);
+    if (!SKILL_NAMES.includes(skillName)) {
+        throw new Error(`Unknown skill: ${skillName}`);
+    }
 
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return null;
@@ -62,27 +66,75 @@ async function addSkillXP(skillName, amount) {
 
     const xpColumn = `${skillName}_xp`;
     const levelColumn = `${skillName}_level`;
-    const oldLevel = Number(row[levelColumn] || levelFromXP(row[xpColumn]));
-    const newXP = Number(row[xpColumn] || 0) + Math.max(0, Number(amount || 0));
+    const oldXP = Math.max(0, Number(row[xpColumn] || 0));
+    const oldLevel = levelFromXP(oldXP);
+    const awardedXP = Math.max(0, Number(amount || 0));
+    const newXP = oldXP + awardedXP;
     const newLevel = levelFromXP(newXP);
 
-    const { error } = await supabaseClient
+    const { data: saved, error } = await supabaseClient
         .from("skills")
-        .update({ [xpColumn]: newXP, [levelColumn]: newLevel })
-        .eq("player_id", user.id);
+        .update({
+            [xpColumn]: newXP,
+            [levelColumn]: newLevel
+        })
+        .eq("player_id", user.id)
+        .select()
+        .single();
 
     if (error) {
         console.error(`${skillName} XP update failed:`, error);
-        return null;
+        throw error;
     }
+
+    const progress = typeof skillProgressFromRow === "function"
+        ? skillProgressFromRow(saved, skillName)
+        : null;
 
     return {
         skill: skillName,
-        xp: newXP,
-        level: newLevel,
-        levelledUp: newLevel > oldLevel,
-        nextLevelXP: xpForLevel(newLevel)
+        awardedXP,
+        ...(progress || { xp: newXP, level: newLevel }),
+        levelledUp: newLevel > oldLevel
     };
+}
+
+async function loadSkillProgress(skillName) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return null;
+
+    const row = await ensureSkillsRow(user.id);
+    if (!row) return null;
+
+    return typeof skillProgressFromRow === "function"
+        ? skillProgressFromRow(row, skillName)
+        : null;
+}
+
+function renderSkillProgress(skillName, progress) {
+    if (!progress) return;
+
+    const levelElement = document.getElementById(`${skillName}-level-circle`);
+    const textElement = document.getElementById(`${skillName}-xp-text`);
+    const fillElement = document.getElementById(`${skillName}-xp-fill`);
+
+    if (levelElement) levelElement.textContent = progress.level;
+
+    if (textElement) {
+        textElement.textContent = progress.level >= 100
+            ? `${Number(progress.xp).toLocaleString()} XP · MAX LEVEL`
+            : `${Number(progress.earned).toLocaleString()} / ${Number(progress.required).toLocaleString()} XP`;
+    }
+
+    if (fillElement) {
+        fillElement.style.width = `${Math.max(0, Math.min(100, progress.percent))}%`;
+    }
+}
+
+async function refreshSkillProgress(skillName) {
+    const progress = await loadSkillProgress(skillName);
+    renderSkillProgress(skillName, progress);
+    return progress;
 }
 
 // Old page code can continue using these familiar helper names.

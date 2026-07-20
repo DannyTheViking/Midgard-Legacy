@@ -100,7 +100,7 @@ if (
     playerAxe.rusty_axe_durability <= 0
 ) {
     showForestMessage(
-        "❌ You need to build an Iron Axe before chopping."
+        "❌ You need your starter Rusty Axe before chopping Birch. Refresh the page if it is missing."
     );
     return;
 }
@@ -188,13 +188,14 @@ const axe = {
     ===================================== */
 
     /* XP must never stop a successful chop from updating the page. */
+    let woodcuttingProgress = null;
+
     try {
         if (typeof addWoodcuttingXP === "function") {
-            await addWoodcuttingXP(WOODCUTTING_XP_PER_BIRCH);
-        }
-
-        if (typeof addPlayerXP === "function") {
-            await addPlayerXP(PLAYER_XP_PER_BIRCH);
+            woodcuttingProgress = await addWoodcuttingXP(WOODCUTTING_XP_PER_BIRCH);
+            if (typeof renderSkillProgress === "function") {
+                renderSkillProgress("woodcutting", woodcuttingProgress);
+            }
         }
     } catch (xpError) {
         console.error("Birch XP failed:", xpError);
@@ -261,7 +262,12 @@ if (durabilityError) {
         🪵 You gather
         <strong>${logs} Birch Logs</strong>.<br><br>
 
-        Your Woodcutting skill improves.<br><br>${sentToCart ? "🛒 The logs were loaded into your cart." : "🎒 The logs were placed in your inventory."}
+        ${woodcuttingProgress
+            ? `🌲 +${woodcuttingProgress.awardedXP} Woodcutting XP`
+              + (woodcuttingProgress.levelledUp
+                    ? `<br><strong>🎉 Woodcutting Level ${woodcuttingProgress.level}!</strong>`
+                    : "")
+            : "Your Woodcutting skill improves."}<br><br>${sentToCart ? "🛒 The logs were loaded into your cart." : "🎒 The logs were placed in your inventory."}
     `;
 
 
@@ -687,17 +693,31 @@ async function loadOakTree() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) return;
 
-        const { data: player, error } = await supabaseClient
-            .from("players")
-            .select("oak_unlocked")
-            .eq("id", user.id)
-            .single();
+        const [{ data: player, error: playerError }, progress] = await Promise.all([
+            supabaseClient
+                .from("players")
+                .select("tutorial_complete, is_free_man")
+                .eq("id", user.id)
+                .single(),
+            typeof loadSkillProgress === "function"
+                ? loadSkillProgress("woodcutting")
+                : Promise.resolve(null)
+        ]);
 
-        if (error) throw error;
+        if (playerError) throw playerError;
+
+        const woodcuttingLevel = Number(progress?.level || 1);
+        const isFree = Boolean(player?.tutorial_complete && player?.is_free_man);
+        const unlocked = isFree && woodcuttingLevel >= OAK_WOODCUTTING_LEVEL;
+
+        await supabaseClient
+            .from("players")
+            .update({ oak_unlocked: unlocked })
+            .eq("id", user.id);
 
         oakCard?.classList.remove("oak-loading");
 
-        if (player?.oak_unlocked && oakButton) {
+        if (unlocked && oakButton) {
             oakCard?.classList.remove("locked");
             const image = document.getElementById("oak-image");
             if (image) image.innerHTML = "🌳";
@@ -706,6 +726,17 @@ async function loadOakTree() {
             setOakMessage("Ready to chop Oak.");
         } else {
             oakCard?.classList.add("locked");
+            if (oakButton) {
+                oakButton.disabled = true;
+                oakButton.innerText = !isFree
+                    ? "🔒 Complete the King's Challenge"
+                    : `🔒 Requires Woodcutting Level ${OAK_WOODCUTTING_LEVEL}`;
+            }
+            setOakMessage(
+                !isFree
+                    ? "Complete the King's Challenge before Oak becomes available."
+                    : `Train Woodcutting to Level ${OAK_WOODCUTTING_LEVEL}. Current level: ${woodcuttingLevel}.`
+            );
         }
     } catch (error) {
         console.error("Oak access failed to load:", error);
@@ -725,13 +756,21 @@ async function chopOakTree() {
 
         const { data: player, error: playerError } = await supabaseClient
             .from("players")
-            .select("energy, oak_unlocked")
+            .select("energy, tutorial_complete, is_free_man")
             .eq("id", user.id)
             .single();
 
         if (playerError || !player) throw playerError || new Error("Player failed to load.");
-        if (!player.oak_unlocked) {
-            setOakMessage("🔒 Oak is still locked.");
+        const oakProgress = typeof loadSkillProgress === "function"
+            ? await loadSkillProgress("woodcutting")
+            : null;
+
+        if (
+            !player.tutorial_complete ||
+            !player.is_free_man ||
+            Number(oakProgress?.level || 1) < OAK_WOODCUTTING_LEVEL
+        ) {
+            setOakMessage(`🔒 Oak requires freedom and Woodcutting Level ${OAK_WOODCUTTING_LEVEL}.`);
             return;
         }
         if (Number(player.energy) < 10) {
@@ -882,7 +921,10 @@ async function initialiseForestPage() {
 
         await Promise.all([
             loadToolBeltAxe(),
-            loadOakTree()
+            loadOakTree(),
+            typeof refreshSkillProgress === "function"
+                ? refreshSkillProgress("woodcutting")
+                : Promise.resolve()
         ]);
     } catch (error) {
         console.error("Forest failed to initialise:", error);

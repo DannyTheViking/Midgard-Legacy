@@ -283,9 +283,7 @@ async function loadProfile() {
     }
 
     const playerLevel = profileSkills
-        ? Object.entries(profileSkills)
-            .filter(([column]) => column.endsWith("_level"))
-            .reduce((total, [, value]) => total + Number(value || 1), 0)
+        ? totalSkillFromSkills(profileSkills)
         : 0;
 
     const legacyValue =

@@ -1558,3 +1558,19 @@ body.forest-data-loading .forest-loading-screen {
         grid-template-columns: 1fr;
     }
 }
+
+/* Skill progression */
+.skill-xp-text {
+    margin: 4px 0;
+    font-size: 0.85rem;
+    color: #d6c59a;
+    white-space: nowrap;
+}
+.skill-badge .xp-bar {
+    min-width: 150px;
+    max-width: 220px;
+    margin-inline: auto;
+}
+.skill-xp-fill {
+    background: #d4a017;
+}

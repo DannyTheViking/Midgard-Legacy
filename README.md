@@ -33,3 +33,17 @@ The matching code is:
 4. Hard-refresh the browser after deployment.
 
 Do not upload the `.git` folder inside a ZIP. GitHub already stores project history separately.
+
+
+## Progression, wealth and signup update
+
+Run `supabase/migrations/002_progression_starter_axe_net_worth.sql` once in Supabase.
+
+Changes:
+- Confirm-password field.
+- Starter Rusty Axe for every tutorial player.
+- Woodcutting and Mining XP bars and level-up messages.
+- Long-term cubic XP curve, capped at Level 100.
+- Oak requires freedom and Woodcutting Level 5.
+- Total Skill is calculated from actual XP, with fresh players starting at 1.
+- Net worth includes silver, inventory, storage, carts and equipment.

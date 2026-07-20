@@ -115,14 +115,21 @@ if (signupButton) {
         const username = document.getElementById("signup-username")?.value.trim();
         const email = document.getElementById("signup-email")?.value.trim();
         const password = document.getElementById("signup-password")?.value || "";
+        const confirmPassword = document.getElementById("signup-confirm-password")?.value || "";
         const genderIdentity = document.getElementById("signup-gender")?.value || "prefer_not_to_say";
         const output = document.getElementById("signup-message");
 
         if (!username || !email || password.length < 6) {
             setAuthMessage(
                 output,
-                "Enter a username, a valid email address and a password of at least 6 characters."
+                "Enter a Viking name, a valid email address and a password of at least 6 characters."
             );
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setAuthMessage(output, "The two passwords do not match. Please enter them again.");
+            document.getElementById("signup-confirm-password")?.focus();
             return;
         }
 
