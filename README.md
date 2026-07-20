@@ -59,3 +59,13 @@ Changes:
 - The Tool Belt separately displays the currently equipped pickaxe and durability.
 - Bog Iron gives a fixed 2 Mining XP per successful action.
 - Change `MINING_XP_PER_ACTION` near the top of `js/mining.js` to rebalance it.
+
+
+## Statistics and tool progression update
+
+Run `supabase/migrations/004_statistics_tools_and_blueprints.sql`.
+
+This update adds atomic achievement counters, readable usernames in
+statistics, future arrow/cooking/combat counters, tool power metadata,
+Iron-tool requirements for every non-divine resource, and automatic
+Level 10 Blacksmith/Carpenter blueprint unlocks.

@@ -668,7 +668,11 @@ async function collectYoungMead(barrelId) {
         return;
     }
 
-    await addBrewingXP(25); await addPlayerXP(5);
+    await addBrewingXP(25);
+    await incrementGameStatistics({
+        mead_brewed: 1,
+        drinks_brewed: 1
+    }); await addPlayerXP(5);
     await advanceTutorial(
     TUTORIAL_STEPS.BREW_YOUNG_MEAD,
     TUTORIAL_STEPS.RETURN_TO_KING

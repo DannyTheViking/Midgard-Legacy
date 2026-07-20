@@ -68,3 +68,81 @@ async function getBarterQuote(offeredItemId,wantedItemId,wantedQuantity=1){
  if(!offered||!wanted)throw new Error('One of these items has no hidden base value.');
  return Math.ceil((wanted*Number(wantedQuantity||1))/offered);
 }
+
+
+/* =====================================
+   ATOMIC GAME STATISTICS
+   Requires migration 004.
+   Calls fail softly until the migration
+   has been run, so gameplay is not blocked.
+===================================== */
+
+async function incrementGameStatistics(changes = {}) {
+    const cleanChanges = Object.fromEntries(
+        Object.entries(changes)
+            .map(([key, value]) => [
+                key,
+                Math.max(0, Math.floor(Number(value || 0)))
+            ])
+            .filter(([, value]) => value > 0)
+    );
+
+    if (!Object.keys(cleanChanges).length) {
+        return true;
+    }
+
+    try {
+        const { data: { user } } =
+            await supabaseClient.auth.getUser();
+
+        if (!user) return false;
+
+        const { error } = await supabaseClient.rpc(
+            "increment_player_statistics_json",
+            {
+                p_player_id: user.id,
+                p_changes: cleanChanges
+            }
+        );
+
+        if (error) {
+            console.warn(
+                "Statistics update unavailable:",
+                error.message
+            );
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.warn(
+            "Statistics update failed safely:",
+            error
+        );
+        return false;
+    }
+}
+
+async function recordCraftingStatistics({
+    itemsCrafted = 0,
+    carpentryItems = 0,
+    blacksmithItems = 0,
+    barsForged = 0,
+    nailsForged = 0,
+    hoopsForged = 0,
+    bucketsCrafted = 0,
+    barrelsCrafted = 0,
+    planksSawn = 0
+} = {}) {
+    return incrementGameStatistics({
+        items_crafted: itemsCrafted,
+        carpentry_items_crafted: carpentryItems,
+        blacksmith_items_crafted: blacksmithItems,
+        bars_forged: barsForged,
+        nails_forged: nailsForged,
+        hoops_forged: hoopsForged,
+        buckets_crafted: bucketsCrafted,
+        barrels_crafted: barrelsCrafted,
+        planks_sawn: planksSawn
+    });
+}

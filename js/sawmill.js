@@ -206,6 +206,11 @@ async function sawBirchLog() {
     }
 
 
+    await recordCraftingStatistics({
+        itemsCrafted: PLANKS_CREATED,
+        planksSawn: PLANKS_CREATED
+    });
+
     /* =====================================
        UPDATE TUTORIAL
     ===================================== */

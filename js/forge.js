@@ -165,7 +165,13 @@ async function forgeIronBar() {
        SHOW PLAYER MESSAGE
     ===================================== */
 
-    await addSmithingXP(12); await addPlayerXP(2);
+    await addSmithingXP(12);
+    await addPlayerXP(2);
+    await recordCraftingStatistics({
+        itemsCrafted: IRON_BARS_CREATED,
+        blacksmithItems: IRON_BARS_CREATED,
+        barsForged: IRON_BARS_CREATED
+    });
     document.getElementById("forge-message").innerHTML =
         "🔥 You forge <strong>5 Bog Iron</strong> into <strong>1 Iron Bar</strong>.";
 
@@ -397,6 +403,11 @@ await addTutorialProgress(
     TUTORIAL_STEPS.FORGE_IRON_NAILS,
     TUTORIAL_TARGETS.iron_hoops
 );
+    await recordCraftingStatistics({
+        itemsCrafted: hoopsMade,
+        blacksmithItems: hoopsMade,
+        hoopsForged: hoopsMade
+    });
 
     document.getElementById("hoop-message").innerHTML =
         "⭕ You forge <strong>2 Iron Hoops</strong>.";

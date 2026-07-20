@@ -162,7 +162,12 @@ async function craftWoodenShaft() {
             });
     }
 
-    await addCarpentryXP(totalShaftsMade * 4); await addPlayerXP(Math.max(1, amount));
+    await addCarpentryXP(totalShaftsMade * 4);
+    await addPlayerXP(Math.max(1, amount));
+    await recordCraftingStatistics({
+        itemsCrafted: totalShaftsMade,
+        carpentryItems: totalShaftsMade
+    });
     showTemporaryMessage(
         "carpenter-message",
         "🪵 You craft <strong>" + totalShaftsMade + " Wooden Shaft" +
@@ -266,6 +271,11 @@ async function craftEmptyBucket() {
     TUTORIAL_STEPS.CRAFT_BARREL_PARTS,
     TUTORIAL_TARGETS.empty_buckets
 );
+    await recordCraftingStatistics({
+        itemsCrafted: totalBucketsMade,
+        carpentryItems: totalBucketsMade,
+        bucketsCrafted: totalBucketsMade
+    });
 
     await addCarpentryXP(totalBucketsMade * 10); await addPlayerXP(Math.max(1, amount));
     showTemporaryMessage(

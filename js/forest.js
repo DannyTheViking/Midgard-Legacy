@@ -93,7 +93,11 @@ async function chopBirchTree() {
             max_durability,
             items (
                 name,
-                description
+                description,
+                tool_tier,
+                tool_power,
+                durability_loss_per_use,
+                is_divine
             )
         `)
         .eq("player_id", user.id)
@@ -548,7 +552,11 @@ async function loadToolBeltAxe() {
             max_durability,
             items (
                 name,
-                description
+                description,
+                tool_tier,
+                tool_power,
+                durability_loss_per_use,
+                is_divine
             )
         `)
         .eq("player_id", user.id)
