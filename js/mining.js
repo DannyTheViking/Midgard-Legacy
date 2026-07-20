@@ -3,6 +3,7 @@
 ===================================== */
 
 const ENERGY_COST = 5;
+const MINING_XP_PER_ACTION = 5; // XP gained per mining action, can be adjusted as needed
 
 const gatherButton = document.getElementById("gather-bog-iron");
 
@@ -165,7 +166,7 @@ async function gatherBogIron() {
 
     let miningProgress = null;
     try {
-        miningProgress = await addMiningXP(ore * 5);
+       
         if (typeof renderSkillProgress === "function") {
             renderSkillProgress("mining", miningProgress);
         }

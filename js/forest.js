@@ -21,8 +21,8 @@
     already declared inside constants.js.
 */
 
-const WOODCUTTING_XP_PER_BIRCH = 2;
-const WOODCUTTING_XP_PER_OAK = 5;
+const WOODCUTTING_XP_PER_BIRCH = 5;
+const WOODCUTTING_XP_PER_OAK = 10;
 const ENERGY_COST = 5;
 
 
