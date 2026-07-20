@@ -1678,3 +1678,9 @@ body.forest-data-loading .forest-loading-screen {
         width: 100%;
     }
 }
+
+
+/* Named crafting stock wording */
+.craft-stock span {
+    display: block;
+}

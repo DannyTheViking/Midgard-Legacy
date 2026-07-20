@@ -61,9 +61,9 @@ async function loadSawmillCardStock() {
 
     setCraftingStock(
         "birch-plank-stock",
+        "Birch Logs",
         birchLogs,
-        Math.floor(birchLogs / LOGS_REQUIRED),
-        birchPlanks
+        Math.floor(birchLogs / LOGS_REQUIRED)
     );
 
     const oakLogs =
@@ -78,9 +78,9 @@ async function loadSawmillCardStock() {
 
     setCraftingStock(
         "oak-plank-stock",
+        "Oak Logs",
         oakLogs,
-        Math.floor(oakLogs / LOGS_REQUIRED),
-        oakPlanks
+        Math.floor(oakLogs / LOGS_REQUIRED)
     );
 }
 

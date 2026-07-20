@@ -291,22 +291,18 @@ async function getPlayerInventoryQuantities(
 
 function setCraftingStock(
     elementId,
+    materialName,
     owned,
-    canMake,
-    outputOwned = null
+    canMake
 ) {
-    const element = document.getElementById(elementId);
+    const element =
+        document.getElementById(elementId);
+
     if (!element) return;
 
-    const outputText =
-        outputOwned === null
-            ? ""
-            : ` · Made item: ${Number(outputOwned).toLocaleString()}`;
-
     element.innerHTML = `
-        <span>Owned: ${Number(owned || 0).toLocaleString()}</span>
-        <span>Can make: ${Number(canMake || 0).toLocaleString()}</span>
-        ${outputText ? `<span>${outputText}</span>` : ""}
+        <span>You have ${Number(owned || 0).toLocaleString()} ${materialName}</span>
+        <span>You can make ${Number(canMake || 0).toLocaleString()}</span>
     `;
 }
 

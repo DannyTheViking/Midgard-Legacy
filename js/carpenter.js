@@ -59,6 +59,105 @@ const craftBarrelButton =
    TEMPORARY MESSAGE
 ===================================== */
 
+
+async function loadCarpenterCardStock() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const [
+        oakPlankItem,
+        barrelStavesItem,
+        barrelLidItem,
+        emptyBarrelItem
+    ] = await Promise.all([
+        getItemByName(ITEM_NAMES.OAK_PLANK),
+        getItemByName("Oak Barrel Staves"),
+        getItemByName("Oak Barrel Lid"),
+        getItemByName("Empty Barrel")
+    ]);
+
+    const itemIds = [
+        BIRCH_PLANK,
+        IRON_HOOP,
+        oakPlankItem?.id,
+        barrelStavesItem?.id,
+        barrelLidItem?.id,
+        emptyBarrelItem?.id
+    ].filter(Boolean);
+
+    const quantities =
+        await getPlayerInventoryQuantities(
+            user.id,
+            itemIds
+        );
+
+    const birchPlanks =
+        quantities[BIRCH_PLANK] || 0;
+
+    const ironHoops =
+        quantities[IRON_HOOP] || 0;
+
+    const oakPlanks =
+        oakPlankItem
+            ? quantities[oakPlankItem.id] || 0
+            : 0;
+
+    const staves =
+        barrelStavesItem
+            ? quantities[barrelStavesItem.id] || 0
+            : 0;
+
+    const lids =
+        barrelLidItem
+            ? quantities[barrelLidItem.id] || 0
+            : 0;
+
+    setCraftingStock(
+        "shaft-stock",
+        "Birch Planks",
+        birchPlanks,
+        birchPlanks
+    );
+
+    setCraftingStock(
+        "bucket-stock",
+        "Oak Planks",
+        oakPlanks,
+        Math.min(
+            Math.floor(oakPlanks / 5),
+            Math.floor(ironHoops / 3)
+        )
+    );
+
+    setCraftingStock(
+        "staves-stock",
+        "Oak Planks",
+        oakPlanks,
+        Math.floor(oakPlanks / 30)
+    );
+
+    setCraftingStock(
+        "lid-stock",
+        "Birch Planks",
+        birchPlanks,
+        Math.floor(birchPlanks / 5)
+    );
+
+    setCraftingStock(
+        "barrel-stock",
+        "Barrel Staves",
+        staves,
+        Math.min(
+            Math.floor(staves / 30),
+            lids,
+            Math.floor(ironHoops / 6)
+        )
+    );
+}
+
+
 function showTemporaryMessage(id, message) {
 
     const element = document.getElementById(id);
@@ -622,3 +721,4 @@ async function updateCarpenterWoodLabels(){
  set('lid-title','🛢️ Oak Barrel Lid'); set('lid-wood-label','5 Oak Planks'); set('barrel-title','🛢️ Oak Barrel');
 }
 updateCarpenterWoodLabels();
+    loadCarpenterCardStock();

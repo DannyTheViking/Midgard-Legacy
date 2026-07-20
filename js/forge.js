@@ -57,34 +57,34 @@ async function loadForgeCardStock() {
 
     setCraftingStock(
         "iron-bar-stock",
+        "Bog Iron",
         bogIron,
-        Math.floor(bogIron / BOG_IRON_COST),
-        bars
+        Math.floor(bogIron / BOG_IRON_COST)
     );
 
     setCraftingStock(
         "iron-nails-stock",
+        "Iron Bars",
         bars,
-        bars,
-        nails
+        bars
     );
 
     setCraftingStock(
         "axe-head-stock",
+        "Iron Bars",
         bars,
         Math.floor(
             bars / IRON_BAR_COST_FOR_AXE_HEAD
-        ),
-        axeHeads
+        )
     );
 
     setCraftingStock(
         "iron-hoop-stock",
+        "Iron Bars",
         bars,
         Math.floor(
             bars / IRON_BAR_COST_FOR_HOOPS
-        ),
-        hoops
+        )
     );
 }
 
