@@ -240,3 +240,129 @@ async function createPlayerNotification({
         return false;
     }
 }
+
+
+/* =====================================
+   CRAFTING CARD INVENTORY HELPERS
+===================================== */
+
+function getPositiveCraftAmount(inputId, fallback = 1) {
+    const input = document.getElementById(inputId);
+    const amount = Math.floor(Number(input?.value || fallback));
+
+    return Math.max(1, Math.min(9999, amount));
+}
+
+async function getPlayerInventoryQuantities(
+    playerId,
+    itemIds
+) {
+    const uniqueIds = [
+        ...new Set(
+            itemIds
+                .map(Number)
+                .filter(Number.isFinite)
+        )
+    ];
+
+    if (!uniqueIds.length) return {};
+
+    const { data, error } = await supabaseClient
+        .from("inventory")
+        .select("item_id, quantity")
+        .eq("player_id", playerId)
+        .in("item_id", uniqueIds);
+
+    if (error) {
+        console.warn(
+            "Crafting inventory failed to load:",
+            error.message
+        );
+        return {};
+    }
+
+    return Object.fromEntries(
+        (data || []).map(row => [
+            Number(row.item_id),
+            Number(row.quantity || 0)
+        ])
+    );
+}
+
+function setCraftingStock(
+    elementId,
+    owned,
+    canMake,
+    outputOwned = null
+) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    const outputText =
+        outputOwned === null
+            ? ""
+            : ` · Made item: ${Number(outputOwned).toLocaleString()}`;
+
+    element.innerHTML = `
+        <span>Owned: ${Number(owned || 0).toLocaleString()}</span>
+        <span>Can make: ${Number(canMake || 0).toLocaleString()}</span>
+        ${outputText ? `<span>${outputText}</span>` : ""}
+    `;
+}
+
+async function changeInventoryQuantity(
+    playerId,
+    itemId,
+    amount
+) {
+    const safeAmount = Math.trunc(Number(amount || 0));
+    if (!safeAmount) return true;
+
+    const { data: row, error: loadError } =
+        await supabaseClient
+            .from("inventory")
+            .select("id, quantity")
+            .eq("player_id", playerId)
+            .eq("item_id", itemId)
+            .maybeSingle();
+
+    if (loadError) throw loadError;
+
+    const current = Number(row?.quantity || 0);
+    const next = current + safeAmount;
+
+    if (next < 0) {
+        throw new Error("Not enough materials.");
+    }
+
+    if (row && next === 0) {
+        const { error } = await supabaseClient
+            .from("inventory")
+            .delete()
+            .eq("id", row.id);
+
+        if (error) throw error;
+        return true;
+    }
+
+    if (row) {
+        const { error } = await supabaseClient
+            .from("inventory")
+            .update({ quantity: next })
+            .eq("id", row.id);
+
+        if (error) throw error;
+        return true;
+    }
+
+    const { error } = await supabaseClient
+        .from("inventory")
+        .insert({
+            player_id: playerId,
+            item_id: itemId,
+            quantity: next
+        });
+
+    if (error) throw error;
+    return true;
+}

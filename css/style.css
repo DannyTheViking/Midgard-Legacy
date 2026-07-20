@@ -1613,3 +1613,68 @@ body.forest-data-loading .forest-loading-screen {
 .online-player-separator {
     opacity: 0.75;
 }
+
+
+/* Crafting-card stock and bulk controls */
+.craft-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.craft-card-heading h3 {
+    margin: 0;
+}
+
+.craft-stock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 6px 9px;
+    border: 1px solid rgba(212, 160, 23, 0.55);
+    background: rgba(0, 0, 0, 0.28);
+    color: #d6c59a;
+    font-size: 0.76rem;
+    line-height: 1.25;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.craft-controls {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.craft-amount {
+    width: 96px;
+    min-height: 42px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+    .craft-card-heading {
+        flex-direction: column;
+    }
+
+    .craft-stock {
+        align-items: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .craft-controls {
+        display: grid;
+        grid-template-columns: minmax(82px, 0.7fr) minmax(130px, 1.3fr);
+    }
+
+    .craft-amount {
+        width: 100%;
+    }
+}

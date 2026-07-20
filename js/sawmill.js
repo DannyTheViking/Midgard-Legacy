@@ -1,352 +1,338 @@
 /* =====================================
-
-    MIDGARD LEGACY
-
-    File:
-    sawmill.js
-
-    Purpose:
-    Turns Birch Logs into Birch Planks
-    and updates tutorial progress.
-
+   MIDGARD LEGACY - SAWMILL
+   Bulk sawing and live stock cards.
 ===================================== */
-
-
-/* =====================================
-   SETTINGS
-===================================== */
-
-/*
-    Delete these two lines if BIRCH_LOG
-    and BIRCH_PLANK already exist in
-    constants.js.
-*/
-
 
 const LOGS_REQUIRED = 1;
 const PLANKS_CREATED = 2;
 
-
-/* =====================================
-   PAGE ELEMENTS
-===================================== */
-
 const sawBirchButton =
     document.getElementById("saw-birch-button");
 
+const sawOakButton =
+    document.getElementById("saw-oak-button");
 
-/* =====================================
-   SAW BIRCH LOG
-===================================== */
+function showSawmillMessage(message) {
+    const element =
+        document.getElementById("sawmill-message");
+
+    if (element) element.innerHTML = message;
+}
+
+async function resolveOakItemIds() {
+    const [log, plank] = await Promise.all([
+        getItemByName(ITEM_NAMES.OAK_LOG),
+        getItemByName(ITEM_NAMES.OAK_PLANK)
+    ]);
+
+    return {
+        oakLogId: log?.id || null,
+        oakPlankId: plank?.id || null
+    };
+}
+
+async function loadSawmillCardStock() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const {
+        oakLogId,
+        oakPlankId
+    } = await resolveOakItemIds();
+
+    const quantities =
+        await getPlayerInventoryQuantities(
+            user.id,
+            [
+                BIRCH_LOG,
+                BIRCH_PLANK,
+                oakLogId,
+                oakPlankId
+            ]
+        );
+
+    const birchLogs =
+        quantities[BIRCH_LOG] || 0;
+
+    const birchPlanks =
+        quantities[BIRCH_PLANK] || 0;
+
+    setCraftingStock(
+        "birch-plank-stock",
+        birchLogs,
+        Math.floor(birchLogs / LOGS_REQUIRED),
+        birchPlanks
+    );
+
+    const oakLogs =
+        oakLogId
+            ? quantities[oakLogId] || 0
+            : 0;
+
+    const oakPlanks =
+        oakPlankId
+            ? quantities[oakPlankId] || 0
+            : 0;
+
+    setCraftingStock(
+        "oak-plank-stock",
+        oakLogs,
+        Math.floor(oakLogs / LOGS_REQUIRED),
+        oakPlanks
+    );
+}
 
 async function sawBirchLog() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
 
-    /* =====================================
-       GET CURRENT PLAYER
-    ===================================== */
+    if (!user) return;
 
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
-
-
-    /* =====================================
-       LOAD BIRCH LOGS
-    ===================================== */
-
-    const {
-        data: logItem,
-        error: logLoadError
-    } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BIRCH_LOG)
-        .maybeSingle();
-
-    if (logLoadError) {
-        showSawmillMessage(
-            "❌ Birch Logs failed to load: " +
-            logLoadError.message
+    const amount =
+        getPositiveCraftAmount(
+            "birch-saw-amount"
         );
-        return;
-    }
 
+    const logsNeeded =
+        amount * LOGS_REQUIRED;
 
-    /* =====================================
-       CHECK PLAYER HAS A LOG
-    ===================================== */
+    const planksMade =
+        amount * PLANKS_CREATED;
 
-    if (
-        !logItem ||
-        logItem.quantity < LOGS_REQUIRED
-    ) {
-        showSawmillMessage(
-            "❌ You need at least 1 Birch Log."
+    try {
+        const quantities =
+            await getPlayerInventoryQuantities(
+                user.id,
+                [BIRCH_LOG]
+            );
+
+        if (
+            Number(quantities[BIRCH_LOG] || 0) <
+            logsNeeded
+        ) {
+            showSawmillMessage(
+                `❌ You need ${logsNeeded} Birch Log${logsNeeded === 1 ? "" : "s"}.`
+            );
+            return;
+        }
+
+        await changeInventoryQuantity(
+            user.id,
+            BIRCH_LOG,
+            -logsNeeded
         );
-        return;
-    }
 
-
-    /* =====================================
-       LOAD BIRCH PLANKS
-    ===================================== */
-
-    const {
-        data: plankItem,
-        error: plankLoadError
-    } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BIRCH_PLANK)
-        .maybeSingle();
-
-    if (plankLoadError) {
-        showSawmillMessage(
-            "❌ Birch Planks failed to load: " +
-            plankLoadError.message
+        await changeInventoryQuantity(
+            user.id,
+            BIRCH_PLANK,
+            planksMade
         );
-        return;
-    }
 
-
-    /* =====================================
-       ADD BIRCH PLANKS
-    ===================================== */
-
-    if (plankItem) {
-
-        const { error: plankUpdateError } =
-            await supabaseClient
-                .from("inventory")
-                .update({
-                    quantity:
-                        plankItem.quantity +
-                        PLANKS_CREATED
-                })
-                .eq("id", plankItem.id);
-
-        if (plankUpdateError) {
-            showSawmillMessage(
-                "❌ Birch Planks failed to update: " +
-                plankUpdateError.message
-            );
-            return;
+        if (
+            typeof recordCraftingStatistics ===
+            "function"
+        ) {
+            await recordCraftingStatistics({
+                itemsCrafted: planksMade,
+                planksSawn: planksMade
+            });
         }
 
-    } else {
-
-        const { error: plankInsertError } =
-            await supabaseClient
-                .from("inventory")
-                .insert({
-                    player_id: user.id,
-                    item_id: BIRCH_PLANK,
-                    quantity: PLANKS_CREATED
-                });
-
-        if (plankInsertError) {
-            showSawmillMessage(
-                "❌ Birch Planks failed to enter inventory: " +
-                plankInsertError.message
-            );
-            return;
-        }
-
-    }
-
-
-    /* =====================================
-       REMOVE BIRCH LOG
-    ===================================== */
-
-    const newLogQuantity =
-        logItem.quantity - LOGS_REQUIRED;
-
-    if (newLogQuantity > 0) {
-
-        const { error: logUpdateError } =
-            await supabaseClient
-                .from("inventory")
-                .update({
-                    quantity: newLogQuantity
-                })
-                .eq("id", logItem.id);
-
-        if (logUpdateError) {
-            showSawmillMessage(
-                "❌ Birch Logs failed to update: " +
-                logUpdateError.message
-            );
-            return;
-        }
-
-    } else {
-
-        const { error: logDeleteError } =
-            await supabaseClient
-                .from("inventory")
-                .delete()
-                .eq("id", logItem.id);
-
-        if (logDeleteError) {
-            showSawmillMessage(
-                "❌ Birch Logs failed to update: " +
-                logDeleteError.message
-            );
-            return;
-        }
-
-    }
-
-
-    await recordCraftingStatistics({
-        itemsCrafted: PLANKS_CREATED,
-        planksSawn: PLANKS_CREATED
-    });
-
-    /* =====================================
-       UPDATE TUTORIAL
-    ===================================== */
-
-    let tutorialResult = null;
-
-    if (
-        typeof addTutorialProgress === "function" &&
-        typeof TUTORIAL_STEPS !== "undefined" &&
-        typeof TUTORIAL_TARGETS !== "undefined"
-    ) {
-
-        tutorialResult =
+        const tutorialResult =
             await addTutorialProgress(
                 "birch_planks",
-                PLANKS_CREATED,
+                planksMade,
                 TUTORIAL_STEPS.MAKE_PLANKS,
                 TUTORIAL_STEPS.GATHER_BOG_IRON,
                 TUTORIAL_TARGETS.birch_planks
             );
 
-    }
-
-
-    /* =====================================
-       CREATE ACTION MESSAGE
-    ===================================== */
-
-    let actionMessage = `
-        🪚 You cut
-        <strong>${LOGS_REQUIRED} Birch Log</strong>
-        into
-        <strong>${PLANKS_CREATED} Birch Planks</strong>.
-    `;
-
-
-    /* =====================================
-       TUTORIAL MESSAGE
-    ===================================== */
-
-    if (
-        tutorialResult &&
-        tutorialResult.completed
-    ) {
-
-        actionMessage += `
-            <br><br>
-
-            ✅ <strong>Plank cutting complete!</strong>
-
-            <br><br>
-
-            📜 <strong>New Objective</strong><br>
-            Travel into the Wilderness and gather Bog Iron
-            from the Mine.
-
-            <br><br>
-
-            <button
-                onclick="window.location.href='wildness.html'">
-                🌲 Go to Wilderness
-            </button>
+        let message = `
+            🪚 You cut
+            <strong>${logsNeeded} Birch Log${logsNeeded === 1 ? "" : "s"}</strong>
+            into
+            <strong>${planksMade} Birch Planks</strong>.
         `;
 
-        if (sawBirchButton) {
-            sawBirchButton.disabled = true;
-            sawBirchButton.innerText =
-                "✅ Plank Task Complete";
+        if (tutorialResult?.completed) {
+            message += `
+                <br><br>
+                ✅ You have enough Birch Planks.
+                Travel to the mine and gather Bog Iron.
+            `;
         }
 
-    } else if (tutorialResult) {
+        showSawmillMessage(message);
 
-        actionMessage += `
-            <br><br>
-
-            📜 <strong>Tutorial Progress</strong><br>
-
-            <span class="green">
-                ${tutorialResult.current}
-                /
-                ${tutorialResult.target}
-                Birch Planks
-            </span>
-        `;
-
-    }
-
-
-    /* =====================================
-       SHOW MESSAGE
-    ===================================== */
-
-    showSawmillMessage(actionMessage);
-
-
-    /* =====================================
-       REFRESH PLAYER INFORMATION
-    ===================================== */
-
-    if (typeof loadHomePage === "function") {
+        await loadSawmillCardStock();
         loadHomePage();
+    } catch (error) {
+        showSawmillMessage(
+            "❌ Sawmill failed: " +
+            error.message
+        );
+    }
+}
+
+async function loadOakSawmill() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const { data: player } =
+        await supabaseClient
+            .from("players")
+            .select("oak_unlocked")
+            .eq("id", user.id)
+            .single();
+
+    const amountInput =
+        document.getElementById(
+            "oak-saw-amount"
+        );
+
+    if (
+        player?.oak_unlocked &&
+        sawOakButton
+    ) {
+        document
+            .getElementById("oak-sawmill-card")
+            ?.classList.remove("locked");
+
+        sawOakButton.disabled = false;
+        sawOakButton.innerText =
+            "🪚 Craft";
+
+        if (amountInput) {
+            amountInput.disabled = false;
+        }
+    }
+}
+
+async function sawOakLog() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const amount =
+        getPositiveCraftAmount(
+            "oak-saw-amount"
+        );
+
+    const logsNeeded = amount;
+    const planksMade =
+        amount * PLANKS_CREATED;
+
+    const {
+        oakLogId,
+        oakPlankId
+    } = await resolveOakItemIds();
+
+    if (!oakLogId || !oakPlankId) {
+        document
+            .getElementById(
+                "oak-sawmill-message"
+            )
+            .innerText =
+                "❌ Oak items are not configured.";
+        return;
     }
 
+    try {
+        const quantities =
+            await getPlayerInventoryQuantities(
+                user.id,
+                [oakLogId]
+            );
+
+        if (
+            Number(quantities[oakLogId] || 0) <
+            logsNeeded
+        ) {
+            document
+                .getElementById(
+                    "oak-sawmill-message"
+                )
+                .innerText =
+                    `❌ You need ${logsNeeded} Oak Log${logsNeeded === 1 ? "" : "s"}.`;
+            return;
+        }
+
+        await changeInventoryQuantity(
+            user.id,
+            oakLogId,
+            -logsNeeded
+        );
+
+        await changeInventoryQuantity(
+            user.id,
+            oakPlankId,
+            planksMade
+        );
+
+        await addVillageReputation(
+            planksMade
+        );
+
+        if (
+            typeof recordCraftingStatistics ===
+            "function"
+        ) {
+            await recordCraftingStatistics({
+                itemsCrafted: planksMade,
+                planksSawn: planksMade
+            });
+        }
+
+        document
+            .getElementById(
+                "oak-sawmill-message"
+            )
+            .innerHTML =
+                `🪚 You cut <strong>${logsNeeded} Oak Log${logsNeeded === 1 ? "" : "s"}</strong> into <strong>${planksMade} Oak Planks</strong>.`;
+
+        await loadSawmillCardStock();
+        loadHomePage();
+    } catch (error) {
+        document
+            .getElementById(
+                "oak-sawmill-message"
+            )
+            .innerText =
+                "❌ Sawmill failed: " +
+                error.message;
+    }
 }
 
+sawBirchButton?.addEventListener(
+    "click",
+    sawBirchLog
+);
 
-/* =====================================
-   SHOW SAWMILL MESSAGE
-===================================== */
+sawOakButton?.addEventListener(
+    "click",
+    sawOakLog
+);
 
-function showSawmillMessage(message) {
-
-    const element =
-        document.getElementById("sawmill-message");
-
-    if (!element) return;
-
-    element.innerHTML = message;
-
-}
-
-
-/* =====================================
-   BUTTON EVENT
-===================================== */
-
-if (sawBirchButton) {
-
-    sawBirchButton.addEventListener(
-        "click",
-        sawBirchLog
+document
+    .getElementById("birch-saw-amount")
+    ?.addEventListener(
+        "input",
+        loadSawmillCardStock
     );
 
-}
+document
+    .getElementById("oak-saw-amount")
+    ?.addEventListener(
+        "input",
+        loadSawmillCardStock
+    );
 
-const sawOakButton=document.getElementById('saw-oak-button');
-async function loadOakSawmill(){const {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;const {data:p}=await supabaseClient.from('players').select('oak_unlocked').eq('id',user.id).single();if(p?.oak_unlocked&&sawOakButton){document.getElementById('oak-sawmill-card')?.classList.remove('locked');sawOakButton.disabled=false;sawOakButton.innerText='🪚 Saw Oak Log';}}
-async function sawOakLog(){const {data:{user}}=await supabaseClient.auth.getUser();const log=await getItemByName(ITEM_NAMES.OAK_LOG),plank=await getItemByName(ITEM_NAMES.OAK_PLANK);const {data:r}=await supabaseClient.from('inventory').select('*').eq('player_id',user.id).eq('item_id',log?.id).maybeSingle();if(!r||r.quantity<1){document.getElementById('oak-sawmill-message').innerText='❌ You need 1 Oak Log.';return;}await supabaseClient.from('inventory').update({quantity:r.quantity-1}).eq('id',r.id);await addInventoryById(user.id,plank.id,2);await addVillageReputation(2);document.getElementById('oak-sawmill-message').innerHTML='🪚 You cut <strong>1 Oak Log</strong> into <strong>2 Oak Planks</strong>.';}
-sawOakButton?.addEventListener('click',sawOakLog);loadOakSawmill();
+Promise.all([
+    loadOakSawmill(),
+    loadSawmillCardStock()
+]);

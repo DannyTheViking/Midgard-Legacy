@@ -80,3 +80,11 @@ Run `supabase/migrations/006_central_timers_activity_notifications.sql`.
 - Current gameplay pages log successful actions to the database.
 - Notification and achievement tables are ready for the notification page.
 - Completing the tutorial creates the first "You Are a Freeman!" notification.
+
+
+## Bulk crafting and stock cards
+
+Forge and Sawmill recipes now accept a requested amount.
+Cards show materials owned, maximum batches possible and
+the current amount of the output item. Blacksmith cards show
+silver and Iron Axe materials.

@@ -26,18 +26,36 @@
 <section class="crafting-grid">
 
     <div class="crafting-card">
-        <h3>🪚 Birch Planks</h3>
+        <div class="craft-card-heading">
+            <h3>🪚 Birch Planks</h3>
+            <div class="craft-stock" id="birch-plank-stock">Loading...</div>
+        </div>
 
         <p>Requires: <span class="green">1 Birch Log</span></p>
 
         <p>Produces: <span class="green">2 Birch Planks</span></p>
 
-        <button id="saw-birch-button">🪚 Craft</button>
+        <div class="craft-controls">
+            <input class="craft-amount" id="birch-saw-amount" type="number" min="1" max="9999" value="1" aria-label="Birch Logs to saw">
+            <button id="saw-birch-button">🪚 Craft</button>
+        </div>
 
         <p id="sawmill-message">Ready to cut timber.</p>
     </div>
 
-<div class="crafting-card locked" id="oak-sawmill-card"><h3>🪚 Oak Planks</h3><p>Requires: <span class="green">1 Oak Log</span></p><p>Produces: <span class="green">2 Oak Planks</span></p><button id="saw-oak-button" disabled>🔒 Earn Your Freedom</button><p id="oak-sawmill-message"></p></div></section>
+<div class="crafting-card locked" id="oak-sawmill-card">
+        <div class="craft-card-heading">
+            <h3>🪚 Oak Planks</h3>
+            <div class="craft-stock" id="oak-plank-stock">Loading...</div>
+        </div>
+        <p>Requires: <span class="green">1 Oak Log</span></p>
+        <p>Produces: <span class="green">2 Oak Planks</span></p>
+        <div class="craft-controls">
+            <input class="craft-amount" id="oak-saw-amount" type="number" min="1" max="9999" value="1" aria-label="Oak Logs to saw" disabled>
+            <button id="saw-oak-button" disabled>🔒 Earn Your Freedom</button>
+        </div>
+        <p id="oak-sawmill-message"></p>
+    </div></section>
     </main>
 </div>
 

@@ -66,6 +66,87 @@ function showCraftAxeMessage(message) {
 }
 
 
+
+async function loadBlacksmithCardStock() {
+    const { data: { user } } =
+        await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const [
+        quantities,
+        playerResult,
+        equipmentResult
+    ] = await Promise.all([
+        getPlayerInventoryQuantities(
+            user.id,
+            [
+                WOODEN_SHAFT,
+                IRON_AXE_HEAD
+            ]
+        ),
+        supabaseClient
+            .from("players")
+            .select("silver")
+            .eq("id", user.id)
+            .single(),
+        supabaseClient
+            .from("equipment")
+            .select("id")
+            .eq("player_id", user.id)
+            .eq("slot", "axe")
+            .eq("is_equipped", true)
+            .maybeSingle()
+    ]);
+
+    const shafts =
+        quantities[WOODEN_SHAFT] || 0;
+
+    const heads =
+        quantities[IRON_AXE_HEAD] || 0;
+
+    const canMake =
+        Math.min(shafts, heads);
+
+    const silver =
+        Number(
+            playerResult.data?.silver || 0
+        );
+
+    const axeStock =
+        document.getElementById(
+            "iron-axe-stock"
+        );
+
+    if (axeStock) {
+        axeStock.innerHTML = `
+            <span>Shafts: ${shafts.toLocaleString()}</span>
+            <span>Heads: ${heads.toLocaleString()}</span>
+            <span>Can make: ${canMake.toLocaleString()}</span>
+        `;
+    }
+
+    const repairStock =
+        document.getElementById(
+            "repair-stock"
+        );
+
+    if (repairStock) {
+        repairStock.innerHTML = `
+            <span>Silver: ${silver.toLocaleString()}</span>
+            <span>Can repair: ${
+                equipmentResult.data
+                    ? Math.floor(
+                        silver /
+                        AXE_REPAIR_COST
+                    )
+                    : 0
+            }</span>
+        `;
+    }
+}
+
+
 /* =====================================
    LOAD AXE REPAIR INFO
 ===================================== */
@@ -358,7 +439,10 @@ async function repairAxe() {
         <strong>${AXE_REPAIR_COST} Silver</strong>.`
     );
 
-    await loadAxeRepairInfo();
+    await Promise.all([
+        loadAxeRepairInfo(),
+        loadBlacksmithCardStock()
+    ]);
 
     if (typeof loadHomePage === "function") {
         loadHomePage();
@@ -622,7 +706,10 @@ async function craftIronAxe() {
         "<strong>Iron Axe</strong>!"
     );
 
-    await loadAxeRepairInfo();
+    await Promise.all([
+        loadAxeRepairInfo(),
+        loadBlacksmithCardStock()
+    ]);
 
     if (typeof loadHomePage === "function") {
         loadHomePage();
@@ -655,4 +742,7 @@ if (craftIronAxeButton) {
    START BLACKSMITH PAGE
 ===================================== */
 
-loadAxeRepairInfo();
+Promise.all([
+    loadAxeRepairInfo(),
+    loadBlacksmithCardStock()
+]);
