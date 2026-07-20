@@ -18,12 +18,37 @@ function getPageUrl(pageName, query = "") {
 
 function setAuthMessage(element, message, type = "error") {
     if (!element) return;
+
+    let safeMessage = message;
+
+    // Never display raw JavaScript objects such as "{}" to players.
+    if (safeMessage && typeof safeMessage === "object") {
+        safeMessage =
+            safeMessage.message ||
+            safeMessage.error_description ||
+            safeMessage.error ||
+            "Something went wrong while creating your account. Please try again.";
+    }
+
+    safeMessage = String(safeMessage ?? "").trim();
+
+    if (!safeMessage || safeMessage === "{}" || safeMessage === "[object Object]") {
+        safeMessage =
+            "Something went wrong while creating your account. Please try again, or contact Midgard Legacy support.";
+    }
+
     element.className = `auth-message auth-message-${type}`;
-    element.innerHTML = message;
+    element.innerHTML = safeMessage;
 }
 
 function friendlyAuthError(error) {
-    const message = String(error?.message || error || "Something went wrong.");
+    const rawMessage =
+        error?.message ||
+        error?.error_description ||
+        error?.error ||
+        (typeof error === "string" ? error : "");
+
+    const message = String(rawMessage || "Something went wrong while creating your account.");
 
     if (/email not confirmed/i.test(message)) {
         return "Please confirm your email address before logging in. Check your inbox and junk folder.";
@@ -35,6 +60,14 @@ function friendlyAuthError(error) {
 
     if (/user already registered/i.test(message)) {
         return "An account already exists with that email address. Try logging in instead.";
+    }
+
+    if (/rate limit|too many requests/i.test(message)) {
+        return "Too many signup attempts were made. Wait a few minutes, then try again.";
+    }
+
+    if (/duplicate key|username.*already|already exists/i.test(message)) {
+        return "That Viking name is already in use. Choose another name.";
     }
 
     return message;
@@ -97,23 +130,33 @@ if (signupButton) {
         signupButton.textContent = "Creating your Viking…";
         setAuthMessage(output, "Creating your account…", "info");
 
-        const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: {
-                emailRedirectTo: getPageUrl("login.html", "?confirmed=1"),
-                data: {
-                    username,
-                    gender_identity: genderIdentity,
-                    title_style:
-                        genderIdentity === "man"
-                            ? "freeman"
-                            : genderIdentity === "woman"
-                                ? "freewoman"
-                                : "freeperson"
+        let data;
+        let error;
+
+        try {
+            const signupResult = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: getPageUrl("login.html", "?confirmed=1"),
+                    data: {
+                        username,
+                        gender_identity: genderIdentity,
+                        title_style:
+                            genderIdentity === "man"
+                                ? "freeman"
+                                : genderIdentity === "woman"
+                                    ? "freewoman"
+                                    : "freeperson"
+                    }
                 }
-            }
-        });
+            });
+
+            data = signupResult.data;
+            error = signupResult.error;
+        } catch (signupException) {
+            error = signupException;
+        }
 
         if (error) {
             setAuthMessage(output, friendlyAuthError(error));
