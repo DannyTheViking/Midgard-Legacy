@@ -339,6 +339,20 @@ async function repairAxe() {
        SHOW SUCCESS
     ===================================== */
 
+    if (typeof incrementGameStatistics === "function") {
+        await incrementGameStatistics({
+            tools_repaired: 1,
+            silver_spent: AXE_REPAIR_COST
+        });
+    }
+
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("tool_repaired", {
+            tool: axe.items?.name || "axe",
+            silver_spent: AXE_REPAIR_COST
+        });
+    }
+
     showBlacksmithMessage(
         `⚒️ Your axe has been repaired for
         <strong>${AXE_REPAIR_COST} Silver</strong>.`
@@ -586,6 +600,22 @@ async function craftIronAxe() {
     /* =====================================
        SHOW SUCCESS
     ===================================== */
+
+    if (typeof incrementGameStatistics === "function") {
+        await incrementGameStatistics({
+            items_crafted: 1,
+            blacksmith_items_crafted: 1
+        });
+    }
+
+    if (typeof logGameActivity === "function") {
+        await logGameActivity(
+            "iron_axe_crafted",
+            {
+                equipped: true
+            }
+        );
+    }
 
     showCraftAxeMessage(
         "⚒️ You craft and equip your first " +

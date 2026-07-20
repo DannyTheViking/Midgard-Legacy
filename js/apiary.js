@@ -24,9 +24,16 @@ const NAIL_COST = 100;
     config file is missing.
 */
 const APIARY_HONEY_TIME_SECONDS =
-    typeof HONEY_TIME_SECONDS !== "undefined"
-        ? HONEY_TIME_SECONDS
-        : 12 * 60 * 60;
+    typeof getGameTimerSeconds === "function"
+        ? getGameTimerSeconds(
+            "honey_seconds",
+            12 * 60 * 60
+        )
+        : (
+            typeof HONEY_TIME_SECONDS !== "undefined"
+                ? Number(HONEY_TIME_SECONDS)
+                : 12 * 60 * 60
+        );
 
 
 
@@ -385,6 +392,14 @@ async function buildHive(slot) {
     TUTORIAL_STEPS.COLLECT_HONEY
 );
 
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("beehive_built", {
+            slot,
+            honey_ready_in_seconds:
+                APIARY_HONEY_TIME_SECONDS
+        });
+    }
+
     loadHomePage();
     loadApiary();
 
@@ -466,7 +481,15 @@ async function collectHoney(hiveId) {
         })
         .eq("id", hiveId);
 
-   showMessage(
+   if (typeof logGameActivity === "function") {
+    await logGameActivity("honey_collected", {
+        quantity: 1,
+        hive_id: hive.id,
+        slot: hive.slot
+    });
+}
+
+showMessage(
     hive.slot,
     `🍯 Honey collected! Come back in ${
         TEST_MODE ? "5 minutes" : "12 hours"

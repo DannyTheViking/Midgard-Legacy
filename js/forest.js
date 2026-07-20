@@ -336,6 +336,12 @@ async function chopBirchTree() {
             tool_durability_lost: 1
         });
     }
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("tree_chopped", {
+            tree: "birch",
+            logs_collected: logs
+        });
+    }
 
     /* =====================================
        CREATE ACTION MESSAGE

@@ -69,3 +69,14 @@ This update adds atomic achievement counters, readable usernames in
 statistics, future arrow/cooking/combat counters, tool power metadata,
 Iron-tool requirements for every non-divine resource, and automatic
 Level 10 Blacksmith/Carpenter blueprint unlocks.
+
+
+## Central timers and database hooks
+
+Run `supabase/migrations/006_central_timers_activity_notifications.sql`.
+
+- All current production timers now come from `js/config.js`.
+- Honey and Young Mead no longer rely on mismatched timer names.
+- Current gameplay pages log successful actions to the database.
+- Notification and achievement tables are ready for the notification page.
+- Completing the tutorial creates the first "You Are a Freeman!" notification.

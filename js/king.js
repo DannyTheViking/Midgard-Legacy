@@ -313,6 +313,21 @@ async function presentMead() {
     if (!completed) return;
 
     await grantFreedomRewards(user.id);
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("freeman_unlocked", {});
+    }
+
+    if (typeof createPlayerNotification === "function") {
+        await createPlayerNotification({
+            type: "achievement",
+            title: "You Are a Freeman!",
+            message:
+                "Congratulations. The King has released you from thralldom. Your saga truly begins now.",
+            icon: "🏠",
+            link: "home.html",
+            uniqueKey: "freeman"
+        });
+    }
 
     document.getElementById("king-dialogue").innerHTML = `
         <p>

@@ -177,6 +177,12 @@ async function gatherBogIron() {
             mining_actions: 1
         });
     }
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("ore_gathered", {
+            resource: "bog_iron",
+            quantity: ore
+        });
+    }
 
     let miningProgress = null;
 

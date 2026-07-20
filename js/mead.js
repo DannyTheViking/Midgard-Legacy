@@ -25,18 +25,16 @@ const WATER_BUCKET_COST = 1;
    Falls back to 5 minutes in TEST_MODE or 24 hours in production.
 */
 const MEAD_BREW_TIME_SECONDS =
-    typeof BREW_TIME_SECONDS !== "undefined"
-        ? Number(BREW_TIME_SECONDS)
+    typeof getGameTimerSeconds === "function"
+        ? getGameTimerSeconds(
+            "young_mead_seconds",
+            24 * 60 * 60
+        )
         : (
-            typeof BREW_TIME_HOURS !== "undefined"
-                ? Number(BREW_TIME_HOURS) * 60 * 60
-                : (
-                    typeof TEST_MODE !== "undefined" && TEST_MODE
-                        ? 5 * 60
-                        : 24 * 60 * 60
-                )
+            typeof YOUNG_MEAD_TIME_SECONDS !== "undefined"
+                ? Number(YOUNG_MEAD_TIME_SECONDS)
+                : 24 * 60 * 60
         );
-
 
 /* =====================================
    PAGE DATA
@@ -379,6 +377,11 @@ async function addBarrel(slot) {
 
     loadHomePage();
     loadMeadHall();
+    if (typeof logGameActivity === "function") {
+        await logGameActivity("mead_barrel_added", {
+            slot
+        });
+    }
 
 }
 
@@ -462,6 +465,18 @@ async function startBrewing(barrelId) {
     showPageMessage(
         "🍯 Honey and water added. Your mead has started brewing."
     );
+    if (typeof logGameActivity === "function") {
+        await logGameActivity(
+            "mead_brewing_started",
+            {
+                barrel_id: barrel.id,
+                slot: barrel.slot,
+                ready_in_seconds:
+                    MEAD_BREW_TIME_SECONDS
+            }
+        );
+    }
+
 
     loadHomePage();
     loadMeadHall();
@@ -695,6 +710,16 @@ async function collectYoungMead(barrelId) {
     TUTORIAL_STEPS.BREW_YOUNG_MEAD,
     TUTORIAL_STEPS.RETURN_TO_KING
 );
+
+    if (typeof logGameActivity === "function") {
+        await logGameActivity(
+            "young_mead_collected",
+            {
+                quantity: 1,
+                barrel_id: barrel.id
+            }
+        );
+    }
 
     showPageMessage(
         "🍺 You collected 1 Young Mead. The empty shelf needs another barrel."

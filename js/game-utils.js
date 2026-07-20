@@ -146,3 +146,97 @@ async function recordCraftingStatistics({
         planks_sawn: planksSawn
     });
 }
+
+
+/* =====================================
+   GAME ACTIVITY DATABASE LOG
+   Requires migration 006.
+
+   This is deliberately fail-soft:
+   game actions remain successful if the
+   optional activity log is unavailable.
+===================================== */
+
+async function logGameActivity(
+    activityType,
+    details = {}
+) {
+    try {
+        const { data: { user } } =
+            await supabaseClient.auth.getUser();
+
+        if (!user || !activityType) return false;
+
+        const { error } = await supabaseClient.rpc(
+            "log_player_activity",
+            {
+                p_player_id: user.id,
+                p_activity_type: String(activityType),
+                p_details: details || {}
+            }
+        );
+
+        if (error) {
+            console.warn(
+                "Activity log unavailable:",
+                error.message
+            );
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.warn(
+            "Activity logging failed safely:",
+            error
+        );
+        return false;
+    }
+}
+
+async function createPlayerNotification({
+    type = "system",
+    title,
+    message,
+    icon = "🔔",
+    link = null,
+    uniqueKey = null
+}) {
+    try {
+        const { data: { user } } =
+            await supabaseClient.auth.getUser();
+
+        if (!user || !title || !message) {
+            return false;
+        }
+
+        const { error } = await supabaseClient.rpc(
+            "create_player_notification",
+            {
+                p_player_id: user.id,
+                p_type: type,
+                p_title: title,
+                p_message: message,
+                p_icon: icon,
+                p_link: link,
+                p_unique_key: uniqueKey
+            }
+        );
+
+        if (error) {
+            console.warn(
+                "Notification unavailable:",
+                error.message
+            );
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.warn(
+            "Notification failed safely:",
+            error
+        );
+        return false;
+    }
+}
