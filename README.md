@@ -65,3 +65,20 @@ Changes:
 - Fixed `HONEY_TIME_HOURS is not defined`.
 - Apiary now uses `HONEY_TIME_SECONDS` from `js/config.js`.
 - Hive cards and countdown timers load after building a hive.
+
+
+## Future-proof progression patch
+
+Run:
+
+`supabase/migrations/004_atomic_skill_xp_futureproof.sql`
+
+This fixes Mining/Woodcutting XP becoming stuck during rapid actions by updating XP atomically in PostgreSQL.
+
+It also:
+
+- Keeps gym/combat stats out of Level 1-100 skills.
+- Prevents Village Carpenter and Forge services awarding personal skill XP.
+- Centralises tree and mine unlock/XP settings.
+- Adds action locks to Mining and Woodcutting buttons.
+- Includes `docs/ADDING_NEW_CONTENT.md`.

@@ -21,8 +21,10 @@
     already declared inside constants.js.
 */
 
-const WOODCUTTING_XP_PER_BIRCH = 5;
-const WOODCUTTING_XP_PER_OAK = 10;
+const WOODCUTTING_XP_PER_BIRCH =
+    MIDGARD_CONTENT_RULES.trees.birch.xpPerAction;
+const WOODCUTTING_XP_PER_OAK =
+    MIDGARD_CONTENT_RULES.trees.oak.xpPerAction;
 const ENERGY_COST = 5;
 
 
@@ -33,12 +35,24 @@ const ENERGY_COST = 5;
 const chopButton =
     document.getElementById("chop-birch");
 
+let woodcuttingActionInProgress = false;
+
 
 /* =====================================
    CHOP BIRCH TREE
 ===================================== */
 
 async function chopBirchTree() {
+    if (woodcuttingActionInProgress) return;
+
+    woodcuttingActionInProgress = true;
+
+    if (chopButton) {
+        chopButton.disabled = true;
+        chopButton.innerText = "⏳ Chopping...";
+    }
+
+    try {
 
     /* =====================================
        GET CURRENT PLAYER
@@ -350,6 +364,14 @@ if (durabilityError) {
         }
     }
 
+    } finally {
+        woodcuttingActionInProgress = false;
+
+        if (chopButton) {
+            chopButton.disabled = false;
+            chopButton.innerText = "🪓 Chop Birch";
+        }
+    }
 }
 
 

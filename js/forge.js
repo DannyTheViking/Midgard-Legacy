@@ -164,8 +164,7 @@ async function forgeIronBar() {
     /* =====================================
        SHOW PLAYER MESSAGE
     ===================================== */
-
-    await addSmithingXP(12); await addPlayerXP(2);
+    // Village forge work does not grant personal Blacksmithing XP.
     document.getElementById("forge-message").innerHTML =
         "🔥 You forge <strong>5 Bog Iron</strong> into <strong>1 Iron Bar</strong>.";
 
