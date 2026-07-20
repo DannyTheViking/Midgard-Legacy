@@ -19,6 +19,24 @@ const EMPTY_BARREL_COST = 1;
 const HONEY_BUCKET_COST = 1;
 const WATER_BUCKET_COST = 1;
 
+/*
+   Safe brewing timer.
+   Uses BREW_TIME_SECONDS from config.js when available.
+   Falls back to 5 minutes in TEST_MODE or 24 hours in production.
+*/
+const MEAD_BREW_TIME_SECONDS =
+    typeof BREW_TIME_SECONDS !== "undefined"
+        ? Number(BREW_TIME_SECONDS)
+        : (
+            typeof BREW_TIME_HOURS !== "undefined"
+                ? Number(BREW_TIME_HOURS) * 60 * 60
+                : (
+                    typeof TEST_MODE !== "undefined" && TEST_MODE
+                        ? 5 * 60
+                        : 24 * 60 * 60
+                )
+        );
+
 
 /* =====================================
    PAGE DATA
@@ -461,7 +479,7 @@ function isBrewReady(startedAt) {
 
     const finishTime =
         new Date(startedAt).getTime() +
-        (BREW_TIME_HOURS * 60 * 60 * 1000);
+        (MEAD_BREW_TIME_SECONDS * 1000);
 
     return Date.now() >= finishTime;
 
@@ -476,7 +494,7 @@ function getTimeRemaining(startedAt) {
 
     const finishTime =
         new Date(startedAt).getTime() +
-        (BREW_TIME_HOURS * 60 * 60 * 1000);
+        (MEAD_BREW_TIME_SECONDS * 1000);
 
     const remaining =
         finishTime - Date.now();
