@@ -67,6 +67,18 @@ a {
     color: gold;
 }
 
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.logo img {
+    height: 42px;
+    width: auto;
+    display: block;
+}
 /* =========================
    TOP BAR
 ========================= */
