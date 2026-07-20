@@ -68,10 +68,10 @@ a {
 }
 
 .logo {
-    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 8px 0;
 }
 
 .logo img {
