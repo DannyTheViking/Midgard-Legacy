@@ -47,3 +47,21 @@ Changes:
 - Oak requires freedom and Woodcutting Level 5.
 - Total Skill is calculated from actual XP, with fresh players starting at 1.
 - Net worth includes silver, inventory, storage, carts and equipment.
+
+
+## Public IDs and Mining update
+
+- Profile URLs use `players.player_number`, while UUIDs remain internal.
+- Hall of Fame, Online Players, Friends and Enemies use public player numbers.
+- Online players appear on one wrapping line without green circles.
+- Bog Iron requires Hands.
+- Iron Vein and later mining resources keep their pickaxe requirements.
+- The Tool Belt separately displays the currently equipped pickaxe and durability.
+- Bog Iron gives a fixed 2 Mining XP per successful action.
+- Change `MINING_XP_PER_ACTION` near the top of `js/mining.js` to rebalance it.
+
+
+## Apiary timer fix
+- Fixed `HONEY_TIME_HOURS is not defined`.
+- Apiary now uses `HONEY_TIME_SECONDS` from `js/config.js`.
+- Hive cards and countdown timers load after building a hive.

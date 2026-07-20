@@ -3,7 +3,7 @@
 ===================================== */
 
 const ENERGY_COST = 5;
-const MINING_XP_PER_ACTION = 5; // XP gained per mining action, can be adjusted as needed
+const MINING_XP_PER_ACTION = 2; // Change this number to rebalance Bog Iron XP.
 
 const gatherButton = document.getElementById("gather-bog-iron");
 
@@ -165,13 +165,29 @@ async function gatherBogIron() {
     }
 
     let miningProgress = null;
+
     try {
-       
-        if (typeof renderSkillProgress === "function") {
-            renderSkillProgress("mining", miningProgress);
+        if (typeof addMiningXP === "function") {
+            miningProgress =
+                await addMiningXP(
+                    MINING_XP_PER_ACTION
+                );
+        }
+
+        if (
+            miningProgress &&
+            typeof renderSkillProgress === "function"
+        ) {
+            renderSkillProgress(
+                "mining",
+                miningProgress
+            );
         }
     } catch (xpError) {
-        console.error("Mining XP failed:", xpError);
+        console.error(
+            "Mining XP failed:",
+            xpError
+        );
     }
 
     if (miningProgress) {
@@ -238,11 +254,13 @@ async function loadMiningTool() {
         .maybeSingle();
 
     const toolName =
-        document.getElementById("mining-tool-name");
+        document.getElementById(
+            "pickaxe-name"
+        );
 
     const toolDescription =
         document.getElementById(
-            "mining-tool-description"
+            "pickaxe-description"
         );
 
     if (error) {
@@ -256,12 +274,12 @@ async function loadMiningTool() {
     if (!pickaxe) {
 
         if (toolName) {
-            toolName.innerText = "⛏️ Hands";
+            toolName.innerText = "Hands";
         }
 
         if (toolDescription) {
             toolDescription.innerText =
-                "Bog Iron can be gathered by hand.";
+                "No pickaxe equipped. Bog Iron can still be gathered by hand.";
         }
 
         return;
@@ -269,7 +287,7 @@ async function loadMiningTool() {
 
     if (toolName) {
         toolName.innerText =
-            "⛏️ " + pickaxe.items.name;
+            pickaxe.items.name;
     }
 
     if (toolDescription) {

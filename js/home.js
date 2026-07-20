@@ -56,6 +56,7 @@ async function loadHomePlayer() {
         .from("players")
         .select(`
     id,
+    player_number,
     username,
     reputation,
     net_worth,
@@ -237,6 +238,7 @@ async function loadOnlinePlayers() {
         .from("players")
         .select(`
             id,
+            player_number,
             username,
             last_online
         `)
@@ -276,27 +278,35 @@ async function loadOnlinePlayers() {
         return;
     }
 
-    onlinePlayersList.innerHTML =
-        onlinePlayers
-            .map(player => {
+    onlinePlayersList.innerHTML = `
+        <p class="online-player-links">
+            ${
+                onlinePlayers
+                    .map(player => {
 
-                const playerId =
-                    encodeURIComponent(player.id);
+                        const playerId =
+                            encodeURIComponent(
+                                player.player_number
+                            );
 
-                const username =
-                    escapeHomeHTML(player.username);
+                        const username =
+                            escapeHomeHTML(
+                                player.username
+                            );
 
-                return `
-                    <p>
-                        🟢
-                        <a href="profile.html?id=${playerId}">
-                            ${username}
-                        </a>
-                    </p>
-                `;
+                        return `
+                            <a href="profile.html?id=${playerId}">
+                                ${username}
+                            </a>
+                        `;
 
-            })
-            .join("");
+                    })
+                    .join(
+                        '<span class="online-player-separator"> - </span>'
+                    )
+            }
+        </p>
+    `;
 
 }
 
@@ -323,6 +333,7 @@ async function loadHallOfFamePreview() {
         .from("players")
         .select(`
             id,
+            player_number,
             username,
             reputation
         `)
@@ -363,7 +374,7 @@ async function loadHallOfFamePreview() {
             .map((player, index) => {
 
                 const playerId =
-                    encodeURIComponent(player.id);
+                    encodeURIComponent(player.player_number);
 
                 const username =
                     escapeHomeHTML(player.username);

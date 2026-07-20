@@ -5,7 +5,7 @@ async function board(
 ) {
     const { data, error } = await supabaseClient
         .from("players")
-        .select(`id, username, ${column}`)
+        .select(`id, player_number, username, ${column}`)
         .order(column, { ascending: false })
         .limit(10);
 
@@ -23,7 +23,7 @@ async function board(
                         (player, index) => `
                             <p>
                                 ${index + 1}.
-                                <a href="profile.html?id=${player.id}">
+                                <a href="profile.html?id=${player.player_number}">
                                     ${player.username}
                                 </a>
                                 —
@@ -48,7 +48,7 @@ async function playerLevelBoard() {
     const { data: players, error: playerError } =
         await supabaseClient
             .from("players")
-            .select("id, username");
+            .select("id, player_number, username");
 
     if (playerError) {
         console.error(
@@ -110,7 +110,7 @@ async function playerLevelBoard() {
                         (player, index) => `
                             <p>
                                 ${index + 1}.
-                                <a href="profile.html?id=${player.id}">
+                                <a href="profile.html?id=${player.player_number}">
                                     ${player.username}
                                 </a>
                                 —

@@ -224,18 +224,42 @@ async function loadProfile() {
     const pageParameters =
         new URLSearchParams(window.location.search);
 
-    viewedPlayerId =
-        pageParameters.get("id") ||
-        user.id;
+    const publicPlayerNumber =
+        pageParameters.get("id");
 
-    const {
-        data: player,
-        error
-    } = await supabaseClient
-        .from("players")
-        .select("*")
-        .eq("id", viewedPlayerId)
-        .single();
+    let player;
+    let error;
+
+    if (publicPlayerNumber) {
+
+        const result = await supabaseClient
+            .from("players")
+            .select("*")
+            .eq(
+                "player_number",
+                Number(publicPlayerNumber)
+            )
+            .single();
+
+        player = result.data;
+        error = result.error;
+
+    } else {
+
+        const result = await supabaseClient
+            .from("players")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+
+        player = result.data;
+        error = result.error;
+
+    }
+
+    if (player) {
+        viewedPlayerId = player.id;
+    }
 
     if (error || !player) {
 

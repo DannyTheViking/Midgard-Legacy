@@ -37,7 +37,7 @@ function createFriendRow(relation) {
     if (!player) return "";
 
     const inHospital = playerIsInHospital(player);
-    const playerId = escapeSocialHTML(player.id);
+    const playerId = escapeSocialHTML(player.player_number);
     const username = escapeSocialHTML(player.username || "Unknown Viking");
 
     return `
@@ -61,7 +61,7 @@ function createEnemyRow(relation) {
     const player = relation.target;
     if (!player) return "";
 
-    const playerId = escapeSocialHTML(player.id);
+    const playerId = escapeSocialHTML(player.player_number);
     const username = escapeSocialHTML(player.username || "Unknown Viking");
 
     return `
@@ -95,6 +95,7 @@ async function loadRelations() {
             relation_type,
             target:players!player_relations_target_id_fkey (
                 id,
+                player_number,
                 username,
                 hospital_until
             )

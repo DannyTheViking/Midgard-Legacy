@@ -196,10 +196,7 @@ function isHoneyReady(lastCollected) {
     const now =
         new Date();
 
-    const hoursPassed =
-        (now - last) / 1000 / 60 / 60;
-
-    return hoursPassed >= HONEY_TIME_HOURS;
+    return ((now - last) / 1000) >= HONEY_TIME_SECONDS;
 
 }
 
@@ -212,7 +209,7 @@ function getTimeRemaining(lastCollected) {
 
     const finish =
         new Date(lastCollected).getTime() +
-        (HONEY_TIME_HOURS * 60 * 60 * 1000);
+        (HONEY_TIME_SECONDS * 1000);
 
     const now =
         Date.now();

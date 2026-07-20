@@ -1595,3 +1595,21 @@ body.forest-data-loading .forest-loading-screen {
 .skill-xp-fill {
     background: #d4a017;
 }
+
+
+/* Compact, wrapping online-player links */
+.online-player-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem;
+    margin: 0;
+}
+
+.online-player-links a {
+    white-space: nowrap;
+}
+
+.online-player-separator {
+    opacity: 0.75;
+}

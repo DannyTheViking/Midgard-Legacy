@@ -162,6 +162,7 @@ async function updateTopBarPlayer() {
     } = await supabaseClient
         .from("players")
         .select(`
+            player_number,
             username,
             tutorial_complete,
             is_free_man,
@@ -264,7 +265,7 @@ async function updateTopBarPlayer() {
             player.username || "Viking";
 
         profileLink.href =
-            `profile.html?id=${encodeURIComponent(user.id)}`;
+            `profile.html?id=${encodeURIComponent(player.player_number)}`;
 
     }
 
