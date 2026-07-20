@@ -3,11 +3,9 @@
 ===================================== */
 
 const ENERGY_COST = 5;
-const MINING_XP_PER_ACTION =
-    MIDGARD_CONTENT_RULES.mines.bogIron.xpPerAction;
+const MINING_XP_PER_ACTION = 2; // Change this number to rebalance Bog Iron XP.
 
 const gatherButton = document.getElementById("gather-bog-iron");
-let miningActionInProgress = false;
 
 
 /* =====================================
@@ -15,16 +13,6 @@ let miningActionInProgress = false;
 ===================================== */
 
 async function gatherBogIron() {
-    if (miningActionInProgress) return;
-
-    miningActionInProgress = true;
-
-    if (gatherButton) {
-        gatherButton.disabled = true;
-        gatherButton.innerText = "⏳ Gathering...";
-    }
-
-    try {
 
     const {
         data: { user }
@@ -213,14 +201,6 @@ async function gatherBogIron() {
 
     loadHomePage();
 
-    } finally {
-        miningActionInProgress = false;
-
-        if (gatherButton && !gatherButton.innerText.includes("Tutorial Complete")) {
-            gatherButton.disabled = false;
-            gatherButton.innerText = "⛏️ Gather Bog Iron";
-        }
-    }
 }
 
 /* =====================================

@@ -18,6 +18,16 @@ const MAX_HIVES = 5;
 const PLANK_COST = 30;
 const NAIL_COST = 100;
 
+/*
+    config.js provides HONEY_TIME_SECONDS.
+    Fallback keeps the page working if the
+    config file is missing.
+*/
+const APIARY_HONEY_TIME_SECONDS =
+    typeof HONEY_TIME_SECONDS !== "undefined"
+        ? HONEY_TIME_SECONDS
+        : 12 * 60 * 60;
+
 
 
 
@@ -196,7 +206,10 @@ function isHoneyReady(lastCollected) {
     const now =
         new Date();
 
-    return ((now - last) / 1000) >= HONEY_TIME_SECONDS;
+    const hoursPassed =
+        (now - last) / 1000 / 60 / 60;
+
+    return (now - last) / 1000 >= APIARY_HONEY_TIME_SECONDS;
 
 }
 
@@ -209,7 +222,7 @@ function getTimeRemaining(lastCollected) {
 
     const finish =
         new Date(lastCollected).getTime() +
-        (HONEY_TIME_SECONDS * 1000);
+        (APIARY_HONEY_TIME_SECONDS * 1000);
 
     const now =
         Date.now();
@@ -455,7 +468,9 @@ async function collectHoney(hiveId) {
 
    showMessage(
     hive.slot,
-    "🍯 Honey collected! Come back in 12 hours for the next batch."
+    `🍯 Honey collected! Come back in ${
+        TEST_MODE ? "5 minutes" : "12 hours"
+    } for the next batch.`
 );
 
 await advanceTutorial(

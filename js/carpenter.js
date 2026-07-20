@@ -161,7 +161,8 @@ async function craftWoodenShaft() {
                 quantity: totalShaftsMade
             });
     }
-    // Village carpenter work does not grant personal Carpentry XP.
+
+    await addCarpentryXP(totalShaftsMade * 4); await addPlayerXP(Math.max(1, amount));
     showTemporaryMessage(
         "carpenter-message",
         "🪵 You craft <strong>" + totalShaftsMade + " Wooden Shaft" +
@@ -265,7 +266,8 @@ async function craftEmptyBucket() {
     TUTORIAL_STEPS.CRAFT_BARREL_PARTS,
     TUTORIAL_TARGETS.empty_buckets
 );
-    // Village carpenter work does not grant personal Carpentry XP.
+
+    await addCarpentryXP(totalBucketsMade * 10); await addPlayerXP(Math.max(1, amount));
     showTemporaryMessage(
         "bucket-message",
         "🪣 You craft <strong>" + totalBucketsMade + " Empty Bucket" +

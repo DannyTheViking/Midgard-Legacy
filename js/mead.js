@@ -457,15 +457,13 @@ async function startBrewing(barrelId) {
 
 function isBrewReady(startedAt) {
 
-    if (!startedAt) {
-        return false;
-    }
+    if (!startedAt) return false;
 
-    const finish =
+    const finishTime =
         new Date(startedAt).getTime() +
-        (YOUNG_MEAD_TIME_SECONDS * 1000);
+        (BREW_TIME_HOURS * 60 * 60 * 1000);
 
-    return Date.now() >= finish;
+    return Date.now() >= finishTime;
 
 }
 
@@ -476,12 +474,12 @@ function isBrewReady(startedAt) {
 
 function getTimeRemaining(startedAt) {
 
-    const finish =
+    const finishTime =
         new Date(startedAt).getTime() +
-        (YOUNG_MEAD_TIME_SECONDS * 1000);
+        (BREW_TIME_HOURS * 60 * 60 * 1000);
 
     const remaining =
-        finish - Date.now();
+        finishTime - Date.now();
 
     if (remaining <= 0) {
         return null;
@@ -496,9 +494,14 @@ function getTimeRemaining(startedAt) {
     const seconds =
         Math.floor((remaining / 1000) % 60);
 
-    return hours + "h " + minutes + "m " + seconds + "s";
+    return (
+        hours + "h " +
+        minutes + "m " +
+        seconds + "s"
+    );
 
 }
+
 
 /* =====================================
    START TIMERS

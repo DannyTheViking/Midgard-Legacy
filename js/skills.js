@@ -8,7 +8,8 @@ const SKILL_NAMES = Object.freeze([
     "blacksmithing",
     "carpentry",
     "cooking",
-    "brewing"
+    "brewing",
+    "combat"
 ]);
 
 function xpForLevel(level) {
@@ -54,68 +55,47 @@ async function ensureSkillsRow(playerId) {
 
 async function addSkillXP(skillName, amount) {
     if (!SKILL_NAMES.includes(skillName)) {
-        throw new Error(`Unknown or non-levelled skill: ${skillName}`);
-    }
-
-    const awardedXP = Math.max(0, Math.floor(Number(amount || 0)));
-
-    if (awardedXP <= 0) {
-        return loadSkillProgress(skillName);
+        throw new Error(`Unknown skill: ${skillName}`);
     }
 
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return null;
 
-    /*
-        XP is increased inside PostgreSQL in one atomic operation.
-        This prevents rapid actions from reading the same old XP
-        and overwriting each other.
-    */
-    const { data, error } = await supabaseClient.rpc(
-        "add_skill_xp",
-        {
-            p_skill_name: skillName,
-            p_amount: awardedXP
-        }
-    );
+    const row = await ensureSkillsRow(user.id);
+    if (!row) return null;
+
+    const xpColumn = `${skillName}_xp`;
+    const levelColumn = `${skillName}_level`;
+    const oldXP = Math.max(0, Number(row[xpColumn] || 0));
+    const oldLevel = levelFromXP(oldXP);
+    const awardedXP = Math.max(0, Number(amount || 0));
+    const newXP = oldXP + awardedXP;
+    const newLevel = levelFromXP(newXP);
+
+    const { data: saved, error } = await supabaseClient
+        .from("skills")
+        .update({
+            [xpColumn]: newXP,
+            [levelColumn]: newLevel
+        })
+        .eq("player_id", user.id)
+        .select()
+        .single();
 
     if (error) {
-        console.error(`${skillName} XP RPC failed:`, error);
-
-        throw new Error(
-            error.message?.includes("add_skill_xp")
-                ? "The skill XP migration has not been run in Supabase yet."
-                : error.message
-        );
+        console.error(`${skillName} XP update failed:`, error);
+        throw error;
     }
-
-    const result = Array.isArray(data) ? data[0] : data;
-
-    if (!result) {
-        throw new Error("Supabase did not return the updated skill XP.");
-    }
-
-    const xp = Math.max(0, Number(result.new_xp || 0));
-    const level = Math.max(1, Number(result.new_level || levelFromXP(xp)));
-    const previousXP = Math.max(0, xp - awardedXP);
-    const previousLevel = levelFromXP(previousXP);
-
-    const row = {
-        [`${skillName}_xp`]: xp
-    };
 
     const progress = typeof skillProgressFromRow === "function"
-        ? skillProgressFromRow(row, skillName)
-        : {
-            xp,
-            level
-        };
+        ? skillProgressFromRow(saved, skillName)
+        : null;
 
     return {
         skill: skillName,
         awardedXP,
-        ...progress,
-        levelledUp: level > previousLevel
+        ...(progress || { xp: newXP, level: newLevel }),
+        levelledUp: newLevel > oldLevel
     };
 }
 
@@ -168,6 +148,7 @@ const addFishingXP = amount => addSkillXP("fishing", amount);
 const addHuntingXP = amount => addSkillXP("hunting", amount);
 const addFarmingXP = amount => addSkillXP("farming", amount);
 const addCookingXP = amount => addSkillXP("cooking", amount);
+const addCombatXP = amount => addSkillXP("combat", amount);
 
 // Kept temporarily so older calls do not break. Overall progression now uses Total Skill.
 async function addPlayerXP() {

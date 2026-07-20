@@ -21,10 +21,8 @@
     already declared inside constants.js.
 */
 
-const WOODCUTTING_XP_PER_BIRCH =
-    MIDGARD_CONTENT_RULES.trees.birch.xpPerAction;
-const WOODCUTTING_XP_PER_OAK =
-    MIDGARD_CONTENT_RULES.trees.oak.xpPerAction;
+const WOODCUTTING_XP_PER_BIRCH = 5;
+const WOODCUTTING_XP_PER_OAK = 10;
 const ENERGY_COST = 5;
 
 
@@ -35,24 +33,12 @@ const ENERGY_COST = 5;
 const chopButton =
     document.getElementById("chop-birch");
 
-let woodcuttingActionInProgress = false;
-
 
 /* =====================================
    CHOP BIRCH TREE
 ===================================== */
 
 async function chopBirchTree() {
-    if (woodcuttingActionInProgress) return;
-
-    woodcuttingActionInProgress = true;
-
-    if (chopButton) {
-        chopButton.disabled = true;
-        chopButton.innerText = "⏳ Chopping...";
-    }
-
-    try {
 
     /* =====================================
        GET CURRENT PLAYER
@@ -91,39 +77,92 @@ async function chopBirchTree() {
 
 
     /* =====================================
-       LOAD EQUIPPED AXE
+       LOAD USABLE AXE
+       Prefer an equipped axe. Fall back to
+       the starter Rusty Axe during tutorial.
     ===================================== */
 
     const {
-    data: playerAxe,
-    error: axeError
-} = await supabaseClient
-    .from("players")
-    .select("has_rusty_axe, rusty_axe_durability")
-    .eq("id", user.id)
-    .single();
+        data: equippedAxe,
+        error: equippedAxeError
+    } = await supabaseClient
+        .from("equipment")
+        .select(`
+            id,
+            durability,
+            max_durability,
+            items (
+                name,
+                description
+            )
+        `)
+        .eq("player_id", user.id)
+        .eq("slot", "axe")
+        .eq("is_equipped", true)
+        .maybeSingle();
 
-if (axeError) {
-    showForestMessage(
-        "❌ Axe failed to load: " + axeError.message
-    );
-    return;
-}
+    if (equippedAxeError) {
+        showForestMessage(
+            "❌ Axe failed to load: " +
+            equippedAxeError.message
+        );
+        return;
+    }
 
-if (
-    !playerAxe.has_rusty_axe ||
-    playerAxe.rusty_axe_durability <= 0
-) {
-    showForestMessage(
-        "❌ You need your starter Rusty Axe before chopping Birch. Refresh the page if it is missing."
-    );
-    return;
-}
+    const {
+        data: starterAxe,
+        error: starterAxeError
+    } = await supabaseClient
+        .from("players")
+        .select(`
+            has_rusty_axe,
+            rusty_axe_durability
+        `)
+        .eq("id", user.id)
+        .single();
 
-const axe = {
-    durability: playerAxe.rusty_axe_durability,
-    max_durability: 100
-};
+    if (starterAxeError) {
+        showForestMessage(
+            "❌ Starter axe failed to load: " +
+            starterAxeError.message
+        );
+        return;
+    }
+
+    let axeSource = null;
+    let axe = null;
+
+    if (
+        equippedAxe &&
+        Number(equippedAxe.durability) > 0
+    ) {
+        axeSource = "equipment";
+        axe = equippedAxe;
+    } else if (
+        starterAxe?.has_rusty_axe &&
+        Number(starterAxe.rusty_axe_durability) > 0
+    ) {
+        axeSource = "starter";
+        axe = {
+            durability:
+                Number(
+                    starterAxe.rusty_axe_durability
+                ),
+            max_durability: 100,
+            items: {
+                name: "Rusty Axe",
+                description:
+                    "A battered starter axe."
+            }
+        };
+    }
+
+    if (!axe) {
+        showForestMessage(
+            "❌ You need a usable axe before chopping Birch."
+        );
+        return;
+    }
     /* =====================================
        CHECK ENERGY
     ===================================== */
@@ -222,23 +261,42 @@ const axe = {
     ===================================== */
 
     const newDurability =
-    Math.max(0, axe.durability - 1);
+        Math.max(
+            0,
+            Number(axe.durability) - 1
+        );
 
-const { error: durabilityError } =
-    await supabaseClient
-        .from("players")
-        .update({
-            rusty_axe_durability: newDurability,
-            has_rusty_axe: newDurability > 0
-        })
-        .eq("id", user.id);
+    let durabilityError = null;
 
-if (durabilityError) {
-    console.error(
-        "Rusty axe durability failed:",
-        durabilityError
-    );
-}
+    if (axeSource === "equipment") {
+        const result = await supabaseClient
+            .from("equipment")
+            .update({
+                durability: newDurability
+            })
+            .eq("id", axe.id);
+
+        durabilityError = result.error;
+    } else {
+        const result = await supabaseClient
+            .from("players")
+            .update({
+                rusty_axe_durability:
+                    newDurability,
+                has_rusty_axe:
+                    newDurability > 0
+            })
+            .eq("id", user.id);
+
+        durabilityError = result.error;
+    }
+
+    if (durabilityError) {
+        console.error(
+            "Axe durability failed:",
+            durabilityError
+        );
+    }
 
 
     /* =====================================
@@ -364,14 +422,6 @@ if (durabilityError) {
         }
     }
 
-    } finally {
-        woodcuttingActionInProgress = false;
-
-        if (chopButton) {
-            chopButton.disabled = false;
-            chopButton.innerText = "🪓 Chop Birch";
-        }
-    }
 }
 
 
@@ -526,6 +576,59 @@ async function loadToolBeltAxe() {
     }
 
     if (!axe) {
+
+        const {
+            data: starterAxe
+        } = await supabaseClient
+            .from("players")
+            .select(`
+                has_rusty_axe,
+                rusty_axe_durability
+            `)
+            .eq("id", user.id)
+            .single();
+
+        if (
+            starterAxe?.has_rusty_axe &&
+            Number(
+                starterAxe.rusty_axe_durability
+            ) > 0
+        ) {
+            const rustyPercent =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        Number(
+                            starterAxe
+                                .rusty_axe_durability
+                        )
+                    )
+                );
+
+            if (axeName) {
+                axeName.innerText =
+                    "Rusty Axe";
+            }
+
+            if (axeBonus) {
+                axeBonus.innerText =
+                    "A battered starter axe.";
+            }
+
+            if (durabilityFill) {
+                durabilityFill.style.width =
+                    rustyPercent + "%";
+            }
+
+            if (chopButton) {
+                chopButton.disabled = false;
+                chopButton.innerText =
+                    "🪓 Chop Birch";
+            }
+
+            return;
+        }
 
         if (axeName) {
             axeName.innerText =

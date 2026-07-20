@@ -2,60 +2,11 @@
    LONG-TERM SKILL PROGRESSION
 ===================================== */
 const MIDGARD_SKILL_NAMES = Object.freeze([
-    "woodcutting",
-    "mining",
-    "fishing",
-    "hunting",
-    "farming",
-    "blacksmithing",
-    "carpentry",
-    "cooking",
-    "brewing"
+    "woodcutting", "mining", "fishing", "hunting", "farming",
+    "blacksmithing", "carpentry", "cooking", "brewing", "combat"
 ]);
 
-const MIDGARD_CONTENT_RULES = Object.freeze({
-    trees: Object.freeze({
-        birch: Object.freeze({
-            skill: "woodcutting",
-            levelRequired: 1,
-            xpPerAction: 5
-        }),
-        oak: Object.freeze({
-            skill: "woodcutting",
-            levelRequired: 5,
-            xpPerAction: 10
-        }),
-        pine: Object.freeze({
-            skill: "woodcutting",
-            levelRequired: 20,
-            xpPerAction: 18
-        })
-    }),
-
-    mines: Object.freeze({
-        bogIron: Object.freeze({
-            skill: "mining",
-            levelRequired: 1,
-            toolRequired: "hands",
-            xpPerAction: 5
-        }),
-        ironVein: Object.freeze({
-            skill: "mining",
-            levelRequired: 10,
-            toolRequired: "wooden_pickaxe",
-            xpPerAction: 10
-        }),
-        coalSeam: Object.freeze({
-            skill: "mining",
-            levelRequired: 20,
-            toolRequired: "iron_pickaxe",
-            xpPerAction: 15
-        })
-    })
-});
-
-const OAK_WOODCUTTING_LEVEL =
-    MIDGARD_CONTENT_RULES.trees.oak.levelRequired;
+const OAK_WOODCUTTING_LEVEL = 5;
 
 function skillXPForLevel(level) {
     const safeLevel = Math.max(1, Math.min(100, Number(level || 1)));
