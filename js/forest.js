@@ -416,6 +416,9 @@ async function chopBirchTree() {
 
     setBirchMessage(actionMessage, true);
 
+    // Queen Bees may be discovered from the player's very first successful chop.
+    await maybeTriggerWildBeeEncounter();
+
 
     /* =====================================
        REFRESH PAGE DATA
@@ -794,30 +797,73 @@ if (chopButton) {
 
 
 
-/* WILD BEE ENCOUNTER - after tutorial only */
+/* WILD QUEEN BEE ENCOUNTER - available from the first successful chop */
+const WILD_BEE_CHANCE = 0.05;
+const QUEEN_CAPTURE_CHANCE = 0.95;
+
 async function maybeTriggerWildBeeEncounter(){
- const {data:{user}}=await supabaseClient.auth.getUser(); if(!user)return;
- const {data:p}=await supabaseClient.from('players').select('tutorial_complete').eq('id',user.id).single();
- if(!p?.tutorial_complete||Math.random()>=WILD_BEE_CHANCE)return;
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user || Math.random()>=WILD_BEE_CHANCE)return false;
  showWildBeeEncounter();
+ return true;
 }
 function showWildBeeEncounter(){
- let box=document.getElementById('wild-bee-modal'); if(!box){box=document.createElement('div');box.id='wild-bee-modal';box.className='game-modal';document.body.appendChild(box);}
- box.innerHTML=`<div class="modal-card"><h2>🐝 A Wild Colony!</h2><p>You hear a furious buzzing inside the tree.</p><button onclick="collectWildQueen()">👑 Collect the Queen</button><button onclick="ignoreWildBees()">🪓 Keep Chopping</button><button onclick="closeWildBeeEncounter()">🚶 Walk Away</button></div>`;
+ let box=document.getElementById('wild-bee-modal');
+ if(!box){box=document.createElement('div');box.id='wild-bee-modal';box.className='game-modal';document.body.appendChild(box);}
+ box.innerHTML=`<div class="modal-card"><h2>🐝 A Wild Queen Bee!</h2><p>A fierce colony bursts from a hollow in the tree. A Viking does not flee from a few stings.</p><button onclick="collectWildQueen()">👑 Reach in and catch the Queen</button><button onclick="closeWildBeeEncounter()">🚶 Leave the colony alone</button></div>`;
 }
 function closeWildBeeEncounter(){document.getElementById('wild-bee-modal')?.remove();}
-async function collectWildQueen(){
- const {data:{user}}=await supabaseClient.auth.getUser(); const {data:items}=await supabaseClient.from('items').select('id,name').in('name',[ITEM_NAMES.QUEEN_BEE,ITEM_NAMES.BEE_SUIT,ITEM_NAMES.SMOKER]);
- const queen=items?.find(x=>x.name===ITEM_NAMES.QUEEN_BEE); if(!queen)return;
- const {data:owned}=await supabaseClient.from('inventory').select('item_id,quantity').eq('player_id',user.id).in('item_id',(items||[]).map(x=>x.id));
- const hasSuit=owned?.some(x=>x.item_id===items.find(i=>i.name===ITEM_NAMES.BEE_SUIT)?.id), hasSmoker=owned?.some(x=>x.item_id===items.find(i=>i.name===ITEM_NAMES.SMOKER)?.id);
- const successChance = hasSuit && hasSmoker ? 0.95 : hasSmoker ? 0.75 : hasSuit ? 0.60 : 0.35;
- if(Math.random()<=successChance){const {data:row}=await supabaseClient.from('inventory').select('*').eq('player_id',user.id).eq('item_id',queen.id).maybeSingle(); if(row)await supabaseClient.from('inventory').update({quantity:row.quantity+1}).eq('id',row.id);else await supabaseClient.from('inventory').insert({player_id:user.id,item_id:queen.id,quantity:1});showForestMessage('👑 You capture the Queen Bee! Return to your Bee Yard and install her in an empty hive.');}
- else {await supabaseClient.rpc('damage_player_health',{p_player_id:user.id,p_damage:20});showForestMessage('🐝 The swarm drives you away. You lose 20 health. A Bee Suit and Smoker would help.');}
- closeWildBeeEncounter(); if(typeof loadHomePage==='function')loadHomePage();
+function randomBeeDamage(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+async function getBeeProtection(userId){
+ const {data:eq}=await supabaseClient.from('player_beekeeping_equipment').select('bee_suit_equipped,smoker_equipped').eq('player_id',userId).maybeSingle();
+ return {hasSuit:Boolean(eq?.bee_suit_equipped),hasSmoker:Boolean(eq?.smoker_equipped)};
 }
-async function ignoreWildBees(){const {data:{user}}=await supabaseClient.auth.getUser();if(Math.random()<.7){await supabaseClient.from('players').update({health:0,hospital_until:new Date(Date.now()+30*60000).toISOString()}).eq('id',user.id);showForestMessage('🏥 The swarm overwhelms you. You wake in hospital.');}else showForestMessage('🐝 You somehow escape the angry swarm.');closeWildBeeEncounter();if(typeof loadHomePage==='function')loadHomePage();}
-
+function beeDamageRange(hasSuit,hasSmoker,captured){
+ if(captured){
+   if(hasSuit&&hasSmoker)return [1,3];
+   if(hasSuit)return [3,8];
+   if(hasSmoker)return [5,10];
+   return [10,20];
+ }
+ if(hasSuit&&hasSmoker)return [3,8];
+ if(hasSuit)return [8,15];
+ if(hasSmoker)return [10,18];
+ return [20,40];
+}
+async function applyBeeDamage(userId,damage){
+ const {data:player}=await supabaseClient.from('players').select('health').eq('id',userId).single();
+ const next=Math.max(0,Number(player?.health||0)-damage);
+ const payload={health:next};
+ if(next<=0)payload.hospital_until=new Date(Date.now()+30*60*1000).toISOString();
+ await supabaseClient.from('players').update(payload).eq('id',userId);
+ return next;
+}
+async function collectWildQueen(){
+ const {data:{user}}=await supabaseClient.auth.getUser(); if(!user)return;
+ const captured=Math.random()<QUEEN_CAPTURE_CHANCE;
+ const protection=await getBeeProtection(user.id);
+ const range=beeDamageRange(protection.hasSuit,protection.hasSmoker,captured);
+ const damage=randomBeeDamage(range[0],range[1]);
+ const healthLeft=await applyBeeDamage(user.id,damage);
+ let message='';
+ if(captured){
+   const {data:queen}=await supabaseClient.from('items').select('id').eq('name',ITEM_NAMES.QUEEN_BEE).maybeSingle();
+   if(!queen){message='❌ Queen Bee item is missing. Run migration 007.';}
+   else {
+     const {data:row}=await supabaseClient.from('inventory').select('id,quantity').eq('player_id',user.id).eq('item_id',queen.id).maybeSingle();
+     if(row)await supabaseClient.from('inventory').update({quantity:Number(row.quantity)+1}).eq('id',row.id);
+     else await supabaseClient.from('inventory').insert({player_id:user.id,item_id:queen.id,quantity:1});
+     message=`👑 You seize the Queen Bee and place her safely in your inventory.<br>🐝 The swarm stings you for <strong>${damage} Health</strong>.`;
+     if(typeof incrementGameStatistics==='function')await incrementGameStatistics({queen_bees_found:1,bee_stings_taken:1,damage_taken:damage});
+   }
+ } else {
+   message=`🐝 The Queen escapes your grasp. The swarm stings you for <strong>${damage} Health</strong>.`;
+   if(typeof incrementGameStatistics==='function')await incrementGameStatistics({bee_stings_taken:1,damage_taken:damage});
+ }
+ if(healthLeft<=0)message+='<br>🏥 You collapse and wake in hospital.';
+ closeWildBeeEncounter();showForestMessage(message);
+ if(typeof updateTopBarPlayer==='function')updateTopBarPlayer();
+}
 
 /* OAK WOODCUTTING - unlocked after tutorial */
 const oakButton = document.getElementById("chop-oak");

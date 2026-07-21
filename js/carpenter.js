@@ -692,7 +692,7 @@ async function craftEmptyBarrel() {
 
     await advanceTutorial(
     TUTORIAL_STEPS.CRAFT_BIRCH_BARREL,
-    TUTORIAL_STEPS.BUILD_BEEHIVE
+    TUTORIAL_STEPS.VISIT_VILLAGE_APIARY
 );
 
     showTemporaryMessage(

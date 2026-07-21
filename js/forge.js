@@ -400,7 +400,7 @@ async function forgeIronHoops() {
             "iron_hoops",
             hoopsMade,
             TUTORIAL_STEPS.FORGE_IRON_HOOPS,
-            TUTORIAL_STEPS.FORGE_IRON_NAILS,
+            TUTORIAL_STEPS.CRAFT_BUCKET,
             TUTORIAL_TARGETS.iron_hoops
         );
 

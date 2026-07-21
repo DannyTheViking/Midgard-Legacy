@@ -105,6 +105,7 @@ async function loadApiary() {
     }
 
     startHiveTimers();
+    await loadBeekeepingEquipment();
 
 }
 
@@ -370,15 +371,12 @@ async function buildHive(slot) {
         })
         .eq("id", nailItem.id);
 
-    const { data: playerState } = await supabaseClient
-        .from("players").select("tutorial_complete").eq("id", user.id).single();
-
     const { error: hiveError } = await supabaseClient
         .from("beehives")
         .insert({
             player_id: user.id,
             slot: slot,
-            queen_installed: !playerState?.tutorial_complete,
+            queen_installed: false,
             last_collected: new Date().toISOString()
         });
 
@@ -386,11 +384,6 @@ async function buildHive(slot) {
         showMessage(slot, "❌ Hive save failed: " + hiveError.message);
         return;
     }
-
-    await advanceTutorial(
-    TUTORIAL_STEPS.BUILD_BEEHIVE,
-    TUTORIAL_STEPS.COLLECT_HONEY
-);
 
     if (typeof logGameActivity === "function") {
         await logGameActivity("beehive_built", {
@@ -496,11 +489,6 @@ showMessage(
     } for the next batch.`
 );
 
-await advanceTutorial(
-    TUTORIAL_STEPS.COLLECT_HONEY,
-    TUTORIAL_STEPS.FILL_WATER_BUCKET
-);
-
 setTimeout(() => {
     loadHomePage();
     loadApiary();
@@ -549,3 +537,38 @@ buildHiveCard=function(hive){
  if(hive.queen_installed===false){return `<div class="crafting-card"><h3>🐝 Hive #${hive.slot}</h3><p>Status: <span class="green">Empty Hive</span></p><p>Capture a Queen Bee while woodcutting.</p><button onclick="installQueen(${hive.id},${hive.slot})">👑 Add Queen Bee</button><p id="hive-message-${hive.slot}"></p></div>`;}
  return originalBuildHiveCard(hive);
 };
+
+
+/* =====================================
+   PERSONAL BEEKEEPING EQUIPMENT
+===================================== */
+async function loadBeekeepingEquipment() {
+    const root = document.getElementById("beekeeping-equipment-card");
+    if (!root) return;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    const { data: defs } = await supabaseClient.from("items").select("id,name").in("name", [ITEM_NAMES.BEE_SUIT, ITEM_NAMES.SMOKER]);
+    const ids = (defs || []).map(item => item.id);
+    const { data: owned } = ids.length ? await supabaseClient.from("inventory").select("item_id,quantity").eq("player_id", user.id).in("item_id", ids) : { data: [] };
+    const { data: equipped } = await supabaseClient.from("player_beekeeping_equipment").select("bee_suit_equipped,smoker_equipped").eq("player_id", user.id).maybeSingle();
+    const suitDef = defs?.find(item => item.name === ITEM_NAMES.BEE_SUIT);
+    const smokerDef = defs?.find(item => item.name === ITEM_NAMES.SMOKER);
+    const has = id => Boolean(id && owned?.some(row => row.item_id === id && Number(row.quantity) > 0));
+    const suitOwned = has(suitDef?.id), smokerOwned = has(smokerDef?.id);
+    const suitOn = suitOwned && Boolean(equipped?.bee_suit_equipped);
+    const smokerOn = smokerOwned && Boolean(equipped?.smoker_equipped);
+    root.innerHTML = `
+      <div class="material-row"><div class="material-name"><span>🥋</span><span>Bee Suit</span></div><div><strong>${suitOn ? "Equipped" : suitOwned ? "Owned" : "Not owned"}</strong> ${suitOwned ? `<button onclick="toggleBeeEquipment('bee_suit',${!suitOn})">${suitOn ? "Remove" : "Equip"}</button>` : ""}</div></div>
+      <div class="material-row"><div class="material-name"><span>💨</span><span>Bee Smoker</span></div><div><strong>${smokerOn ? "Equipped" : smokerOwned ? "Owned" : "Not owned"}</strong> ${smokerOwned ? `<button onclick="toggleBeeEquipment('smoker',${!smokerOn})">${smokerOn ? "Remove" : "Equip"}</button>` : ""}</div></div>
+      <p><strong>Queen capture:</strong> 95%</p>
+      <p><strong>Successful-capture sting:</strong> ${suitOn && smokerOn ? "1–3" : suitOn ? "3–8" : smokerOn ? "5–10" : "10–20"} Health</p>`;
+}
+async function toggleBeeEquipment(kind, enabled) {
+    const { data: { user } } = await supabaseClient.auth.getUser(); if (!user) return;
+    const payload = { player_id: user.id, updated_at: new Date().toISOString() };
+    payload[kind === "bee_suit" ? "bee_suit_equipped" : "smoker_equipped"] = Boolean(enabled);
+    const { error } = await supabaseClient.from("player_beekeeping_equipment").upsert(payload, { onConflict: "player_id" });
+    const message = document.getElementById("beekeeping-equipment-message");
+    if (message) message.textContent = error ? `❌ ${error.message}` : enabled ? "✅ Equipment ready." : "Equipment removed.";
+    loadBeekeepingEquipment();
+}
