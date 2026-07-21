@@ -15,7 +15,8 @@ async function loadComponent(
     }
 
     const response = await fetch(
-        `../components/${fileName}`
+        `../components/${fileName}?v=3`,
+        { cache: "no-store" }
     );
 
     if (!response.ok) {
@@ -133,6 +134,77 @@ async function updateNavigation() {
 
         });
 
+}
+
+
+/* =====================================
+   TOP-BAR REGENERATION HOVER TIMERS
+===================================== */
+const MIDGARD_REGEN_INTERVAL_MS = 5 * 60 * 1000;
+const MIDGARD_REGEN_AMOUNT = 5;
+
+function formatRegenDuration(totalSeconds) {
+    const safeSeconds = Math.max(0, Math.ceil(totalSeconds));
+    const hours = Math.floor(safeSeconds / 3600);
+    const minutes = Math.floor((safeSeconds % 3600) / 60);
+    const seconds = safeSeconds % 60;
+    return hours > 0
+        ? `${hours}h ${String(minutes).padStart(2, "0")}m`
+        : `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function ensureTopBarRegenTooltips() {
+    ["health", "energy", "stamina", "courage"].forEach((name) => {
+        const valueElement = document.getElementById(name);
+        if (!valueElement) return;
+        const statContainer = valueElement.closest(".top-stat") || valueElement.parentElement;
+        if (!statContainer) return;
+        statContainer.classList.add("regen-stat");
+        statContainer.tabIndex = 0;
+        let tooltip = statContainer.querySelector(".stat-regen-tooltip");
+        if (!tooltip) {
+            tooltip = document.createElement("span");
+            tooltip.className = "stat-regen-tooltip";
+            tooltip.setAttribute("role", "tooltip");
+            statContainer.appendChild(tooltip);
+        }
+    });
+}
+
+function startTopBarRegenCountdown(player) {
+    ensureTopBarRegenTooltips();
+    if (window.midgardRegenCountdownTimer) clearInterval(window.midgardRegenCountdownTimer);
+    const lastRegenMs = player.last_regen ? new Date(player.last_regen).getTime() : Date.now();
+    const update = () => {
+        const elapsed = Math.max(0, Date.now() - lastRegenMs);
+        const remainder = elapsed % MIDGARD_REGEN_INTERVAL_MS;
+        const nextTickMs = remainder === 0 ? MIDGARD_REGEN_INTERVAL_MS : MIDGARD_REGEN_INTERVAL_MS - remainder;
+        const stats = [
+            ["health", Number(player.health || 0), Number(player.max_health || 500)],
+            ["energy", Number(player.energy || 0), Number(player.max_energy || 100)],
+            ["stamina", Number(player.stamina || 0), Number(player.max_stamina || 100)],
+            ["courage", Number(player.courage || 0), Number(player.max_courage || 100)]
+        ];
+        stats.forEach(([name, current, maximum]) => {
+            const valueElement = document.getElementById(name);
+            const statContainer = valueElement?.closest(".top-stat");
+            const tooltip = statContainer?.querySelector(".stat-regen-tooltip");
+            if (!statContainer || !tooltip) return;
+            let text;
+            if (current >= maximum) {
+                text = "Fully restored";
+            } else {
+                const ticksNeeded = Math.ceil((maximum - current) / MIDGARD_REGEN_AMOUNT);
+                const fullMs = nextTickMs + Math.max(0, ticksNeeded - 1) * MIDGARD_REGEN_INTERVAL_MS;
+                text = `Next +${MIDGARD_REGEN_AMOUNT} in ${formatRegenDuration(nextTickMs / 1000)} · Full in ${formatRegenDuration(fullMs / 1000)}`;
+            }
+            tooltip.textContent = text;
+            statContainer.title = text; // native fallback if custom CSS is unavailable
+            statContainer.dataset.regenTooltip = text;
+        });
+    };
+    update();
+    window.midgardRegenCountdownTimer = setInterval(update, 1000);
 }
 
 /* =====================================
@@ -293,6 +365,8 @@ async function updateTopBarPlayer() {
     setStat("energy", `${Number(player.energy || 0)} / ${Number(player.max_energy || 100)}`);
     setStat("stamina", `${Number(player.stamina || 0)} / ${Number(player.max_stamina || 100)}`);
     setStat("courage", `${Number(player.courage || 0)} / ${Number(player.max_courage || 100)}`);
+
+    startTopBarRegenCountdown(player);
 
     document.getElementById("topbar")?.classList.add("topbar-ready");
 

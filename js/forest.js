@@ -798,7 +798,7 @@ if (chopButton) {
 
 
 /* WILD QUEEN BEE ENCOUNTER - available from the first successful chop */
-const WILD_BEE_CHANCE = 0.05;
+const WILD_BEE_CHANCE = 0.01;
 const QUEEN_CAPTURE_CHANCE = 0.95;
 
 async function maybeTriggerWildBeeEncounter(){
