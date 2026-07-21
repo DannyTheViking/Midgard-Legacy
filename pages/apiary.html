@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midgard Legacy - Personal Bee Yard</title>
+    <title>Midgard Legacy - Apiary</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/apiary.css">
 </head>
 
 <body>
@@ -20,19 +21,33 @@
 
         <section class="page-header">
             <div class="page-title">
-                <h1>🐝 Personal Bee Yard</h1>
-                <p>Build your own hives, install captured Queen Bees and harvest honey.</p>
+                <h1>🐝 Apiary</h1>
+                <p>Build your own hives, install captured Queen Bees and harvest honey on your land.</p>
             </div>
         </section>
 
-        <section class="quick-actions">
-            <h2>🛡️ Beekeeping Equipment</h2>
-            <p>Equipment reduces sting damage when catching a wild Queen Bee.</p>
-            <div id="beekeeping-equipment-card">Loading equipment...</div>
-            <p id="beekeeping-equipment-message"></p>
+        <section id="apiary-locked-message" class="quick-actions" hidden>
+            <h2>🔒 Apiary Locked</h2>
+            <p>Upgrade your Old Shack before building an Apiary.</p>
+            <a href="property.html">Return to Your Homestead</a>
         </section>
 
-        <section id="hive-slots" class="crafting-grid"></section>
+        <section id="apiary-workspace" class="apiary-workspace" hidden>
+            <div>
+                <section class="quick-actions apiary-intro">
+                    <h2>🏡 Your Apiary</h2>
+                    <p>House upgrades unlock more hive plots. Build a hive, then install a captured Queen Bee to begin producing honey.</p>
+                </section>
+                <section id="hive-slots" class="crafting-grid apiary-hive-grid"></section>
+            </div>
+
+            <aside class="quick-actions apiary-tools-card">
+                <h2>🛡️ Beekeeping Tools</h2>
+                <p>Equipment reduces sting damage when catching a wild Queen Bee.</p>
+                <div id="beekeeping-equipment-card">Loading equipment...</div>
+                <p id="beekeeping-equipment-message"></p>
+            </aside>
+        </section>
 
     </main>
 

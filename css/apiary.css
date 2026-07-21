@@ -1,0 +1,18 @@
+
+.apiary-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 18px;
+    align-items: start;
+}
+
+.apiary-intro { margin-bottom: 14px; }
+.apiary-hive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.apiary-tools-card { position: sticky; top: 18px; }
+.apiary-tools-card .material-row { align-items: center; gap: 8px; }
+.apiary-tools-card button { margin-left: 6px; }
+
+@media (max-width: 980px) {
+    .apiary-workspace { grid-template-columns: 1fr; }
+    .apiary-tools-card { position: static; }
+}

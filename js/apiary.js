@@ -18,6 +18,13 @@ const MAX_HIVES = 5;
 const PLANK_COST = 30;
 const NAIL_COST = 100;
 
+function getUnlockedHiveSlots(propertyLevel) {
+    const level = Math.max(0, Number(propertyLevel) || 0);
+    if (level < 1) return 0;
+    if (level >= 4) return 5;
+    return level;
+}
+
 /*
     config.js provides HONEY_TIME_SECONDS.
     Fallback keeps the page working if the
@@ -53,13 +60,33 @@ async function loadApiary() {
         return;
     }
 
+    const { data: player, error: playerError } = await supabaseClient
+        .from("players")
+        .select("property_level")
+        .eq("id", user.id)
+        .maybeSingle();
+
+    const propertyLevel = playerError ? 0 : Number(player?.property_level || 0);
+    const unlockedHiveSlots = getUnlockedHiveSlots(propertyLevel);
+    const lockedMessage = document.getElementById("apiary-locked-message");
+    const workspace = document.getElementById("apiary-workspace");
+
+    if (unlockedHiveSlots < 1) {
+        if (lockedMessage) lockedMessage.hidden = false;
+        if (workspace) workspace.hidden = true;
+        return;
+    }
+
+    if (lockedMessage) lockedMessage.hidden = true;
+    if (workspace) workspace.hidden = false;
+
     const { data: hives } = await supabaseClient
         .from("beehives")
         .select("*")
         .eq("player_id", user.id)
         .order("slot");
 
-        window.currentHives = hives;
+        window.currentHives = hives || [];
 
     const { data: inventory } = await supabaseClient
         .from("inventory")
@@ -67,7 +94,7 @@ async function loadApiary() {
         .eq("player_id", user.id);
 
     const getItemCount = function (itemId) {
-        const item = inventory.find(i => i.item_id === itemId);
+        const item = (inventory || []).find(i => i.item_id === itemId);
         return item ? item.quantity : 0;
     };
 
@@ -82,7 +109,7 @@ async function loadApiary() {
     for (let slot = 1; slot <= MAX_HIVES; slot++) {
 
         const hive =
-            hives.find(h => h.slot === slot);
+            (hives || []).find(h => h.slot === slot);
 
         if (hive) {
             hiveSlots.innerHTML += buildHiveCard(hive);
@@ -90,9 +117,11 @@ async function loadApiary() {
         }
 
         const previousHive =
-            hives.find(h => h.slot === slot - 1);
+            (hives || []).find(h => h.slot === slot - 1);
 
-        if (slot === 1 || previousHive) {
+        if (slot > unlockedHiveSlots) {
+            hiveSlots.innerHTML += buildHouseLockedSlotCard(slot);
+        } else if (slot === 1 || previousHive) {
             hiveSlots.innerHTML += buildEmptySlotCard(
                 slot,
                 plankCount,
@@ -199,6 +228,17 @@ function buildLockedSlotCard(slot) {
         </div>
     `;
 
+}
+
+
+function buildHouseLockedSlotCard(slot) {
+    return `
+        <div class="crafting-card locked">
+            <h3>🔒 Hive Plot #${slot}</h3>
+            <p>Status: Locked</p>
+            <p>Upgrade your house to unlock this hive plot.</p>
+        </div>
+    `;
 }
 
 
@@ -332,6 +372,29 @@ async function buildHive(slot) {
     } = await supabaseClient.auth.getUser();
 
     if (!user) return;
+
+    const { data: player } = await supabaseClient
+        .from("players")
+        .select("property_level")
+        .eq("id", user.id)
+        .maybeSingle();
+
+    if (slot > getUnlockedHiveSlots(player?.property_level)) {
+        showMessage(slot, "❌ Upgrade your house to unlock this hive plot.");
+        return;
+    }
+
+    const { data: existingHive } = await supabaseClient
+        .from("beehives")
+        .select("id")
+        .eq("player_id", user.id)
+        .eq("slot", slot)
+        .maybeSingle();
+
+    if (existingHive) {
+        showMessage(slot, "❌ A hive already occupies this plot.");
+        return;
+    }
 
     const { data: plankItem } = await supabaseClient
         .from("inventory")

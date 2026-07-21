@@ -1,0 +1,23 @@
+MIDGARD LEGACY - APIARY FIX
+
+1. Upload this build.
+2. In Supabase SQL Editor, run:
+   supabase/migrations/008_property_apiary_unlocks.sql
+
+Changes:
+- Removed the duplicate large Personal Bee Yard panel from Property.
+- Kept one Apiary card under Property Buildings.
+- Apiary remains locked until property_level is at least 1 (Upgraded Shack).
+- Directly opening apiary.html while locked shows a locked message.
+- The personal Apiary uses a hive workspace with Beekeeping Tools on the right.
+- House upgrades control available hive plots:
+  Level 1: 1 hive
+  Level 2: 2 hives
+  Level 3: 3 hives
+  Level 4: 5 hives
+- Existing village crafting pages are unchanged.
+
+For testing an upgraded shack manually:
+UPDATE public.players
+SET property_level = 1
+WHERE username = 'YOUR_USERNAME';

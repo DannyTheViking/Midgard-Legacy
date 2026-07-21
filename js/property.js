@@ -57,7 +57,7 @@ const propertyStages = [
  * Later this value should be loaded from Supabase using the signed-in
  * player's property_level column.
  */
-const CURRENT_PROPERTY_LEVEL = 0;
+let CURRENT_PROPERTY_LEVEL = 0;
 
 const currentPropertyImage =
     document.getElementById("current-property-image");
@@ -159,4 +159,40 @@ returnCurrentPropertyButton.addEventListener(
     displayCurrentProperty
 );
 
-displayCurrentProperty();
+async function loadSavedPropertyLevel() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabaseClient
+            .from("players")
+            .select("property_level")
+            .eq("id", user.id)
+            .maybeSingle();
+
+        if (!error && data) {
+            CURRENT_PROPERTY_LEVEL = Math.max(0, Number(data.property_level) || 0);
+        }
+    } catch (error) {
+        console.warn("Could not load property level:", error);
+    }
+
+    const apiaryCard = document.getElementById("apiary-building-card");
+    const apiaryText = document.getElementById("apiary-unlock-text");
+
+    if (apiaryCard && CURRENT_PROPERTY_LEVEL >= 1) {
+        const link = document.createElement("a");
+        link.id = apiaryCard.id;
+        link.className = "property-building available";
+        link.href = "apiary.html";
+        link.innerHTML = apiaryCard.innerHTML;
+        apiaryCard.replaceWith(link);
+        if (apiaryText) apiaryText.textContent = "Available";
+        const newText = document.getElementById("apiary-unlock-text");
+        if (newText) newText.textContent = "Available";
+    }
+
+    displayCurrentProperty();
+}
+
+loadSavedPropertyLevel();
