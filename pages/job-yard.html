@@ -1,35 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Yard | Midgard Legacy</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/job-yard.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Job Yard | Midgard Legacy
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/job-yard.css?v=1"
+    >
+
 </head>
+
 <body>
-  <div id="topbar"></div>
-  <div class="game-layout">
-    <aside id="sidebar"></aside>
-    <main class="main-content">
-      <section class="page-header">
-        <div class="page-title">
-          <h1>📜 Job Yard</h1>
-          <p>Help each villager, earn their trust and learn their profession.</p>
-        </div>
-      </section>
 
-      <div id="job-yard-message" class="job-message" aria-live="polite"></div>
-      <section id="npc-job-grid" class="npc-job-grid">
-        <p>Loading village jobs…</p>
-      </section>
-    </main>
-  </div>
+    <div class="game-layout">
 
-  <!-- Keep these filenames aligned with your current shared files. -->
-  <script src="../js/supabase.js"></script>
-  <script src="../js/components.js"></script>
-  <script src="../js/job-yard.js"></script>
+        <!-- Shared sidebar -->
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <!-- Shared topbar -->
+            <div id="topbar"></div>
+
+            <section class="page-header">
+
+                <div class="page-title">
+
+                    <h1>
+                        📜 Job Yard
+                    </h1>
+
+                    <p>
+                        Help each villager, earn their trust
+                        and learn their profession.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <div
+                id="job-yard-message"
+                class="job-message"
+                aria-live="polite"
+            ></div>
+
+            <section
+                id="npc-job-grid"
+                class="npc-job-grid"
+            >
+
+                <p>
+                    Loading village jobs...
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Supabase library -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <!-- Shared game files -->
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/components.js?v=4"></script>
+
+    <!-- Job Yard -->
+    <script src="../js/job-yard.js?v=1"></script>
+
 </body>
+
 </html>
