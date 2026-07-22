@@ -203,8 +203,8 @@ insert into public.items(name, description)
 values
 ('Stick', 'A simple stick gathered while chopping trees.'),
 ('Rock', 'A rough building stone gathered while mining.'),
-('Birch Beam', 'A sturdy structural beam made from Birch Planks.'),
-('Oak Beam', 'A strong structural beam made from Oak Planks.'),
+('Birch Beam', 'A sturdy structural beam cut from a Birch Log.'),
+('Oak Beam', 'A strong structural beam cut from an Oak Log.'),
 ('Birch Shaft', 'A carved Birch handle for basic tools.'),
 ('Oak Shaft', 'A stronger Oak handle for advanced tools.')
 on conflict (name) do nothing;

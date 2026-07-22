@@ -60,13 +60,6 @@
 
                 </div>
 
-                <nav
-                    id="hospital-pagination"
-                    class="hospital-pagination"
-                    aria-label="Hospital patient pages"
-                    hidden
-                ></nav>
-
             </section>
 
             <div
@@ -127,6 +120,8 @@
                     Patients in the healer hut
                 </h2>
 
+                <p class="patient-sort-note">Longest recovery time is shown first.</p>
+
                 <div
                     id="hospital-grid"
                     class="hospital-grid"
@@ -137,6 +132,12 @@
                     </p>
 
                 </div>
+
+                <nav id="hospital-pagination" class="hospital-pagination" aria-label="Patient pages" hidden>
+                    <button id="patient-page-previous" type="button">← Previous</button>
+                    <span id="patient-page-label">Page 1 of 1</span>
+                    <button id="patient-page-next" type="button">Next →</button>
+                </nav>
 
             </section>
 

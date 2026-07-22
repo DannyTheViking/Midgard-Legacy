@@ -54,7 +54,8 @@ async function updateNavigation() {
         .from("players")
         .select(`
             tutorial_complete,
-            is_free_man
+            is_free_man,
+            hospital_until
         `)
         .eq("id", user.id)
         .maybeSingle();
@@ -108,12 +109,34 @@ async function updateNavigation() {
     }
 
 
+    /* Hospital lock: admitted players may only use Inventory or the Village Healer. */
+    const currentPage = window.location.pathname.split("/").pop() || "home.html";
+    const hospitalActive = player?.hospital_until && new Date(player.hospital_until).getTime() > Date.now();
+    const hospitalAllowedPages = new Set(["inventory.html", "village-healer.html"]);
+
+    if (hospitalActive) {
+        document.querySelectorAll(".sidebar a.nav").forEach(link => {
+            const linkPage = (link.getAttribute("href") || "").split("?")[0];
+            if (hospitalAllowedPages.has(linkPage)) return;
+            link.href = "#";
+            link.classList.add("locked-nav", "hospital-locked-nav");
+            if (!link.textContent.includes("🔒")) link.textContent = `🔒 ${link.textContent.trim()}`;
+            link.addEventListener("click", event => {
+                event.preventDefault();
+                alert("You are recovering in the Village Healer hut. Only the healer and your inventory are available.");
+            });
+        });
+
+        if (!hospitalAllowedPages.has(currentPage)) {
+            window.location.replace("village-healer.html");
+            return;
+        }
+    }
+
+
     /* Active page highlight */
 
-    const currentPage =
-        window.location.pathname
-            .split("/")
-            .pop();
+    const highlightedPage = currentPage;
 
     document
         .querySelectorAll(
@@ -124,7 +147,7 @@ async function updateNavigation() {
             const linkPage =
                 link.getAttribute("href");
 
-            if (linkPage === currentPage) {
+            if (linkPage === highlightedPage) {
 
                 link.classList.add(
                     "active"
@@ -239,6 +262,7 @@ async function updateTopBarPlayer() {
             tutorial_complete,
             is_free_man,
             silver,
+            mission_points,
             health,
             max_health,
             energy,
@@ -247,7 +271,11 @@ async function updateTopBarPlayer() {
             max_stamina,
             courage,
             max_courage,
-            last_regen
+            last_regen,
+            hospital_started_at,
+            hospital_until,
+            hospital_start_health,
+            hospital_regen_per_minute
         `)
         .eq("id", user.id)
         .maybeSingle();
@@ -271,7 +299,9 @@ async function updateTopBarPlayer() {
     const elapsedMs = Math.max(0, now.getTime() - lastRegen.getTime());
     const regenTicks = Math.floor(elapsedMs / (5 * 60 * 1000));
 
-    if (regenTicks > 0) {
+    const isInHospital = player.hospital_until && new Date(player.hospital_until).getTime() > Date.now();
+
+    if (regenTicks > 0 && !isInHospital) {
         const regenAmount = regenTicks * 5;
         const regenerated = {
             health: Math.min(Number(player.health || 0) + regenAmount, Number(player.max_health || 500)),
@@ -360,8 +390,18 @@ async function updateTopBarPlayer() {
         if (element) element.textContent = value;
     };
 
+    let displayedHealth = Number(player.health || 0);
+    if (isInHospital && player.hospital_started_at) {
+        const elapsedMinutes = Math.max(0, (Date.now() - new Date(player.hospital_started_at).getTime()) / 60000);
+        displayedHealth = Math.min(
+            Number(player.max_health || 500),
+            Math.max(1, Math.floor(Number(player.hospital_start_health || 1) + elapsedMinutes * Number(player.hospital_regen_per_minute || 5)))
+        );
+    }
+
     setStat("silver", Number(player.silver || 0).toLocaleString());
-    setStat("health", `${Number(player.health || 0)} / ${Number(player.max_health || 500)}`);
+    setStat("mission-points", Number(player.mission_points || 0).toLocaleString());
+    setStat("health", `${displayedHealth} / ${Number(player.max_health || 500)}`);
     setStat("energy", `${Number(player.energy || 0)} / ${Number(player.max_energy || 100)}`);
     setStat("stamina", `${Number(player.stamina || 0)} / ${Number(player.max_stamina || 100)}`);
     setStat("courage", `${Number(player.courage || 0)} / ${Number(player.max_courage || 100)}`);

@@ -757,7 +757,7 @@ async function craftNamedBeam(woodName, beamName, amountInputId, messageId) {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return;
     const [wood, beam] = await Promise.all([getNamedItem(woodName), getNamedItem(beamName)]);
-    const required = amount * 10;
+    const required = amount;
     const { data: woodRow, error: woodError } = await supabaseClient.from("inventory")
         .select("id,quantity").eq("player_id", user.id).eq("item_id", wood.id).maybeSingle();
     if (woodError) throw woodError;
@@ -789,15 +789,15 @@ async function loadBeamStock() {
         const stock = new Map((data || []).map(row => [row.items?.name, Number(row.quantity || 0)]));
         const birch = document.getElementById("birch-beam-stock");
         const oak = document.getElementById("oak-beam-stock");
-        if (birch) birch.textContent = `${stock.get("Birch Plank") || 0} Birch Planks · ${stock.get("Birch Beam") || 0} Beams`;
-        if (oak) oak.textContent = `${stock.get("Oak Plank") || 0} Oak Planks · ${stock.get("Oak Beam") || 0} Beams`;
+        if (birch) birch.textContent = `${stock.get("Birch Log") || 0} Birch Logs · ${stock.get("Birch Beam") || 0} Beams`;
+        if (oak) oak.textContent = `${stock.get("Oak Log") || 0} Oak Logs · ${stock.get("Oak Beam") || 0} Beams`;
     } catch (error) { console.error("Beam stock failed:", error); }
 }
 
 document.getElementById("craft-birch-beam-button")?.addEventListener("click", () =>
-    craftNamedBeam("Birch Plank", "Birch Beam", "birch-beam-amount", "birch-beam-message").catch(error => showTemporaryMessage("birch-beam-message", `❌ ${error.message}`))
+    craftNamedBeam("Birch Log", "Birch Beam", "birch-beam-amount", "birch-beam-message").catch(error => showTemporaryMessage("birch-beam-message", `❌ ${error.message}`))
 );
 document.getElementById("craft-oak-beam-button")?.addEventListener("click", () =>
-    craftNamedBeam("Oak Plank", "Oak Beam", "oak-beam-amount", "oak-beam-message").catch(error => showTemporaryMessage("oak-beam-message", `❌ ${error.message}`))
+    craftNamedBeam("Oak Log", "Oak Beam", "oak-beam-amount", "oak-beam-message").catch(error => showTemporaryMessage("oak-beam-message", `❌ ${error.message}`))
 );
 loadBeamStock();

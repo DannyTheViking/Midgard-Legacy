@@ -1175,7 +1175,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const button = document.createElement("button");
             button.id = "test-medical-accident";
             button.type = "button";
-            button.textContent = "🧪 Test Falling Tree Accident";
+            button.textContent = "🧪 Test Random Hospital Accident";
             button.addEventListener("click", () => testMedicalAccident("forest"));
             header.appendChild(button);
         }

@@ -2,9 +2,10 @@ let healerUser = null;
 let healerJobsCompleted = 0;
 let hospitalTimer = null;
 let hospitalRealtimeChannel = null;
-let hospitalPatients = [];
-let hospitalPage = 1;
-const HOSPITAL_PAGE_SIZE = 10;
+let healerPatients = [];
+let healerPage = 1;
+const PATIENTS_PER_PAGE = 10;
+const MAX_RANDOM_NPC_PATIENTS = 6;
 
 function safe(value) {
   return String(value ?? "")
@@ -24,12 +25,20 @@ function liveHealth(startHealth, admittedAt, regenPerMinute, maxHealth = 500) {
   return Math.min(maxHealth, Math.max(1, Math.floor(Number(startHealth) + elapsedMinutes * Number(regenPerMinute))));
 }
 
+function remainingMilliseconds(until) {
+  return Math.max(0, new Date(until).getTime() - Date.now());
+}
+
 function remainingText(until) {
-  const ms = new Date(until).getTime() - Date.now();
+  const ms = remainingMilliseconds(until);
   if (ms <= 0) return "Ready to leave";
-  const minutes = Math.floor(ms / 60000);
-  const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}m ${String(seconds).padStart(2, "0")}s`;
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return hours > 0
+    ? `${hours}h ${String(minutes).padStart(2, "0")}m`
+    : `${minutes}m ${String(seconds).padStart(2, "0")}s`;
 }
 
 function healingPercent() {
@@ -64,7 +73,7 @@ async function loadVillageHealer() {
         .not("hospital_until", "is", null).gt("hospital_until", new Date().toISOString()),
       supabaseClient.from("npc_hospital_visits")
         .select("id,npc_id,injury_text,start_health,regen_per_minute,admitted_at,recovery_at,status,village_npcs(*)")
-        .eq("status", "recovering").gt("recovery_at", new Date().toISOString()).order("admitted_at"),
+        .eq("status", "recovering").gt("recovery_at", new Date().toISOString()),
       supabaseClient.from("players")
         .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
         .eq("id", user.id).single()
@@ -73,7 +82,7 @@ async function loadVillageHealer() {
     for (const result of [playersResult, npcVisitsResult, meResult]) if (result.error) throw result.error;
 
     renderMyHospital(meResult.data);
-    renderPatients(playersResult.data || [], npcVisitsResult.data || []);
+    preparePatients(playersResult.data || [], npcVisitsResult.data || []);
     startLiveUpdates();
     subscribeToHospitalChanges();
   } catch (error) {
@@ -84,7 +93,10 @@ async function loadVillageHealer() {
 
 function renderMyHospital(me) {
   const card = document.getElementById("my-hospital-card");
-  if (!me.hospital_until) { card.hidden = true; return; }
+  if (!me.hospital_until || new Date(me.hospital_until).getTime() <= Date.now()) {
+    card.hidden = true;
+    return;
+  }
   card.hidden = false;
   card.dataset.started = me.hospital_started_at;
   card.dataset.until = me.hospital_until;
@@ -97,38 +109,40 @@ function renderMyHospital(me) {
       <span>Health <strong data-my-health>1/${me.max_health || 500}</strong></span>
       <span>Time remaining <strong data-my-time>--</strong></span>
     </div>
-    <p class="regen-note">Your injury details are shown with the other patients below.</p>`;
+    <p class="regen-note">Your injury reason is shown on your patient card below.</p>`;
+}
+
+function patientEndTime(patient) {
+  return new Date(patient.kind === "player" ? patient.hospital_until : patient.recovery_at).getTime();
 }
 
 function patientCard(patient) {
   const level = healingPercent();
   const locked = !level;
   const isPlayer = patient.kind === "player";
-  const name = isPlayer ? patient.username : patient.npc.name;
-  const job = isPlayer ? "Real player" : patient.npc.profession;
-  const profile = isPlayer ? "Player" : "Village NPC";
+  const npc = patient.npc || {};
+  const name = isPlayer ? patient.username : npc.name;
+  const subtitle = isPlayer ? "Recovering patient" : (npc.profession || "Village resident");
   const start = isPlayer ? (patient.hospital_start_health || 1) : patient.start_health;
   const admitted = isPlayer ? patient.hospital_started_at : patient.admitted_at;
   const regen = isPlayer ? patient.hospital_regen_per_minute : patient.regen_per_minute;
   const until = isPlayer ? patient.hospital_until : patient.recovery_at;
-  const max = isPlayer ? patient.max_health : patient.npc.max_health;
+  const max = Number(isPlayer ? patient.max_health : npc.max_health) || 500;
   const injury = isPlayer ? patient.hospital_reason : patient.injury_text;
   const target = patient.id;
-  const portrait = isPlayer
+  const profileHref = isPlayer && patient.player_number
+    ? `profile.html?id=${encodeURIComponent(patient.player_number)}`
+    : (!isPlayer && npc.id ? `profile.html?npc=${encodeURIComponent(npc.id)}` : "#");
+  const portraitContent = isPlayer
     ? (patient.avatar_url ? `<img src="${safe(patient.avatar_url)}" alt="${safe(name)}">` : "🛡️")
-    : (patient.npc.avatar_url ? `<img src="${safe(patient.npc.avatar_url)}" alt="${safe(name)}">` : safe(patient.npc.icon));
-  const displayName = isPlayer
-    ? (patient.player_number
-        ? `<a href="profile.html?id=${Number(patient.player_number)}">${safe(name)}</a>`
-        : safe(name))
-    : `<a href="profile.html?npc=${Number(patient.npc.id)}">${safe(name)}</a>`;
+    : (npc.avatar_url ? `<img src="${safe(npc.avatar_url)}" alt="${safe(name)}">` : safe(npc.icon || "🧑"));
 
-  return `<article class="patient-card" data-start="${start}" data-admitted="${admitted}" data-regen="${regen}" data-until="${until}" data-max="${max}">
+  return `<article class="patient-card" data-start="${start}" data-admitted="${safe(admitted)}" data-regen="${regen}" data-until="${safe(until)}" data-max="${max}" data-self="${isPlayer && patient.id === healerUser.id}">
     <header>
-      <div class="patient-icon">${portrait}</div>
-      <div><h3>${displayName}</h3><p>${safe(job)} · <span>${profile}</span></p></div>
+      <a class="patient-icon" href="${profileHref}" aria-label="View ${safe(name)} profile">${portraitContent}</a>
+      <div><h3><a href="${profileHref}">${safe(name)}</a></h3><p>${safe(subtitle)}</p></div>
     </header>
-    <p class="injury">${safe(injury)}</p>
+    <p class="injury">${safe(injury || "Recovering under Yrsa's care.")}</p>
     <div class="health-row"><span>❤️ <strong data-live-health>1/${max}</strong></span><span>⏳ <strong data-live-time>--</strong></span></div>
     <div class="health-track"><div data-health-bar></div></div>
     ${locked
@@ -137,65 +151,45 @@ function patientCard(patient) {
   </article>`;
 }
 
-function renderPatients(players, npcVisits) {
-  const playerPatients = players
-    .map(p => ({ ...p, kind: "player" }))
-    .sort((a, b) => {
-      if (a.id === healerUser.id) return -1;
-      if (b.id === healerUser.id) return 1;
-      return String(a.username || "").localeCompare(String(b.username || ""));
-    });
-
+function preparePatients(players, npcVisits) {
+  const playerPatients = players.map(player => ({ ...player, kind: "player" }));
   const npcPatients = npcVisits
-    .slice(0, 6)
-    .map(v => ({ ...v, npc: v.village_npcs, kind: "npc" }));
+    .slice()
+    .sort((a, b) => new Date(b.recovery_at) - new Date(a.recovery_at))
+    .slice(0, MAX_RANDOM_NPC_PATIENTS)
+    .map(visit => ({ ...visit, npc: visit.village_npcs, kind: "npc" }));
 
-  // Keep the six random NPC patients, then use the remaining beds for real players.
-  hospitalPatients = [...npcPatients, ...playerPatients];
+  healerPatients = [...playerPatients, ...npcPatients]
+    .filter(patient => patientEndTime(patient) > Date.now())
+    .sort((a, b) => patientEndTime(b) - patientEndTime(a));
 
-  const totalPages = Math.max(1, Math.ceil(hospitalPatients.length / HOSPITAL_PAGE_SIZE));
-  hospitalPage = Math.min(hospitalPage, totalPages);
-
-  document.getElementById("patient-count").textContent = hospitalPatients.length;
-  renderHospitalPage();
+  const totalPages = Math.max(1, Math.ceil(healerPatients.length / PATIENTS_PER_PAGE));
+  healerPage = Math.min(healerPage, totalPages);
+  renderPatientPage();
 }
 
-function renderHospitalPage() {
-  const grid = document.getElementById("hospital-grid");
-  const pagination = document.getElementById("hospital-pagination");
-  const totalPages = Math.max(1, Math.ceil(hospitalPatients.length / HOSPITAL_PAGE_SIZE));
-  const start = (hospitalPage - 1) * HOSPITAL_PAGE_SIZE;
-  const visiblePatients = hospitalPatients.slice(start, start + HOSPITAL_PAGE_SIZE);
+function renderPatientPage() {
+  const totalPages = Math.max(1, Math.ceil(healerPatients.length / PATIENTS_PER_PAGE));
+  const start = (healerPage - 1) * PATIENTS_PER_PAGE;
+  const visible = healerPatients.slice(start, start + PATIENTS_PER_PAGE);
+  document.getElementById("patient-count").textContent = healerPatients.length;
 
-  grid.innerHTML = visiblePatients.length
-    ? visiblePatients.map(patientCard).join("")
+  const grid = document.getElementById("hospital-grid");
+  grid.innerHTML = visible.length
+    ? visible.map(patientCard).join("")
     : "<p>Every bed is empty. Yrsa looks suspiciously relaxed.</p>";
 
   grid.querySelectorAll(".heal-button").forEach(button => {
     button.addEventListener("click", () => healPatient(button.dataset.kind, button.dataset.target));
   });
 
-  if (totalPages <= 1) {
-    pagination.hidden = true;
-    pagination.innerHTML = "";
-  } else {
-    pagination.hidden = false;
-    pagination.innerHTML = `
-      <button type="button" id="hospital-prev" ${hospitalPage === 1 ? "disabled" : ""}>← Previous</button>
-      <span>Page <strong>${hospitalPage}</strong> of <strong>${totalPages}</strong></span>
-      <button type="button" id="hospital-next" ${hospitalPage === totalPages ? "disabled" : ""}>Next →</button>`;
-
-    document.getElementById("hospital-prev")?.addEventListener("click", () => {
-      hospitalPage = Math.max(1, hospitalPage - 1);
-      renderHospitalPage();
-    });
-
-    document.getElementById("hospital-next")?.addEventListener("click", () => {
-      hospitalPage = Math.min(totalPages, hospitalPage + 1);
-      renderHospitalPage();
-    });
-  }
-
+  const pager = document.getElementById("hospital-pagination");
+  pager.hidden = totalPages <= 1;
+  document.getElementById("patient-page-label").textContent = `Page ${healerPage} of ${totalPages}`;
+  const previous = document.getElementById("patient-page-previous");
+  const next = document.getElementById("patient-page-next");
+  previous.disabled = healerPage <= 1;
+  next.disabled = healerPage >= totalPages;
   updateLiveValues();
 }
 
@@ -216,11 +210,17 @@ async function healPatient(kind, target) {
 }
 
 function updateLiveValues() {
+  let shouldReload = false;
   document.querySelectorAll(".patient-card").forEach(card => {
+    if (remainingMilliseconds(card.dataset.until) <= 0) shouldReload = true;
     const health = liveHealth(card.dataset.start, card.dataset.admitted, card.dataset.regen, card.dataset.max);
     card.querySelector("[data-live-health]").textContent = `${health}/${card.dataset.max}`;
     card.querySelector("[data-live-time]").textContent = remainingText(card.dataset.until);
     card.querySelector("[data-health-bar]").style.width = `${Math.max(1, health / Number(card.dataset.max) * 100)}%`;
+    if (card.dataset.self === "true") {
+      const topHealth = document.getElementById("health");
+      if (topHealth) topHealth.textContent = `${health} / ${card.dataset.max}`;
+    }
   });
 
   const mine = document.getElementById("my-hospital-card");
@@ -228,10 +228,16 @@ function updateLiveValues() {
     const health = liveHealth(mine.dataset.startHealth, mine.dataset.started, mine.dataset.regen, mine.dataset.max);
     mine.querySelector("[data-my-health]").textContent = `${health}/${mine.dataset.max}`;
     mine.querySelector("[data-my-time]").textContent = remainingText(mine.dataset.until);
+    const topHealth = document.getElementById("health");
+    if (topHealth) topHealth.textContent = `${health} / ${mine.dataset.max}`;
+  }
 
-    // Keep the shared top bar in sync with the live hospital regeneration value.
-    const topbarHealth = document.getElementById("health");
-    if (topbarHealth) topbarHealth.textContent = `${health} / ${mine.dataset.max}`;
+  if (shouldReload && !window.healerReloadPending) {
+    window.healerReloadPending = true;
+    setTimeout(() => {
+      window.healerReloadPending = false;
+      loadVillageHealer();
+    }, 1000);
   }
 }
 
@@ -239,9 +245,6 @@ function startLiveUpdates() {
   clearInterval(hospitalTimer);
   hospitalTimer = setInterval(updateLiveValues, 1000);
 }
-
-loadVillageHealer();
-
 
 function subscribeToHospitalChanges() {
   if (hospitalRealtimeChannel) return;
@@ -252,3 +255,22 @@ function subscribeToHospitalChanges() {
     .on("postgres_changes", { event: "*", schema: "public", table: "npc_hospital_visits" }, () => loadVillageHealer())
     .subscribe();
 }
+
+document.getElementById("patient-page-previous")?.addEventListener("click", () => {
+  if (healerPage > 1) {
+    healerPage -= 1;
+    renderPatientPage();
+    document.getElementById("hospital-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+document.getElementById("patient-page-next")?.addEventListener("click", () => {
+  const totalPages = Math.max(1, Math.ceil(healerPatients.length / PATIENTS_PER_PAGE));
+  if (healerPage < totalPages) {
+    healerPage += 1;
+    renderPatientPage();
+    document.getElementById("hospital-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+loadVillageHealer();
