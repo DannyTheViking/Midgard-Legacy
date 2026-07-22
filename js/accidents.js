@@ -1,6 +1,10 @@
 /* Shared profession accident system. Keep true while testing the healer. */
 const ACCIDENT_TEST_MODE = true;
 
+/* The test button remains available, but normal chopping only has a 0.25%
+   chance per completed action (roughly 1 accident in 400 actions). */
+const NATURAL_HOSPITAL_ACCIDENT_CHANCE = 0.0025;
+
 const FOREST_HOSPITAL_ACCIDENTS = Object.freeze([
   {
     shortReason: "Flattened by a falling tree.",
@@ -100,8 +104,7 @@ async function admitForAccident(accident) {
 async function maybeTriggerProfessionAccident(activity) {
   const accidents = PROFESSION_ACCIDENTS[activity] || [];
   if (!accidents.length) return false;
-  const chance = ACCIDENT_TEST_MODE ? 0.10 : 0.0025;
-  if (Math.random() >= chance) return false;
+  if (Math.random() >= NATURAL_HOSPITAL_ACCIDENT_CHANCE) return false;
   const accident = accidents[Math.floor(Math.random() * accidents.length)];
   await admitForAccident(accident);
   return true;

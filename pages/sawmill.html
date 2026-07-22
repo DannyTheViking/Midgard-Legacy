@@ -56,7 +56,36 @@
             <button id="saw-oak-button" disabled>🔒 Earn Your Freedom</button>
         </div>
         <p id="oak-sawmill-message"></p>
-    </div></section>
+    </div>
+
+    <div class="crafting-card">
+        <div class="craft-card-heading">
+            <h3>🪚 Birch Beam</h3>
+            <div class="craft-stock" id="birch-beam-stock">Loading...</div>
+        </div>
+        <p>Requires: <span class="green">1 Birch Log</span></p>
+        <p>Produces: <span class="green">1 Birch Beam</span></p>
+        <div class="craft-controls">
+            <input class="craft-amount" id="birch-beam-amount" type="number" min="1" max="9999" value="1" aria-label="Birch Beams to saw">
+            <button id="craft-birch-beam-button">🪚 Craft</button>
+        </div>
+        <p id="birch-beam-message"></p>
+    </div>
+
+    <div class="crafting-card locked" id="oak-beam-card">
+        <div class="craft-card-heading">
+            <h3>🪚 Oak Beam</h3>
+            <div class="craft-stock" id="oak-beam-stock">Loading...</div>
+        </div>
+        <p>Requires: <span class="green">1 Oak Log</span></p>
+        <p>Produces: <span class="green">1 Oak Beam</span></p>
+        <div class="craft-controls">
+            <input class="craft-amount" id="oak-beam-amount" type="number" min="1" max="9999" value="1" aria-label="Oak Beams to saw" disabled>
+            <button id="craft-oak-beam-button" disabled>🔒 Earn Your Freedom</button>
+        </div>
+        <p id="oak-beam-message"></p>
+    </div>
+</section>
     </main>
 </div>
 
