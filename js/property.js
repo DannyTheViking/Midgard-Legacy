@@ -1,198 +1,97 @@
 "use strict";
 
-/*
- * Midgard Legacy - Property Preview System
- *
- * The actual upgrade system is deliberately disabled for the first test.
- * This file allows testers to preview each future house without changing
- * their saved property level or spending resources.
- */
-
 const propertyStages = [
-    {
-        level: 0,
-        name: "Old Shack",
-        image: "../images/property/old shack.png",
-        alt: "A broken and run-down wooden shack",
-        description:
-            "An abandoned shack with a damaged roof, broken timbers and unsafe walls. It is not much, but the land now belongs to you."
-    },
-    {
-        level: 1,
-        name: "Upgraded Shack",
-        image: "../images/property/upgraded shack.png",
-        alt: "A repaired wooden Viking shack",
-        description:
-            "The roof and walls have been repaired, creating a secure wooden home and unlocking space for your first Apiary."
-    },
-    {
-        level: 2,
-        name: "Small House",
-        image: "../images/property/small house.png",
-        alt: "A small Viking wooden house",
-        description:
-            "A proper Viking house with stronger foundations, more living space and enough land to begin expanding your estate."
-    },
-    {
-        level: 3,
-        name: "Medium House",
-        image: "../images/property/med house.png",
-        alt: "A medium-sized Viking house",
-        description:
-            "A larger timber-and-stone homestead that displays your growing wealth, reputation and influence."
-    },
-    {
-        level: 4,
-        name: "Large House",
-        image: "../images/property/large house.png",
-        alt: "A large two-floor Viking house",
-        description:
-            "A grand two-floor homestead worthy of a wealthy Viking, with room for servants, storage and further estate buildings."
-    }
+  { level:0,name:"Old Shack",image:"../images/property/old shack.png",alt:"A broken and run-down wooden shack",description:"An abandoned shack with damaged timbers and unsafe walls." },
+  { level:1,name:"Upgraded Shack",image:"../images/property/upgraded shack.png",alt:"A repaired wooden Viking shack",description:"A secure repaired home that unlocks space for your first Apiary." },
+  { level:2,name:"Small House",image:"../images/property/small house.png",alt:"A small Viking wooden house",description:"A proper Viking house with stronger foundations and more living space." },
+  { level:3,name:"Medium House",image:"../images/property/med house.png",alt:"A medium-sized Viking house",description:"A larger timber-and-stone homestead showing your growing influence." },
+  { level:4,name:"Large House",image:"../images/property/large house.png",alt:"A large two-floor Viking house",description:"A grand two-floor homestead worthy of a wealthy Viking." }
 ];
 
-/*
- * Keep this at zero for the first public test.
- *
- * Later this value should be loaded from Supabase using the signed-in
- * player's property_level column.
- */
 let CURRENT_PROPERTY_LEVEL = 0;
+let propertyUser = null;
 
-const currentPropertyImage =
-    document.getElementById("current-property-image");
+function propertyStage(level){ return propertyStages.find(stage => stage.level === level); }
+function propertySafe(value){ return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 
-const currentPropertyName =
-    document.getElementById("current-property-name");
-
-const currentPropertyLevel =
-    document.getElementById("current-property-level");
-
-const currentPropertyDescription =
-    document.getElementById("current-property-description");
-
-const returnCurrentPropertyButton =
-    document.getElementById("return-current-property");
-
-const previewButtons =
-    document.querySelectorAll(".preview-property-button");
-
-const propertyStageCards =
-    document.querySelectorAll(".property-stage");
-
-function getPropertyStage(level) {
-    return propertyStages.find((stage) => stage.level === level);
+function displayProperty(stage,isPreview=false){
+  if(!stage)return;
+  document.getElementById("current-property-image").src=stage.image;
+  document.getElementById("current-property-image").alt=stage.alt;
+  document.getElementById("current-property-name").textContent=stage.name;
+  document.getElementById("current-property-level").textContent=`Level ${stage.level}${isPreview?" Preview":""}`;
+  document.getElementById("current-property-description").textContent=stage.description;
+  document.getElementById("return-current-property").hidden=!isPreview;
 }
 
-function removePreviewHighlight() {
-    propertyStageCards.forEach((card) => {
-        card.classList.remove("previewed-stage");
-    });
+async function inventoryByName(playerId){
+  const {data,error}=await supabaseClient.from("inventory").select("quantity,items(name)").eq("player_id",playerId);
+  if(error)throw error;
+  return new Map((data||[]).map(row=>[String(row.items?.name||"").toLowerCase(),Number(row.quantity||0)]));
 }
 
-function highlightStage(level) {
-    removePreviewHighlight();
+async function renderUpgradePanel(){
+  const panel=document.querySelector(".next-upgrade-panel");
+  if(!panel)return;
+  if(CURRENT_PROPERTY_LEVEL>=4){
+    panel.innerHTML='<span class="property-eyebrow">Homestead Complete</span><h2>Large House</h2><p>Your homestead is fully upgraded.</p>';
+    return;
+  }
+  const nextLevel=CURRENT_PROPERTY_LEVEL+1;
+  const [requirementsResult,inventory]=await Promise.all([
+    supabaseClient.from("property_upgrade_requirements").select("item_name,quantity").eq("target_level",nextLevel).order("item_name"),
+    inventoryByName(propertyUser.id)
+  ]);
+  if(requirementsResult.error)throw requirementsResult.error;
+  const requirements=requirementsResult.data||[];
+  const ready=requirements.every(req=>Number(inventory.get(req.item_name.toLowerCase())||0)>=Number(req.quantity));
+  const current=propertyStage(CURRENT_PROPERTY_LEVEL);
+  const next=propertyStage(nextLevel);
+  panel.innerHTML=`
+    <span class="property-eyebrow">Next Upgrade</span>
+    <h2>${propertySafe(next.name)}</h2>
+    <p class="upgrade-summary">Build the next stage using materials gathered and crafted around the village.</p>
+    <div class="upgrade-comparison"><div class="comparison-stage"><img src="${current.image}" alt="${current.alt}"><span>${current.name}</span></div><span class="comparison-arrow">➜</span><div class="comparison-stage"><img src="${next.image}" alt="${next.alt}"><span>${next.name}</span></div></div>
+    <div class="active-upgrade-requirements"><h3>Required Materials</h3>${requirements.map(req=>{
+      const owned=Number(inventory.get(req.item_name.toLowerCase())||0); const enough=owned>=Number(req.quantity);
+      return `<div class="material-row ${enough?"material-ready":"material-missing"}"><div class="material-name"><span>${req.item_name.includes("Beam")?"🪚":req.item_name.includes("Nail")?"🔩":req.item_name==="Rock"?"🪨":"🪵"}</span><span>${propertySafe(req.item_name)}</span></div><strong>${owned}/${req.quantity}</strong></div>`;
+    }).join("")}</div>
+    <button id="upgrade-property-button" class="property-upgrade-button" type="button" ${ready?"":"disabled"}>${ready?`Upgrade to ${propertySafe(next.name)}`:"More materials required"}</button>
+    <p id="property-upgrade-message" class="test-version-notice">Upgrades permanently consume the listed materials.</p>`;
+  document.getElementById("upgrade-property-button")?.addEventListener("click",upgradeProperty);
+}
 
-    const selectedCard = document.querySelector(
-        `[data-property-level="${level}"]`
-    );
+async function upgradeProperty(){
+  const message=document.getElementById("property-upgrade-message");
+  try{
+    message.textContent="Building your property…";
+    const {data,error}=await supabaseClient.rpc("upgrade_my_property");
+    if(error)throw error;
+    CURRENT_PROPERTY_LEVEL=Number(data.property_level);
+    message.textContent="✅ Property upgraded.";
+    displayProperty(propertyStage(CURRENT_PROPERTY_LEVEL));
+    await renderUpgradePanel();
+  }catch(error){ message.textContent=`❌ ${error.message}`; }
+}
 
-    if (selectedCard) {
-        selectedCard.classList.add("previewed-stage");
+async function loadSavedPropertyLevel(){
+  try{
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    if(!user){window.location.href="login.html";return;}
+    propertyUser=user;
+    const {data,error}=await supabaseClient.from("players").select("property_level").eq("id",user.id).single();
+    if(error)throw error;
+    CURRENT_PROPERTY_LEVEL=Math.max(0,Number(data.property_level)||0);
+    displayProperty(propertyStage(CURRENT_PROPERTY_LEVEL));
+    await renderUpgradePanel();
+    const apiaryCard=document.getElementById("apiary-building-card");
+    if(apiaryCard&&CURRENT_PROPERTY_LEVEL>=1&&apiaryCard.tagName!=="A"){
+      const link=document.createElement("a");link.id=apiaryCard.id;link.className="property-building available";link.href="apiary.html";link.innerHTML=apiaryCard.innerHTML;apiaryCard.replaceWith(link);
+      document.getElementById("apiary-unlock-text").textContent="Available";
     }
+  }catch(error){console.error("Property failed:",error);}
 }
 
-function displayProperty(stage, isPreview = false) {
-    if (!stage) {
-        console.error("Property stage could not be found.");
-        return;
-    }
-
-    currentPropertyImage.src = stage.image;
-    currentPropertyImage.alt = stage.alt;
-
-    currentPropertyName.textContent = stage.name;
-    currentPropertyLevel.textContent = `Level ${stage.level}`;
-    currentPropertyDescription.textContent = stage.description;
-
-    returnCurrentPropertyButton.hidden = !isPreview;
-
-    highlightStage(stage.level);
-
-    if (isPreview) {
-        currentPropertyLevel.textContent =
-            `Level ${stage.level} Preview`;
-    }
-
-    currentPropertyImage.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
-}
-
-function displayCurrentProperty() {
-    const currentStage = getPropertyStage(CURRENT_PROPERTY_LEVEL);
-
-    displayProperty(currentStage, false);
-}
-
-previewButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        const previewLevel = Number(button.dataset.previewLevel);
-
-        if (!Number.isInteger(previewLevel)) {
-            console.error("Invalid property preview level.");
-            return;
-        }
-
-        const selectedStage = getPropertyStage(previewLevel);
-
-        displayProperty(
-            selectedStage,
-            previewLevel !== CURRENT_PROPERTY_LEVEL
-        );
-    });
-});
-
-returnCurrentPropertyButton.addEventListener(
-    "click",
-    displayCurrentProperty
-);
-
-async function loadSavedPropertyLevel() {
-    try {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return;
-
-        const { data, error } = await supabaseClient
-            .from("players")
-            .select("property_level")
-            .eq("id", user.id)
-            .maybeSingle();
-
-        if (!error && data) {
-            CURRENT_PROPERTY_LEVEL = Math.max(0, Number(data.property_level) || 0);
-        }
-    } catch (error) {
-        console.warn("Could not load property level:", error);
-    }
-
-    const apiaryCard = document.getElementById("apiary-building-card");
-    const apiaryText = document.getElementById("apiary-unlock-text");
-
-    if (apiaryCard && CURRENT_PROPERTY_LEVEL >= 1) {
-        const link = document.createElement("a");
-        link.id = apiaryCard.id;
-        link.className = "property-building available";
-        link.href = "apiary.html";
-        link.innerHTML = apiaryCard.innerHTML;
-        apiaryCard.replaceWith(link);
-        if (apiaryText) apiaryText.textContent = "Available";
-        const newText = document.getElementById("apiary-unlock-text");
-        if (newText) newText.textContent = "Available";
-    }
-
-    displayCurrentProperty();
-}
-
+document.querySelectorAll(".preview-property-button").forEach(button=>button.addEventListener("click",()=>{const level=Number(button.dataset.previewLevel);displayProperty(propertyStage(level),level!==CURRENT_PROPERTY_LEVEL);}));
+document.getElementById("return-current-property")?.addEventListener("click",()=>displayProperty(propertyStage(CURRENT_PROPERTY_LEVEL)));
 loadSavedPropertyLevel();

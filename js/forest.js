@@ -347,13 +347,20 @@ async function chopBirchTree() {
        CREATE ACTION MESSAGE
     ===================================== */
 
+    const sticksGathered = Math.floor(Math.random() * 41) + 20;
+    if (typeof grantNamedResource === "function") {
+        try { await grantNamedResource("Stick", sticksGathered); }
+        catch (stickError) { console.error("Stick gathering failed:", stickError); }
+    }
+
     let actionMessage = `
         🪓 You spend
         <strong>${ENERGY_COST} energy</strong>
         chopping down a Birch Tree.<br><br>
 
         🪵 You gather
-        <strong>${logs} Birch Logs</strong>.<br><br>
+        <strong>${logs} Birch Logs</strong>.<br>
+        🪵 You also gather <strong>${sticksGathered} Sticks</strong>.<br><br>
 
         ${woodcuttingProgress
             ? `🌲 +${woodcuttingProgress.awardedXP} Woodcutting XP`
@@ -415,6 +422,11 @@ async function chopBirchTree() {
     ===================================== */
 
     setBirchMessage(actionMessage, true);
+
+    if (typeof maybeTriggerProfessionAccident === "function") {
+        const admitted = await maybeTriggerProfessionAccident("forest");
+        if (admitted) return;
+    }
 
     // Queen Bees may be discovered from the player's very first successful chop.
     await maybeTriggerWildBeeEncounter();
@@ -1066,13 +1078,20 @@ async function chopOakTree() {
             });
         }
 
+        const oakSticksGathered = Math.floor(Math.random() * 61) + 40;
+        if (typeof grantNamedResource === "function") {
+            try { await grantNamedResource("Stick", oakSticksGathered); }
+            catch (stickError) { console.error("Oak stick gathering failed:", stickError); }
+        }
+
         const oakActionMessage = `
             🌳 You spend
             <strong>10 energy</strong>
             chopping down an Oak Tree.<br><br>
 
             🪵 You gather
-            <strong>${amount} Oak Logs</strong>.<br><br>
+            <strong>${amount} Oak Logs</strong>.<br>
+            🪵 You also gather <strong>${oakSticksGathered} Sticks</strong>.<br><br>
 
             Your Woodcutting skill improves.<br><br>
 
@@ -1089,6 +1108,11 @@ async function chopOakTree() {
         `;
 
         setOakMessage(oakActionMessage, true);
+
+        if (typeof maybeTriggerProfessionAccident === "function") {
+            const admitted = await maybeTriggerProfessionAccident("forest");
+            if (admitted) return;
+        }
 
         // Change the visible number instantly, then reload the authoritative values.
         const energyElement = document.getElementById("energy");
@@ -1142,3 +1166,18 @@ async function initialiseForestPage() {
 
 initialiseForestPage();
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof ACCIDENT_TEST_MODE !== "undefined" && ACCIDENT_TEST_MODE) {
+        const header = document.querySelector(".page-header");
+        if (header && !document.getElementById("test-medical-accident")) {
+            const button = document.createElement("button");
+            button.id = "test-medical-accident";
+            button.type = "button";
+            button.textContent = "🧪 Test Falling Tree Accident";
+            button.addEventListener("click", () => testMedicalAccident("forest"));
+            header.appendChild(button);
+        }
+    }
+});

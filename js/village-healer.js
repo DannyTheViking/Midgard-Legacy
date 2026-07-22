@@ -1,6 +1,7 @@
 let healerUser = null;
 let healerJobsCompleted = 0;
 let hospitalTimer = null;
+let hospitalRealtimeChannel = null;
 
 function safe(value) {
   return String(value ?? "")
@@ -56,13 +57,13 @@ async function loadVillageHealer() {
 
     const [playersResult, npcVisitsResult, meResult] = await Promise.all([
       supabaseClient.from("players")
-        .select("id,username,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
+        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
         .not("hospital_until", "is", null).gt("hospital_until", new Date().toISOString()),
       supabaseClient.from("npc_hospital_visits")
         .select("id,npc_id,injury_text,start_health,regen_per_minute,admitted_at,recovery_at,status,village_npcs(*)")
         .eq("status", "recovering").gt("recovery_at", new Date().toISOString()).order("admitted_at"),
       supabaseClient.from("players")
-        .select("id,username,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
+        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
         .eq("id", user.id).single()
     ]);
 
@@ -71,6 +72,7 @@ async function loadVillageHealer() {
     renderMyHospital(meResult.data);
     renderPatients(playersResult.data || [], npcVisitsResult.data || []);
     startLiveUpdates();
+    subscribeToHospitalChanges();
   } catch (error) {
     console.error(error);
     setHealerMessage(`❌ ${safe(error.message)}`, "error");
@@ -109,12 +111,18 @@ function patientCard(patient) {
   const until = isPlayer ? patient.hospital_until : patient.recovery_at;
   const max = isPlayer ? patient.max_health : patient.npc.max_health;
   const injury = isPlayer ? patient.hospital_reason : patient.injury_text;
-  const target = isPlayer ? patient.id : patient.id;
+  const target = patient.id;
+  const portrait = isPlayer
+    ? (patient.avatar_url ? `<img src="${safe(patient.avatar_url)}" alt="${safe(name)}">` : "🛡️")
+    : (patient.npc.avatar_url ? `<img src="${safe(patient.npc.avatar_url)}" alt="${safe(name)}">` : safe(patient.npc.icon));
+  const displayName = isPlayer && patient.player_number
+    ? `<a href="profile.html?id=${Number(patient.player_number)}">${safe(name)}</a>`
+    : safe(name);
 
   return `<article class="patient-card" data-start="${start}" data-admitted="${admitted}" data-regen="${regen}" data-until="${until}" data-max="${max}">
     <header>
-      <div class="patient-icon">${isPlayer ? "🛡️" : safe(patient.npc.icon)}</div>
-      <div><h3>${safe(name)}</h3><p>${safe(job)} · <span>${profile}</span></p></div>
+      <div class="patient-icon">${portrait}</div>
+      <div><h3>${displayName}</h3><p>${safe(job)} · <span>${profile}</span></p></div>
     </header>
     <p class="injury">${safe(injury)}</p>
     <div class="health-row"><span>❤️ <strong data-live-health>1/${max}</strong></span><span>⏳ <strong data-live-time>--</strong></span></div>
@@ -177,3 +185,14 @@ function startLiveUpdates() {
 }
 
 loadVillageHealer();
+
+
+function subscribeToHospitalChanges() {
+  if (hospitalRealtimeChannel) return;
+  hospitalRealtimeChannel = supabaseClient.channel("village-healer-live")
+    .on("postgres_changes", { event: "*", schema: "public", table: "players" }, payload => {
+      if (payload.new?.hospital_until || payload.old?.hospital_until) loadVillageHealer();
+    })
+    .on("postgres_changes", { event: "*", schema: "public", table: "npc_hospital_visits" }, () => loadVillageHealer())
+    .subscribe();
+}

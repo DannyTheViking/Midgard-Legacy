@@ -447,53 +447,59 @@ const freedomBadge = `
 
 function loadOwnProfileActions() {
 
-    const profileActions =
-        document.getElementById("profile-actions");
+    const profileActions = document.getElementById("profile-actions");
 
     profileActions.innerHTML = `
-        <button
-            type="button"
-            id="edit-profile-button"
-        >
-            Edit Profile
-        </button>
-
-        <button
-            type="button"
-            id="social-list-button"
-        >
-            Friends & Enemies
-        </button>
-
-        <button
-            type="button"
-            id="logout-button"
-        >
-            Log Out
-        </button>
+        <div class="avatar-upload-box">
+            <label for="avatar-file"><strong>Update Avatar</strong></label>
+            <input id="avatar-file" type="file" accept="image/png,image/jpeg,image/webp">
+            <button type="button" id="upload-avatar-button">Upload Avatar</button>
+            <small id="avatar-upload-message">Square images work best. Maximum 5 MB.</small>
+        </div>
+        <button type="button" id="social-list-button">Friends & Enemies</button>
+        <button type="button" id="logout-button">Log Out</button>
     `;
 
-    document
-        .getElementById("edit-profile-button")
-        .addEventListener("click", () => {
+    document.getElementById("upload-avatar-button").addEventListener("click", uploadOwnAvatar);
+    document.getElementById("social-list-button").addEventListener("click", () => {
+        window.location.href = "friends-enemies.html";
+    });
+    document.getElementById("logout-button").addEventListener("click", logoutGame);
+}
 
-            alert(
-                "Profile editing is coming soon."
-            );
-        });
+async function uploadOwnAvatar() {
+    const input = document.getElementById("avatar-file");
+    const message = document.getElementById("avatar-upload-message");
+    const file = input?.files?.[0];
 
-    document
-        .getElementById("social-list-button")
-        .addEventListener("click", () => {
-            window.location.href = "friends-enemies.html";
-        });
+    if (!file) { message.textContent = "Choose an image first."; return; }
+    if (!file.type.startsWith("image/")) { message.textContent = "Please choose an image file."; return; }
+    if (file.size > 5 * 1024 * 1024) { message.textContent = "That image is larger than 5 MB."; return; }
 
-    document
-        .getElementById("logout-button")
-        .addEventListener(
-            "click",
-            logoutGame
-        );
+    try {
+        message.textContent = "Uploading avatar…";
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) throw new Error("You are not signed in.");
+
+        const extension = (file.name.split(".").pop() || "png").toLowerCase();
+        const path = `${user.id}/avatar.${extension}`;
+        const { error: uploadError } = await supabaseClient.storage
+            .from("avatars")
+            .upload(path, file, { upsert: true, contentType: file.type, cacheControl: "3600" });
+        if (uploadError) throw uploadError;
+
+        const { data } = supabaseClient.storage.from("avatars").getPublicUrl(path);
+        const avatarUrl = `${data.publicUrl}?v=${Date.now()}`;
+        const { error: updateError } = await supabaseClient.from("players")
+            .update({ avatar_url: avatarUrl }).eq("id", user.id);
+        if (updateError) throw updateError;
+
+        message.textContent = "✅ Avatar updated.";
+        await loadProfile();
+    } catch (error) {
+        console.error("Avatar upload failed:", error);
+        message.textContent = `❌ ${error.message}`;
+    }
 }
 
 

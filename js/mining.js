@@ -217,7 +217,22 @@ async function gatherBogIron() {
         }
     }
 
+    const rocksGathered = Math.floor(Math.random() * 6) + 3;
+    if (typeof grantNamedResource === "function") {
+        try {
+            await grantNamedResource("Rock", rocksGathered);
+            message += `<br><br>🪨 You also gather <strong>${rocksGathered} Rocks</strong>.`;
+        } catch (rockError) {
+            console.error("Rock gathering failed:", rockError);
+        }
+    }
+
     showMiningMessage(message);
+
+    if (typeof maybeTriggerProfessionAccident === "function") {
+        const admitted = await maybeTriggerProfessionAccident("mining");
+        if (admitted) return;
+    }
 
     loadHomePage();
 

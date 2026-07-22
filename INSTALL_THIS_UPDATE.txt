@@ -1,0 +1,25 @@
+MIDGARD LEGACY UPDATE
+
+1. Back up your current MidgarLegacy folder.
+2. Replace it with this folder.
+3. Open Supabase > SQL Editor.
+4. Open and run:
+   supabase/migrations/009_missions_accidents_property_avatars.sql
+5. Refresh the game with Ctrl + F5.
+
+MEDICAL TEST MODE
+- js/accidents.js currently has ACCIDENT_TEST_MODE = true.
+- The Forest page includes a "Test Falling Tree Accident" button.
+- Test hospital times are 1 to 3 minutes.
+- Change ACCIDENT_TEST_MODE to false after testing.
+
+INCLUDED
+- Expandable Job Yard NPC cards.
+- Mission Points and horizontal reward shop.
+- Mission Point secure unlock RPC.
+- Birch/Oak Beams and property material upgrades.
+- Sticks from trees and Rocks from mining.
+- Serious forest/mining accidents with long player messages and short hospital reasons.
+- Village Healer realtime refresh and player profile links.
+- Player avatar uploads using the Supabase avatars bucket.
+- avatar_url columns for job_npcs and village_npcs so each NPC can have their own portrait.

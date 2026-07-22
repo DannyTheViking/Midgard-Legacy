@@ -1698,3 +1698,5 @@ body.forest-data-loading .forest-loading-screen {
 }
 .regen-stat:hover .stat-regen-tooltip, .regen-stat:focus .stat-regen-tooltip, .regen-stat:focus-within .stat-regen-tooltip { opacity:1; visibility:visible; transform:translate(-50%,0); }
 .top-bar, .player-stats, .top-stat, #topbar { overflow:visible !important; }
+
+.avatar-upload-box{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;border:1px solid #6d4b20;background:#111}.avatar-upload-box label{width:100%;color:gold}.avatar-upload-box input{max-width:260px}.avatar-upload-box small{width:100%;color:#cdb68a}
