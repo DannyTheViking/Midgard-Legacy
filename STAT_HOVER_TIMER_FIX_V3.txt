@@ -1,1 +1,0 @@
-Uses renamed CSS/JS files to bypass hosting/browser caches. Hover Health, Energy, Stamina, or Courage. Native title fallback included.

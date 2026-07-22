@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Village Healer | Midgard Legacy</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/village-healer.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div id="topbar"></div>
+  <div class="game-layout">
+    <aside id="sidebar"></aside>
+    <main class="main-content healer-page">
+      <section class="page-header">
+        <div class="page-title">
+          <h1>🌿 Village Healer</h1>
+          <p>Recover naturally, or use your training to get someone back on their feet.</p>
+        </div>
+      </section>
+
+      <div id="healer-message" class="healer-message" aria-live="polite"></div>
+
+      <section id="my-hospital-card" class="my-hospital-card" hidden></section>
+
+      <section class="healer-summary">
+        <div><span>Yrsa jobs</span><strong id="healer-jobs">0</strong></div>
+        <div><span>Healing unlocked</span><strong id="healing-level">Locked</strong></div>
+        <div><span>Ward patients</span><strong id="patient-count">0</strong></div>
+      </section>
+
+      <section>
+        <h2>Patients in the healer hut</h2>
+        <div id="hospital-grid" class="hospital-grid"><p>Checking the beds…</p></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/supabase.js"></script>
+  <script src="../js/components.js"></script>
+  <script src="../js/village-healer.js"></script>
+</body>
+</html>

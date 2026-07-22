@@ -1,5 +1,0 @@
-STAT HOVER TIMER FIX v2
-
-This build creates the hover tooltip markup from JavaScript, so it still works if the host/browser serves an older cached components/topbar.html.
-
-After pushing, hard refresh the live game with Ctrl+F5.
