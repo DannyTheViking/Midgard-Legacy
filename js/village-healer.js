@@ -115,9 +115,11 @@ function patientCard(patient) {
   const portrait = isPlayer
     ? (patient.avatar_url ? `<img src="${safe(patient.avatar_url)}" alt="${safe(name)}">` : "🛡️")
     : (patient.npc.avatar_url ? `<img src="${safe(patient.npc.avatar_url)}" alt="${safe(name)}">` : safe(patient.npc.icon));
-  const displayName = isPlayer && patient.player_number
-    ? `<a href="profile.html?id=${Number(patient.player_number)}">${safe(name)}</a>`
-    : safe(name);
+  const displayName = isPlayer
+    ? (patient.player_number
+        ? `<a href="profile.html?id=${Number(patient.player_number)}">${safe(name)}</a>`
+        : safe(name))
+    : `<a href="profile.html?npc=${Number(patient.npc.id)}">${safe(name)}</a>`;
 
   return `<article class="patient-card" data-start="${start}" data-admitted="${admitted}" data-regen="${regen}" data-until="${until}" data-max="${max}">
     <header>

@@ -207,6 +207,75 @@ function createRankBadge(
 
 
 /* =====================================
+   NPC PROFILE
+===================================== */
+
+async function loadNpcProfile(npcId) {
+
+    const { data: npc, error } = await supabaseClient
+        .from("village_npcs")
+        .select("*")
+        .eq("id", Number(npcId))
+        .maybeSingle();
+
+    const profileCard = document.getElementById("profile-card");
+    const profileActions = document.getElementById("profile-actions");
+    const sagaSection = document.getElementById("saga-cards")?.closest("section");
+
+    if (error || !npc) {
+        console.error("Could not load NPC profile:", error);
+        profileCard.innerHTML = "<p>Village profile could not be found.</p>";
+        profileActions.innerHTML = "";
+        if (sagaSection) sagaSection.hidden = true;
+        return;
+    }
+
+    const npcName = npc.name || "Village Resident";
+    const npcRole = npc.profession || npc.role || "Village Resident";
+    const npcAvatar = npc.avatar_url
+        ? `<img src="${escapeHTML(npc.avatar_url)}" alt="${escapeHTML(npcName)}'s portrait" class="profile-avatar-image">`
+        : `<span class="profile-default-avatar" aria-label="NPC portrait">${escapeHTML(npc.icon || "🧑")}</span>`;
+
+    profileCard.innerHTML = `
+        <div class="avatar-placeholder">
+            ${npcAvatar}
+        </div>
+
+        <div class="profile-information">
+            <h1>${escapeHTML(npcName)}</h1>
+            <p>🟢 Village resident</p>
+
+            <div class="profile-ranks">
+                <span class="profile-rank-badge" title="This person's role in the village">
+                    🏘️ Role: ${escapeHTML(npcRole)}
+                </span>
+                <span class="profile-rank-badge" title="Non-player character">
+                    🛡️ Village NPC
+                </span>
+            </div>
+
+            <p>${escapeHTML(npc.description || `${npcName} serves Midgard as the ${npcRole}.`)}</p>
+        </div>
+    `;
+
+    profileActions.innerHTML = `
+        <button type="button" id="return-healer-button">Return to Village Healer</button>
+        <button type="button" id="return-village-button">Return to Village</button>
+    `;
+
+    document.getElementById("return-healer-button")?.addEventListener("click", () => {
+        window.location.href = "village-healer.html";
+    });
+
+    document.getElementById("return-village-button")?.addEventListener("click", () => {
+        window.location.href = "village.html";
+    });
+
+    if (sagaSection) sagaSection.hidden = true;
+}
+
+
+/* =====================================
    LOAD PROFILE
 ===================================== */
 
@@ -226,6 +295,14 @@ async function loadProfile() {
 
     const publicPlayerNumber =
         pageParameters.get("id");
+
+    const npcId =
+        pageParameters.get("npc");
+
+    if (npcId) {
+        await loadNpcProfile(npcId);
+        return;
+    }
 
     let player;
     let error;

@@ -15,7 +15,7 @@ async function loadComponent(
     }
 
     const response = await fetch(
-        `../components/${fileName}?v=3`,
+        `../components/${fileName}?v=4`,
         { cache: "no-store" }
     );
 
@@ -239,6 +239,7 @@ async function updateTopBarPlayer() {
             tutorial_complete,
             is_free_man,
             silver,
+            mission_points,
             health,
             max_health,
             energy,
@@ -361,6 +362,7 @@ async function updateTopBarPlayer() {
     };
 
     setStat("silver", Number(player.silver || 0).toLocaleString());
+    setStat("mission-points", Number(player.mission_points || 0).toLocaleString());
     setStat("health", `${Number(player.health || 0)} / ${Number(player.max_health || 500)}`);
     setStat("energy", `${Number(player.energy || 0)} / ${Number(player.max_energy || 100)}`);
     setStat("stamina", `${Number(player.stamina || 0)} / ${Number(player.max_stamina || 100)}`);
