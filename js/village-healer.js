@@ -2,6 +2,9 @@ let healerUser = null;
 let healerJobsCompleted = 0;
 let hospitalTimer = null;
 let hospitalRealtimeChannel = null;
+let hospitalPatients = [];
+let hospitalPage = 1;
+const HOSPITAL_PAGE_SIZE = 10;
 
 function safe(value) {
   return String(value ?? "")
@@ -90,12 +93,11 @@ function renderMyHospital(me) {
   card.dataset.max = me.max_health || 500;
   card.innerHTML = `
     <h2>🛏️ You are recovering</h2>
-    <p>${safe(me.hospital_reason || "You were carried into the healer hut.")}</p>
     <div class="hospital-stats">
       <span>Health <strong data-my-health>1/${me.max_health || 500}</strong></span>
       <span>Time remaining <strong data-my-time>--</strong></span>
     </div>
-    <p class="regen-note">Your health continues regenerating while the timer counts down.</p>`;
+    <p class="regen-note">Your injury details are shown with the other patients below.</p>`;
 }
 
 function patientCard(patient) {
@@ -136,16 +138,64 @@ function patientCard(patient) {
 }
 
 function renderPatients(players, npcVisits) {
-  const otherPlayers = players.filter(p => p.id !== healerUser.id).map(p => ({ ...p, kind: "player" }));
-  const npcs = npcVisits.map(v => ({ ...v, npc: v.village_npcs, kind: "npc" }));
-  const patients = [...otherPlayers, ...npcs];
-  document.getElementById("patient-count").textContent = patients.length;
+  const playerPatients = players
+    .map(p => ({ ...p, kind: "player" }))
+    .sort((a, b) => {
+      if (a.id === healerUser.id) return -1;
+      if (b.id === healerUser.id) return 1;
+      return String(a.username || "").localeCompare(String(b.username || ""));
+    });
+
+  const npcPatients = npcVisits
+    .slice(0, 6)
+    .map(v => ({ ...v, npc: v.village_npcs, kind: "npc" }));
+
+  // Keep the six random NPC patients, then use the remaining beds for real players.
+  hospitalPatients = [...npcPatients, ...playerPatients];
+
+  const totalPages = Math.max(1, Math.ceil(hospitalPatients.length / HOSPITAL_PAGE_SIZE));
+  hospitalPage = Math.min(hospitalPage, totalPages);
+
+  document.getElementById("patient-count").textContent = hospitalPatients.length;
+  renderHospitalPage();
+}
+
+function renderHospitalPage() {
   const grid = document.getElementById("hospital-grid");
-  grid.innerHTML = patients.length ? patients.map(patientCard).join("") : "<p>Every bed is empty. Yrsa looks suspiciously relaxed.</p>";
+  const pagination = document.getElementById("hospital-pagination");
+  const totalPages = Math.max(1, Math.ceil(hospitalPatients.length / HOSPITAL_PAGE_SIZE));
+  const start = (hospitalPage - 1) * HOSPITAL_PAGE_SIZE;
+  const visiblePatients = hospitalPatients.slice(start, start + HOSPITAL_PAGE_SIZE);
+
+  grid.innerHTML = visiblePatients.length
+    ? visiblePatients.map(patientCard).join("")
+    : "<p>Every bed is empty. Yrsa looks suspiciously relaxed.</p>";
 
   grid.querySelectorAll(".heal-button").forEach(button => {
     button.addEventListener("click", () => healPatient(button.dataset.kind, button.dataset.target));
   });
+
+  if (totalPages <= 1) {
+    pagination.hidden = true;
+    pagination.innerHTML = "";
+  } else {
+    pagination.hidden = false;
+    pagination.innerHTML = `
+      <button type="button" id="hospital-prev" ${hospitalPage === 1 ? "disabled" : ""}>← Previous</button>
+      <span>Page <strong>${hospitalPage}</strong> of <strong>${totalPages}</strong></span>
+      <button type="button" id="hospital-next" ${hospitalPage === totalPages ? "disabled" : ""}>Next →</button>`;
+
+    document.getElementById("hospital-prev")?.addEventListener("click", () => {
+      hospitalPage = Math.max(1, hospitalPage - 1);
+      renderHospitalPage();
+    });
+
+    document.getElementById("hospital-next")?.addEventListener("click", () => {
+      hospitalPage = Math.min(totalPages, hospitalPage + 1);
+      renderHospitalPage();
+    });
+  }
+
   updateLiveValues();
 }
 
@@ -178,6 +228,10 @@ function updateLiveValues() {
     const health = liveHealth(mine.dataset.startHealth, mine.dataset.started, mine.dataset.regen, mine.dataset.max);
     mine.querySelector("[data-my-health]").textContent = `${health}/${mine.dataset.max}`;
     mine.querySelector("[data-my-time]").textContent = remainingText(mine.dataset.until);
+
+    // Keep the shared top bar in sync with the live hospital regeneration value.
+    const topbarHealth = document.getElementById("health");
+    if (topbarHealth) topbarHealth.textContent = `${health} / ${mine.dataset.max}`;
   }
 }
 
