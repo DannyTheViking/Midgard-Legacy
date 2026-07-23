@@ -741,3 +741,63 @@ async function updateCarpenterWoodLabels(){
 }
 updateCarpenterWoodLabels();
     loadCarpenterCardStock();
+
+
+/* =====================================
+   PROPERTY BEAMS
+===================================== */
+async function getNamedItem(name) {
+    const { data, error } = await supabaseClient.from("items").select("id,name").eq("name", name).single();
+    if (error) throw error;
+    return data;
+}
+
+async function craftNamedBeam(woodName, beamName, amountInputId, messageId) {
+    const amount = getCraftAmount(amountInputId);
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    const [wood, beam] = await Promise.all([getNamedItem(woodName), getNamedItem(beamName)]);
+    const required = amount;
+    const { data: woodRow, error: woodError } = await supabaseClient.from("inventory")
+        .select("id,quantity").eq("player_id", user.id).eq("item_id", wood.id).maybeSingle();
+    if (woodError) throw woodError;
+    if (!woodRow || Number(woodRow.quantity) < required) {
+        showTemporaryMessage(messageId, `❌ You need ${required} ${woodName}${required === 1 ? "" : "s"}.`);
+        return;
+    }
+    const { error: spendError } = await supabaseClient.from("inventory")
+        .update({ quantity: Number(woodRow.quantity) - required }).eq("id", woodRow.id);
+    if (spendError) throw spendError;
+    const { data: beamRow, error: beamReadError } = await supabaseClient.from("inventory")
+        .select("id,quantity").eq("player_id", user.id).eq("item_id", beam.id).maybeSingle();
+    if (beamReadError) throw beamReadError;
+    const result = beamRow
+        ? await supabaseClient.from("inventory").update({ quantity: Number(beamRow.quantity) + amount }).eq("id", beamRow.id)
+        : await supabaseClient.from("inventory").insert({ player_id: user.id, item_id: beam.id, quantity: amount });
+    if (result.error) throw result.error;
+    if (typeof addCarpentryXP === "function") await addCarpentryXP(amount * (beamName.startsWith("Oak") ? 20 : 10));
+    showTemporaryMessage(messageId, `🪚 You craft <strong>${amount} ${beamName}${amount === 1 ? "" : "s"}</strong>.`);
+    await loadBeamStock();
+}
+
+async function loadBeamStock() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+        const { data, error } = await supabaseClient.from("inventory").select("quantity,items(name)").eq("player_id", user.id);
+        if (error) throw error;
+        const stock = new Map((data || []).map(row => [row.items?.name, Number(row.quantity || 0)]));
+        const birch = document.getElementById("birch-beam-stock");
+        const oak = document.getElementById("oak-beam-stock");
+        if (birch) birch.textContent = `${stock.get("Birch Log") || 0} Birch Logs · ${stock.get("Birch Beam") || 0} Beams`;
+        if (oak) oak.textContent = `${stock.get("Oak Log") || 0} Oak Logs · ${stock.get("Oak Beam") || 0} Beams`;
+    } catch (error) { console.error("Beam stock failed:", error); }
+}
+
+document.getElementById("craft-birch-beam-button")?.addEventListener("click", () =>
+    craftNamedBeam("Birch Log", "Birch Beam", "birch-beam-amount", "birch-beam-message").catch(error => showTemporaryMessage("birch-beam-message", `❌ ${error.message}`))
+);
+document.getElementById("craft-oak-beam-button")?.addEventListener("click", () =>
+    craftNamedBeam("Oak Log", "Oak Beam", "oak-beam-amount", "oak-beam-message").catch(error => showTemporaryMessage("oak-beam-message", `❌ ${error.message}`))
+);
+loadBeamStock();

@@ -12,12 +12,6 @@ const sawBirchButton =
 const sawOakButton =
     document.getElementById("saw-oak-button");
 
-const craftBirchBeamButton =
-    document.getElementById("craft-birch-beam-button");
-
-const craftOakBeamButton =
-    document.getElementById("craft-oak-beam-button");
-
 function showSawmillMessage(message) {
     const element =
         document.getElementById("sawmill-message");
@@ -37,18 +31,6 @@ async function resolveOakItemIds() {
     };
 }
 
-async function resolveBeamItemIds() {
-    const [birchBeam, oakBeam] = await Promise.all([
-        getItemByName("Birch Beam"),
-        getItemByName("Oak Beam")
-    ]);
-
-    return {
-        birchBeamId: birchBeam?.id || null,
-        oakBeamId: oakBeam?.id || null
-    };
-}
-
 async function loadSawmillCardStock() {
     const { data: { user } } =
         await supabaseClient.auth.getUser();
@@ -60,21 +42,14 @@ async function loadSawmillCardStock() {
         oakPlankId
     } = await resolveOakItemIds();
 
-    const {
-        birchBeamId,
-        oakBeamId
-    } = await resolveBeamItemIds();
-
     const quantities =
         await getPlayerInventoryQuantities(
             user.id,
             [
                 BIRCH_LOG,
                 BIRCH_PLANK,
-                birchBeamId,
                 oakLogId,
-                oakPlankId,
-                oakBeamId
+                oakPlankId
             ]
         );
 
@@ -96,18 +71,6 @@ async function loadSawmillCardStock() {
         Math.floor(
             birchLogs / LOGS_REQUIRED
         ) * PLANKS_CREATED
-    );
-
-    setCraftingStock(
-        "birch-beam-stock",
-        [
-            {
-                name: "Birch Logs",
-                quantity: birchLogs
-            }
-        ],
-        "Birch Beams",
-        birchLogs
     );
 
     const oakLogs =
@@ -132,18 +95,6 @@ async function loadSawmillCardStock() {
         Math.floor(
             oakLogs / LOGS_REQUIRED
         ) * PLANKS_CREATED
-    );
-
-    setCraftingStock(
-        "oak-beam-stock",
-        [
-            {
-                name: "Oak Logs",
-                quantity: oakLogs
-            }
-        ],
-        "Oak Beams",
-        oakLogs
     );
 }
 
@@ -272,22 +223,6 @@ async function loadOakSawmill() {
         if (amountInput) {
             amountInput.disabled = false;
         }
-
-        document
-            .getElementById("oak-beam-card")
-            ?.classList.remove("locked");
-
-        if (craftOakBeamButton) {
-            craftOakBeamButton.disabled = false;
-            craftOakBeamButton.innerText = "🪚 Craft";
-        }
-
-        const oakBeamAmount =
-            document.getElementById("oak-beam-amount");
-
-        if (oakBeamAmount) {
-            oakBeamAmount.disabled = false;
-        }
     }
 }
 
@@ -387,70 +322,6 @@ async function sawOakLog() {
     }
 }
 
-async function craftBeam(logName, beamName, amountInputId, messageId) {
-    const { data: { user } } =
-        await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const amount =
-        getPositiveCraftAmount(amountInputId);
-
-    const [logItem, beamItem] = await Promise.all([
-        getItemByName(logName),
-        getItemByName(beamName)
-    ]);
-
-    if (!logItem?.id || !beamItem?.id) {
-        throw new Error(`${beamName} is not configured in the items table.`);
-    }
-
-    const quantities =
-        await getPlayerInventoryQuantities(
-            user.id,
-            [logItem.id]
-        );
-
-    const logsOwned =
-        Number(quantities[logItem.id] || 0);
-
-    if (logsOwned < amount) {
-        const message = document.getElementById(messageId);
-        if (message) {
-            message.innerText =
-                `❌ You need ${amount} ${logName}${amount === 1 ? "" : "s"}.`;
-        }
-        return;
-    }
-
-    await changeInventoryQuantity(
-        user.id,
-        logItem.id,
-        -amount
-    );
-
-    await changeInventoryQuantity(
-        user.id,
-        beamItem.id,
-        amount
-    );
-
-    if (typeof recordCraftingStatistics === "function") {
-        await recordCraftingStatistics({
-            itemsCrafted: amount
-        });
-    }
-
-    const message = document.getElementById(messageId);
-    if (message) {
-        message.innerHTML =
-            `🪚 You cut <strong>${amount} ${logName}${amount === 1 ? "" : "s"}</strong> into <strong>${amount} ${beamName}${amount === 1 ? "" : "s"}</strong>.`;
-    }
-
-    await loadSawmillCardStock();
-    loadHomePage();
-}
-
 sawBirchButton?.addEventListener(
     "click",
     sawBirchLog
@@ -470,46 +341,6 @@ document
 
 document
     .getElementById("oak-saw-amount")
-    ?.addEventListener(
-        "input",
-        loadSawmillCardStock
-    );
-
-craftBirchBeamButton?.addEventListener(
-    "click",
-    () => craftBeam(
-        "Birch Log",
-        "Birch Beam",
-        "birch-beam-amount",
-        "birch-beam-message"
-    ).catch(error => {
-        const message = document.getElementById("birch-beam-message");
-        if (message) message.innerText = `❌ ${error.message}`;
-    })
-);
-
-craftOakBeamButton?.addEventListener(
-    "click",
-    () => craftBeam(
-        "Oak Log",
-        "Oak Beam",
-        "oak-beam-amount",
-        "oak-beam-message"
-    ).catch(error => {
-        const message = document.getElementById("oak-beam-message");
-        if (message) message.innerText = `❌ ${error.message}`;
-    })
-);
-
-document
-    .getElementById("birch-beam-amount")
-    ?.addEventListener(
-        "input",
-        loadSawmillCardStock
-    );
-
-document
-    .getElementById("oak-beam-amount")
     ?.addEventListener(
         "input",
         loadSawmillCardStock

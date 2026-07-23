@@ -416,7 +416,7 @@ async function buildHive(slot) {
     }
 
     if (!nailItem || nailItem.quantity < NAIL_COST) {
-        showMessage(slot, "❌ You need 100 Hand-Forged Iron Nails.");
+        showMessage(slot, "❌ You need 100 Iron Nails.");
         return;
     }
 
