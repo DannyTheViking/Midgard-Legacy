@@ -1,5 +1,5 @@
 /* Shared profession accident system. Keep true while testing the healer. */
-const ACCIDENT_TEST_MODE = true;
+const ACCIDENT_TEST_MODE = false;
 
 const FOREST_HOSPITAL_ACCIDENTS = Object.freeze([
   {
@@ -100,7 +100,7 @@ async function admitForAccident(accident) {
 async function maybeTriggerProfessionAccident(activity) {
   const accidents = PROFESSION_ACCIDENTS[activity] || [];
   if (!accidents.length) return false;
-  const chance = ACCIDENT_TEST_MODE ? 0.10 : 0.0025;
+  const chance = 0.0001; // 0.01%: about 1 serious accident per 10,000 actions
   if (Math.random() >= chance) return false;
   const accident = accidents[Math.floor(Math.random() * accidents.length)];
   await admitForAccident(accident);

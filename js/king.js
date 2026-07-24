@@ -382,6 +382,12 @@ async function presentMead() {
 
         <p>
             <strong>
+                "There is an abandoned handcart in the Wagon Shed. Repair it before your Backpack breaks your back."
+            </strong>
+        </p>
+
+        <p>
+            <strong>
                 "Like every free man, you shall return
                 one part in one hundred of your earnings
                 to the Crown."

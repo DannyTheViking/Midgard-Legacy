@@ -1700,3 +1700,7 @@ body.forest-data-loading .forest-loading-screen {
 .top-bar, .player-stats, .top-stat, #topbar { overflow:visible !important; }
 
 .avatar-upload-box{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;border:1px solid #6d4b20;background:#111}.avatar-upload-box label{width:100%;color:gold}.avatar-upload-box input{max-width:260px}.avatar-upload-box small{width:100%;color:#cdb68a}
+
+
+/* Backpack and transport weight displays */
+.backpack-capacity,.transport-capacity{margin:12px 0 18px;padding:12px;background:#111;border:1px solid #59400f;border-radius:4px}.backpack-capacity-row,.transport-capacity-row{display:flex;justify-content:space-between;gap:12px;color:#eee0ba}.weight-bar{height:10px;margin-top:9px;overflow:hidden;background:#292929;border:1px solid #4d3a16;border-radius:99px}.weight-bar span{display:block;height:100%;background:linear-gradient(90deg,#9b741d,#e4b94e)}.inventory-row small{display:block;margin-top:5px;color:#afa486}.transport-item-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #32270f}.transport-item-row button{padding:7px 10px}.wagon-repair-list{display:grid;gap:8px;margin:14px 0}.wagon-repair-item{display:flex;justify-content:space-between;padding:10px;background:#111;border:1px solid #44330f}.wagon-ready{color:#6dd96d}.wagon-missing{color:#ef7777}

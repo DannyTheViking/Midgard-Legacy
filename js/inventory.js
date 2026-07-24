@@ -1,191 +1,74 @@
 /* =====================================
-
-    MIDGARD LEGACY
-
-    File:
-    inventory.js
-
-    Purpose:
-    Loads inventory and allows Empty
-    Buckets to be filled with water.
-
+   MIDGARD LEGACY - BACKPACK
 ===================================== */
 
+const DEFAULT_BACKPACK_CAPACITY_KG = 25;
 
-/* =====================================
-   LOAD INVENTORY
-===================================== */
-
-async function loadInventory() {
-
-    const inventoryList =
-        document.getElementById("inventory-list");
-
-    if (!inventoryList) {
-        console.error(
-            'Missing HTML element: id="inventory-list"'
-        );
-        return;
-    }
-
-    const {
-        data: { user },
-        error: userError
-    } = await supabaseClient.auth.getUser();
-
-    if (userError) {
-        inventoryList.innerText =
-            userError.message;
-        return;
-    }
-
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from("inventory")
-        .select(`
-            id,
-            item_id,
-            quantity,
-            items (
-                id,
-                name,
-                description
-            )
-        `)
-        .eq("player_id", user.id)
-        .gt("quantity", 0)
-        .order("item_id");
-
-    if (error) {
-        inventoryList.innerText =
-            "Inventory failed to load: " +
-            error.message;
-        return;
-    }
-
-    inventoryList.innerHTML = "";
-
-    if (!data || data.length === 0) {
-        inventoryList.innerHTML =
-            "<p>Your inventory is empty.</p>";
-        return;
-    }
-
-    data.forEach(function (inventoryItem) {
-
-        /*
-            Protect the page from an inventory row
-            whose matching item was deleted.
-        */
-
-        if (!inventoryItem.items) {
-
-            console.warn(
-                "Missing item record for inventory row:",
-                inventoryItem
-            );
-
-            return;
-        }
-
-        let actionButton = "";
-
-        /*
-            Only show Fill With Water
-            on the Empty Bucket.
-        */
-
-        if (inventoryItem.item_id === EMPTY_BUCKET) {
-
-            actionButton = `
-                <button
-                    type="button"
-                    onclick="fillBucketWithWater(
-                        ${inventoryItem.id},
-                        this
-                    )"
-                >
-                    💧 Fill With Water
-                </button>
-            `;
-
-        }
-
-        inventoryList.innerHTML += `
-            <div class="inventory-row">
-
-                <div class="item-left">
-
-                    <div class="item-icon">
-                        ${getInventoryIcon(
-                            inventoryItem.items.name
-                        )}
-                    </div>
-
-                    <div>
-
-                        <div class="item-name">
-                            ${inventoryItem.items.name}
-                        </div>
-
-                        <div class="item-description">
-                            ${
-                                inventoryItem.items.description ||
-                                "No description available."
-                            }
-                        </div>
-
-                        ${actionButton}
-
-                    </div>
-
-                </div>
-
-                <div class="item-right">
-
-                    <div class="item-quantity">
-                        ${inventoryItem.quantity}
-                    </div>
-
-                </div>
-
-            </div>
-        `;
-
-    });
-
+function formatWeight(value) {
+    const number = Number(value || 0);
+    return `${number.toFixed(number < 10 ? 2 : 1)}kg`;
 }
 
-
-/* =====================================
-   INVENTORY ICON
-===================================== */
-
 function getInventoryIcon(itemName) {
-
-    const name =
-        String(itemName || "").toLowerCase();
-
+    const name = String(itemName || "").toLowerCase();
     if (name.includes("bucket")) return "🪣";
     if (name.includes("mead")) return "🍺";
     if (name.includes("honey")) return "🍯";
     if (name.includes("axe")) return "🪓";
-    if (name.includes("iron")) return "⚒️";
+    if (name.includes("pickaxe")) return "⛏️";
+    if (name.includes("iron") || name.includes("nail")) return "⚒️";
     if (name.includes("barrel")) return "🛢️";
-    if (name.includes("plank")) return "🪵";
-    if (name.includes("log")) return "🪵";
-    if (name.includes("hive")) return "🐝";
-
+    if (name.includes("plank") || name.includes("beam") || name.includes("log")) return "🪵";
+    if (name.includes("rock") || name.includes("stone") || name.includes("ore")) return "🪨";
+    if (name.includes("stick")) return "🌿";
+    if (name.includes("hive") || name.includes("queen bee")) return "🐝";
     return "📦";
 }
 
+async function loadInventory() {
+    const inventoryList = document.getElementById("inventory-list");
+    const capacityBox = document.getElementById("backpack-capacity");
+    if (!inventoryList) return;
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const [{ data, error }, { data: player }] = await Promise.all([
+        supabaseClient.from("inventory").select(`
+            id,item_id,quantity,
+            items(id,name,description,weight_kg)
+        `).eq("player_id", user.id).gt("quantity", 0).order("item_id"),
+        supabaseClient.from("players").select("backpack_capacity_kg").eq("id", user.id).single()
+    ]);
+
+    if (error) {
+        inventoryList.innerText = "Backpack failed to load: " + error.message;
+        return;
+    }
+
+    const capacity = Number(player?.backpack_capacity_kg || DEFAULT_BACKPACK_CAPACITY_KG);
+    const used = (data || []).reduce((total, row) => total + Number(row.quantity || 0) * Number(row.items?.weight_kg || 0), 0);
+    if (capacityBox) {
+        const percent = Math.min(100, capacity ? used / capacity * 100 : 0);
+        capacityBox.innerHTML = `<div class="backpack-capacity-row"><strong>Backpack Weight</strong><span>${formatWeight(used)} / ${formatWeight(capacity)}</span></div><div class="weight-bar"><span style="width:${percent}%"></span></div>`;
+    }
+
+    if (!data?.length) {
+        inventoryList.innerHTML = "<p>Your backpack is empty. Your permanent resources are kept in the Storage Yard.</p>";
+        return;
+    }
+
+    inventoryList.innerHTML = data.map(inventoryItem => {
+        if (!inventoryItem.items) return "";
+        const unitWeight = Number(inventoryItem.items.weight_kg || 0);
+        const totalWeight = unitWeight * Number(inventoryItem.quantity || 0);
+        const actionButton = inventoryItem.item_id === EMPTY_BUCKET ? `<button type="button" onclick="fillBucketWithWater(${inventoryItem.id},this)">💧 Fill With Water</button>` : "";
+        return `<div class="inventory-row"><div class="item-left"><div class="item-icon">${getInventoryIcon(inventoryItem.items.name)}</div><div><div class="item-name">${inventoryItem.items.name}</div><div class="item-description">${inventoryItem.items.description || "No description available."}</div><small>${formatWeight(unitWeight)} each · ${formatWeight(totalWeight)} total</small>${actionButton}</div></div><div class="item-right"><div class="item-quantity">${inventoryItem.quantity}</div></div></div>`;
+    }).join("");
+}
 
 /* =====================================
    FILL EMPTY BUCKET WITH WATER

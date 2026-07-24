@@ -14,6 +14,16 @@ let propertyUser = null;
 function propertyStage(level){ return propertyStages.find(stage => stage.level === level); }
 function propertySafe(value){ return String(value ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 
+function propertyMaterialIcon(itemName){
+  const name=String(itemName||"").toLowerCase();
+  if(name.includes("beam"))return "🪚";
+  if(name.includes("nail"))return "🔩";
+  if(name.includes("rock")||name.includes("stone"))return "🪨";
+  if(name.includes("stick"))return "🌿";
+  if(name.includes("plank")||name.includes("wood"))return "🪵";
+  return "📦";
+}
+
 function displayProperty(stage,isPreview=false){
   if(!stage)return;
   document.getElementById("current-property-image").src=stage.image;
@@ -54,7 +64,7 @@ async function renderUpgradePanel(){
     <div class="upgrade-comparison"><div class="comparison-stage"><img src="${current.image}" alt="${current.alt}"><span>${current.name}</span></div><span class="comparison-arrow">➜</span><div class="comparison-stage"><img src="${next.image}" alt="${next.alt}"><span>${next.name}</span></div></div>
     <div class="active-upgrade-requirements"><h3>Required Materials</h3>${requirements.map(req=>{
       const owned=Number(inventory.get(req.item_name.toLowerCase())||0); const enough=owned>=Number(req.quantity);
-      return `<div class="material-row ${enough?"material-ready":"material-missing"}"><div class="material-name"><span>${req.item_name.includes("Beam")?"🪚":req.item_name.includes("Nail")?"🔩":req.item_name==="Rock"?"🪨":"🪵"}</span><span>${propertySafe(req.item_name)}</span></div><strong>${owned}/${req.quantity}</strong></div>`;
+      return `<div class="material-row ${enough?"material-ready":"material-missing"}"><div class="material-name"><span>${propertyMaterialIcon(req.item_name)}</span><span>${propertySafe(req.item_name)}</span></div><strong>${owned}/${req.quantity}</strong></div>`;
     }).join("")}</div>
     <button id="upgrade-property-button" class="property-upgrade-button" type="button" ${ready?"":"disabled"}>${ready?`Upgrade to ${propertySafe(next.name)}`:"More materials required"}</button>
     <p id="property-upgrade-message" class="test-version-notice">Upgrades permanently consume the listed materials.</p>`;
