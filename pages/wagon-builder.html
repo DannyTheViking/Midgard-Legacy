@@ -1,69 +1,329 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Midgard Legacy - Wagon Builder</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
-    <link rel="stylesheet" href="../css/wagon-builder.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - Wagon Builder
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/wagon-builder.css?v=2"
+    >
+
 </head>
+
 <body>
-<div class="game-layout">
-    <div id="sidebar"></div>
-    <main class="main-area">
-        <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🛞 Wagon Builder</h1>
-                <p>Buy wheels, axles and wagon parts for handcarts, horse carts and merchant wagons.</p>
+    <div class="game-layout">
+
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🛞 Haldor’s Wagon Builder
+                        </h1>
+
+                        <p>
+                            Buy wheels, axles and wagon parts for
+                            handcarts, horse carts and merchant wagons.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🛞 Wheelwright
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     CRAFTSMAN INTRO
+                ========================= -->
+
+                <section class="wagon-builder-intro">
+
+                    <div>
+
+                        <span class="wagon-builder-eyebrow">
+                            Village Craftsman
+                        </span>
+
+                        <h2>
+                            Haldor’s Wheelwright
+                        </h2>
+
+                        <p>
+                            Every part purchased here is delivered
+                            directly to your Storage Yard.
+                        </p>
+
+                    </div>
+
+                    <div class="wagon-builder-silver">
+
+                        <span>
+                            Your Silver
+                        </span>
+
+                        <strong id="wagon-builder-silver">
+                            Loading…
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     CATEGORY TABS
+                ========================= -->
+
+                <nav
+                    class="wagon-builder-tabs"
+                    aria-label="Wagon part categories"
+                >
+
+                    <button
+                        type="button"
+                        class="wagon-tab active"
+                        data-category="all"
+                    >
+                        All Parts
+                    </button>
+
+                    <button
+                        type="button"
+                        class="wagon-tab"
+                        data-category="wheels"
+                    >
+                        Wheels
+                    </button>
+
+                    <button
+                        type="button"
+                        class="wagon-tab"
+                        data-category="frame"
+                    >
+                        Frame Parts
+                    </button>
+
+                    <button
+                        type="button"
+                        class="wagon-tab"
+                        data-category="horse"
+                    >
+                        Horse Gear
+                    </button>
+
+                </nav>
+
+
+                <!-- =========================
+                     SHOP GRID
+                ========================= -->
+
+                <section
+                    id="wagon-builder-grid"
+                    class="wagon-builder-grid"
+                    aria-live="polite"
+                >
+
+                    <div class="wagon-builder-loading">
+
+                        <div>
+                            🛞
+                        </div>
+
+                        <p>
+                            Loading the wheelwright’s stock…
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     MESSAGE
+                ========================= -->
+
+                <p
+                    id="wagon-builder-message"
+                    class="wagon-builder-message"
+                    role="status"
+                    aria-live="polite"
+                ></p>
+
+
+                <!-- =========================
+                     TRANSPORT PROGRESSION
+                ========================= -->
+
+                <section class="wagon-builder-progression">
+
+                    <header class="section-header">
+
+                        <h2>
+                            🛒 Transport Progression
+                        </h2>
+
+                        <span class="game-badge">
+                            Carry Capacity
+                        </span>
+
+                    </header>
+
+                    <div class="wagon-progression-grid">
+
+
+                        <article class="transport-progress-card">
+
+                            <div class="transport-progress-icon">
+                                🎒
+                            </div>
+
+                            <h3>
+                                Backpack
+                            </h3>
+
+                            <strong>
+                                50kg
+                            </strong>
+
+                            <p>
+                                Always available
+                            </p>
+
+                        </article>
+
+
+                        <article class="transport-progress-card">
+
+                            <div class="transport-progress-icon">
+                                🛒
+                            </div>
+
+                            <h3>
+                                Wooden Handcart
+                            </h3>
+
+                            <strong>
+                                250kg
+                            </strong>
+
+                            <p>
+                                Repair it inside your Wagon Shed
+                            </p>
+
+                        </article>
+
+
+                        <article class="transport-progress-card locked">
+
+                            <div class="transport-progress-icon">
+                                🐴
+                            </div>
+
+                            <h3>
+                                Horse Cart
+                            </h3>
+
+                            <strong>
+                                500kg
+                            </strong>
+
+                            <p>
+                                Requires medium wagon parts
+                            </p>
+
+                        </article>
+
+
+                        <article class="transport-progress-card locked">
+
+                            <div class="transport-progress-icon">
+                                🚛
+                            </div>
+
+                            <h3>
+                                Merchant Wagon
+                            </h3>
+
+                            <strong>
+                                1,000kg
+                            </strong>
+
+                            <p>
+                                Requires large wagon parts
+                            </p>
+
+                        </article>
+
+                    </div>
+
+                </section>
+
             </div>
-        </section>
 
-        <section class="wagon-builder-intro">
-            <div>
-                <span class="wagon-builder-eyebrow">Village Craftsman</span>
-                <h2>Haldor's Wheelwright</h2>
-                <p>Every part purchased here is delivered directly to your Storage Yard.</p>
-            </div>
-            <div class="wagon-builder-silver">
-                <span>Your Silver</span>
-                <strong id="wagon-builder-silver">Loading…</strong>
-            </div>
-        </section>
+        </main>
 
-        <nav class="wagon-builder-tabs" aria-label="Wagon part categories">
-            <button type="button" class="wagon-tab active" data-category="all">All Parts</button>
-            <button type="button" class="wagon-tab" data-category="wheels">Wheels</button>
-            <button type="button" class="wagon-tab" data-category="frame">Frame Parts</button>
-            <button type="button" class="wagon-tab" data-category="horse">Horse Gear</button>
-        </nav>
+    </div>
 
-        <section id="wagon-builder-grid" class="wagon-builder-grid" aria-live="polite">
-            <p>Loading the wheelwright's stock…</p>
-        </section>
 
-        <p id="wagon-builder-message" class="wagon-builder-message" role="status"></p>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-        <section class="wagon-builder-progression">
-            <h2>Transport Progression</h2>
-            <div class="wagon-progression-grid">
-                <article><strong>🎒 Backpack</strong><span>25kg</span><small>Always available</small></article>
-                <article><strong>🛒 Wooden Handcart</strong><span>100kg</span><small>Repair in your Wagon Shed</small></article>
-                <article><strong>🐴 Horse Cart</strong><span>400kg</span><small>Requires medium wagon parts</small></article>
-                <article><strong>🚚 Merchant Wagon</strong><span>600kg</span><small>Requires large wagon parts</small></article>
-            </div>
-        </section>
-    </main>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script>
-<script src="../js/constants.js"></script>
-<script src="../js/wagon-builder.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/wagon-builder.js"></script>
+
 </body>
+
 </html>

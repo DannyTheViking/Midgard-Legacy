@@ -2,107 +2,471 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Midgard Legacy - Forge</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🔥 Forge</h1>
-                <p>Welcome to my forge <span id="home-username"></span>, here you can turn raw iron into useful metal.</p>
+
+            <!-- =========================
+                 FORGE PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🔥 Ivar’s Forge
+                        </h1>
+
+                        <p>
+                            Welcome to my forge,
+                            <span id="home-username"></span>.
+                            Turn raw iron into useful metal parts.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🔥 Forge
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     FORGE RECIPES
+                ========================= -->
+
+                <section class="forge-grid">
+
+
+                    <!-- Iron Bar -->
+
+                    <article class="forge-card">
+
+                        <div class="forge-card-image iron-bar-area">
+                            🔥
+                        </div>
+
+                        <header class="forge-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Iron Bar
+                                </h2>
+
+                                <p>
+                                    Smelt bog iron into a cleaner
+                                    and more useful metal bar.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="iron-bar-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="forge-card-body">
+
+                            <div class="forge-requirements">
+
+                                <p>
+                                    <span>🪨 Bog Iron</span>
+                                    <span class="green">5</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Iron Bar
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="forge-controls">
+
+                                <label for="iron-bar-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="iron-bar-amount"
+                                    type="number"
+                                    min="1"
+                                    max="9999"
+                                    value="1"
+                                    aria-label="Iron Bars to forge"
+                                >
+
+                                <button
+                                    id="forge-iron-bar-button"
+                                    type="button"
+                                    class="forge-button"
+                                >
+                                    🔥 Forge Iron Bar
+                                </button>
+
+                            </div>
+
+                            <div class="forge-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="forge-message">
+                                    Ready to forge.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Iron Nails -->
+
+                    <article class="forge-card">
+
+                        <div class="forge-card-image nails-area">
+                            🔩
+                        </div>
+
+                        <header class="forge-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Iron Nails
+                                </h2>
+
+                                <p>
+                                    Hammer an iron bar into nails
+                                    for construction and crafting.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="iron-nails-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="forge-card-body">
+
+                            <div class="forge-requirements">
+
+                                <p>
+                                    <span>⚒️ Iron Bar</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        25 Iron Nails
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="forge-controls">
+
+                                <label for="nails-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="nails-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="forge-nails-button"
+                                    type="button"
+                                    class="forge-button"
+                                >
+                                    🔥 Forge Nails
+                                </button>
+
+                            </div>
+
+                            <div class="forge-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="nails-message">
+                                    Ready to forge.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Iron Axe Head -->
+
+                    <article class="forge-card">
+
+                        <div class="forge-card-image axe-head-area">
+                            🪓
+                        </div>
+
+                        <header class="forge-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Iron Axe Head
+                                </h2>
+
+                                <p>
+                                    Shape two iron bars into a
+                                    strong cutting head.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="axe-head-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="forge-card-body">
+
+                            <div class="forge-requirements">
+
+                                <p>
+                                    <span>⚒️ Iron Bars</span>
+                                    <span class="green">2</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Iron Axe Head
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="forge-controls">
+
+                                <label for="axe-head-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="axe-head-amount"
+                                    type="number"
+                                    min="1"
+                                    max="9999"
+                                    value="1"
+                                    aria-label="Iron Axe Heads to forge"
+                                >
+
+                                <button
+                                    id="forge-axe-head-button"
+                                    type="button"
+                                    class="forge-button"
+                                >
+                                    🔥 Forge Axe Head
+                                </button>
+
+                            </div>
+
+                            <div class="forge-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="axe-head-message">
+                                    Ready to forge.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Iron Hoop -->
+
+                    <article class="forge-card">
+
+                        <div class="forge-card-image hoop-area">
+                            ⭕
+                        </div>
+
+                        <header class="forge-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Iron Hoop
+                                </h2>
+
+                                <p>
+                                    Bend iron into strong hoops for
+                                    buckets, barrels and containers.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="iron-hoop-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="forge-card-body">
+
+                            <div class="forge-requirements">
+
+                                <p>
+                                    <span>⚒️ Iron Bar</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        2 Iron Hoops
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="forge-controls">
+
+                                <label for="hoop-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="hoop-amount"
+                                    type="number"
+                                    min="1"
+                                    max="9999"
+                                    value="1"
+                                    aria-label="Iron Hoop batches to forge"
+                                >
+
+                                <button
+                                    id="forge-hoop-button"
+                                    type="button"
+                                    class="forge-button"
+                                >
+                                    🔥 Forge Hoops
+                                </button>
+
+                            </div>
+
+                            <div class="forge-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="hoop-message">
+                                    Ready to forge.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-        <section class="crafting-grid">
+        </main>
 
-            <!-- iron bar -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3>⚒️ Iron Bar</h3>
-                    <div class="craft-stock" id="iron-bar-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">5 Bog Iron</span></p>
-                <p>Produces: <span class="green">1 Iron Bar</span></p>
-                <div class="craft-controls">
-                    <input class="craft-amount" id="iron-bar-amount" type="number" min="1" max="9999" value="1" aria-label="Iron Bars to forge">
-                    <button id="forge-iron-bar-button">🔥 Craft</button>
-                </div>
-                <p id="forge-message">Ready to forge.</p>
-            </div>
+    </div>
 
-            <!-- iron nails -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3>🔩 Iron Nails</h3>
-                    <div class="craft-stock" id="iron-nails-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">1 Iron Bar</span></p>
-                <p>Produces: <span class="green">25 Iron Nails</span></p>
 
-                <div class="craft-controls">
-                    <input class="craft-amount" id="nails-amount" type="number" min="1" value="1">
-                    <button id="forge-nails-button">🔥 Craft</button>
-                </div>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-                <p id="nails-message">Ready to forge.</p>
-            </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-            <!-- iron axe head -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3>🪓 Iron Axe Head</h3>
-                    <div class="craft-stock" id="axe-head-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">2 Iron Bars</span></p>
-                <p>Produces: <span class="green">1 Iron Axe Head</span></p>
-                <div class="craft-controls">
-                    <input class="craft-amount" id="axe-head-amount" type="number" min="1" max="9999" value="1" aria-label="Iron Axe Heads to forge">
-                    <button id="forge-axe-head-button">🔥 Craft</button>
-                </div>
-                <p id="axe-head-message">Ready to forge.</p>
-            </div>
-
-            <!-- iron hoop -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3>⭕ Iron Hoop</h3>
-                    <div class="craft-stock" id="iron-hoop-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">1 Iron Bar</span></p>
-                <p>Produces: <span class="green">2 Iron Hoops</span></p>
-                <div class="craft-controls">
-                    <input class="craft-amount" id="hoop-amount" type="number" min="1" max="9999" value="1" aria-label="Iron Hoop batches to forge">
-                    <button id="forge-hoop-button">🔥 Craft</button>
-                </div>
-                <p id="hoop-message">Ready to forge.</p>
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/skills.js"></script>
-<script src="../js/forge.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/skills.js"></script>
+    <script src="../js/forge.js"></script>
 
 </body>
+
 </html>

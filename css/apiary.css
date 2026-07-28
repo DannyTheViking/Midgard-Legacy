@@ -1,18 +1,874 @@
+/* =========================================================
+   MIDGARD LEGACY
+   PROPERTY APIARY PAGE
+========================================================= */
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+:root {
+    --apiary-accent: #b78a4d;
+    --apiary-accent-light: #e5c18b;
+    --apiary-accent-dark: #6a4728;
+
+    --apiary-honey: #d6a92d;
+    --apiary-honey-light: #f0d276;
+
+    --apiary-panel: #211c17;
+    --apiary-panel-light: #2b241d;
+
+    --apiary-border: #5f4a32;
+
+    --apiary-text: #f3ead8;
+    --apiary-muted: #b9ad9a;
+
+    --apiary-success: #70bc73;
+    --apiary-danger: #d66d65;
+
+    --apiary-radius: 12px;
+    --apiary-small-radius: 8px;
+
+    --apiary-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   WORKSPACE
+========================================================= */
 
 .apiary-workspace {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
+
     gap: 18px;
-    align-items: start;
 }
 
-.apiary-intro { margin-bottom: 14px; }
-.apiary-hive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.apiary-tools-card { position: sticky; top: 18px; }
-.apiary-tools-card .material-row { align-items: center; gap: 8px; }
-.apiary-tools-card button { margin-left: 6px; }
 
-@media (max-width: 980px) {
-    .apiary-workspace { grid-template-columns: 1fr; }
-    .apiary-tools-card { position: static; }
+/* =========================================================
+   LOCKED PANEL
+========================================================= */
+
+.apiary-locked-panel {
+    display: grid;
+
+    grid-template-columns:
+        56px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 17px 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-panel-light),
+            var(--apiary-panel)
+        );
+
+    border:
+        1px solid
+        var(--apiary-border);
+
+    border-radius:
+        var(--apiary-radius);
+
+    box-shadow:
+        var(--apiary-shadow);
+}
+
+.apiary-locked-panel[hidden] {
+    display: none;
+}
+
+.apiary-locked-icon {
+    display: grid;
+    place-items: center;
+
+    width: 54px;
+    height: 54px;
+
+    font-size: 1.7rem;
+
+    background:
+        rgba(214, 109, 101, 0.10);
+
+    border:
+        1px solid
+        rgba(214, 109, 101, 0.32);
+
+    border-radius: 10px;
+}
+
+.apiary-locked-panel h2 {
+    margin: 3px 0 6px;
+
+    color:
+        var(--apiary-text);
+
+    font-size: 1.2rem;
+}
+
+.apiary-locked-panel p {
+    margin: 0;
+
+    color:
+        var(--apiary-muted);
+
+    font-size: 0.82rem;
+}
+
+.apiary-return-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    padding: 9px 13px;
+
+    color:
+        #17120d;
+
+    font-size: 0.78rem;
+    font-weight: 850;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-accent-light),
+            var(--apiary-accent)
+        );
+
+    border:
+        1px solid
+        var(--apiary-accent-dark);
+
+    border-radius:
+        var(--apiary-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--apiary-accent-dark);
+}
+
+
+/* =========================================================
+   SUMMARY PANEL
+========================================================= */
+
+.apiary-summary-panel {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(0, 1.1fr);
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.apiary-summary-card,
+.apiary-tools-card {
+    min-width: 0;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-panel-light),
+            var(--apiary-panel)
+        );
+
+    border:
+        1px solid
+        var(--apiary-border);
+
+    border-radius:
+        var(--apiary-radius);
+
+    box-shadow:
+        var(--apiary-shadow);
+}
+
+.apiary-summary-card {
+    display: grid;
+
+    grid-template-columns:
+        54px
+        minmax(0, 1fr);
+
+    align-items: start;
+
+    gap: 13px;
+}
+
+.apiary-tools-heading {
+    display: grid;
+
+    grid-template-columns:
+        54px
+        minmax(0, 1fr);
+
+    align-items: start;
+
+    gap: 13px;
+
+    margin-bottom: 14px;
+}
+
+.apiary-summary-icon {
+    display: grid;
+    place-items: center;
+
+    width: 54px;
+    height: 54px;
+
+    font-size: 1.65rem;
+
+    background:
+        rgba(214, 169, 45, 0.10);
+
+    border:
+        1px solid
+        rgba(214, 169, 45, 0.32);
+
+    border-radius: 10px;
+}
+
+.apiary-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--apiary-honey-light);
+
+    font-size: 0.68rem;
+    font-weight: 850;
+
+    letter-spacing: 0.11em;
+
+    text-transform: uppercase;
+}
+
+.apiary-summary-card h2,
+.apiary-tools-card h2 {
+    margin: 0 0 7px;
+
+    color:
+        var(--apiary-text);
+
+    font-size: 1.15rem;
+}
+
+.apiary-summary-card p,
+.apiary-tools-card p {
+    margin: 0;
+
+    color:
+        var(--apiary-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   EQUIPMENT CARD
+========================================================= */
+
+.beekeeping-equipment-card {
+    padding: 12px;
+
+    color:
+        var(--apiary-muted);
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--apiary-small-radius);
+}
+
+.beekeeping-equipment-card .material-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+.beekeeping-equipment-card .material-row:last-child {
+    border-bottom: 0;
+}
+
+.beekeeping-equipment-card strong {
+    color:
+        var(--apiary-text);
+}
+
+.beekeeping-equipment-card button {
+    min-height: 36px;
+
+    padding: 7px 10px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-accent-light),
+            var(--apiary-accent)
+        );
+
+    border:
+        1px solid
+        var(--apiary-accent-dark);
+
+    border-radius:
+        var(--apiary-small-radius);
+
+    box-shadow:
+        0 3px 0
+        var(--apiary-accent-dark);
+}
+
+.beekeeping-equipment-message {
+    display: none;
+
+    margin: 10px 0 0;
+    padding: 9px 10px;
+
+    color:
+        var(--apiary-muted);
+
+    font-size: 0.75rem;
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    border:
+        1px solid
+        rgba(214, 169, 45, 0.24);
+
+    border-radius:
+        var(--apiary-small-radius);
+}
+
+.beekeeping-equipment-message:not(:empty) {
+    display: block;
+}
+
+
+/* =========================================================
+   HIVE PANEL
+========================================================= */
+
+.apiary-hives-panel {
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-panel-light),
+            var(--apiary-panel)
+        );
+
+    border:
+        1px solid
+        var(--apiary-border);
+
+    border-radius:
+        var(--apiary-radius);
+
+    box-shadow:
+        var(--apiary-shadow);
+}
+
+
+/* =========================================================
+   HIVE PANEL HEADING
+========================================================= */
+
+.apiary-hives-heading {
+    display: grid;
+
+    grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(214, 169, 45, 0.11),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        var(--apiary-border);
+}
+
+.apiary-hives-heading-icon {
+    display: grid;
+    place-items: center;
+
+    width: 44px;
+    height: 44px;
+
+    font-size: 1.3rem;
+
+    background:
+        rgba(214, 169, 45, 0.10);
+
+    border:
+        1px solid
+        rgba(214, 169, 45, 0.30);
+
+    border-radius: 9px;
+}
+
+.apiary-hives-heading h2 {
+    margin: 0;
+
+    color:
+        var(--apiary-text);
+
+    font-size: 1.05rem;
+}
+
+.apiary-hives-heading p {
+    margin: 4px 0 0;
+
+    color:
+        var(--apiary-muted);
+
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.apiary-hives-badge {
+    padding: 5px 9px;
+
+    color:
+        var(--apiary-honey-light);
+
+    font-size: 0.63rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(214, 169, 45, 0.10);
+
+    border:
+        1px solid
+        rgba(214, 169, 45, 0.34);
+
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   HIVE GRID
+========================================================= */
+
+.apiary-hive-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    padding: 16px;
+}
+
+
+/* =========================================================
+   HIVE CARDS
+========================================================= */
+
+.apiary-hive-grid .crafting-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 255px;
+
+    padding: 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.025),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--apiary-small-radius);
+
+    box-shadow:
+        0 5px 12px
+        rgba(0, 0, 0, 0.20);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.apiary-hive-grid .crafting-card:hover {
+    transform:
+        translateY(-2px);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(214, 169, 45, 0.09),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border-color:
+        rgba(214, 169, 45, 0.38);
+}
+
+.apiary-hive-grid .crafting-card h3 {
+    margin: 0 0 12px;
+
+    color:
+        var(--apiary-text);
+
+    font-size: 0.95rem;
+}
+
+.apiary-hive-grid .crafting-card p {
+    margin: 0 0 10px;
+
+    color:
+        var(--apiary-muted);
+
+    font-size: 0.76rem;
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+}
+
+.apiary-hive-grid .crafting-card strong {
+    color:
+        var(--apiary-honey-light);
+}
+
+.apiary-hive-grid .crafting-card.locked {
+    filter:
+        saturate(0.5);
+
+    opacity: 0.68;
+}
+
+.apiary-hive-grid .crafting-card.locked::after {
+    content:
+        "LOCKED";
+
+    position: absolute;
+
+    top: 9px;
+    right: 9px;
+
+    padding: 3px 7px;
+
+    color:
+        #aaa19a;
+
+    font-size: 0.58rem;
+    font-weight: 900;
+
+    letter-spacing: 0.10em;
+
+    background:
+        rgba(0, 0, 0, 0.30);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius:
+        999px;
+}
+
+
+/* =========================================================
+   HIVE BUTTONS
+========================================================= */
+
+.apiary-hive-grid .crafting-card button {
+    width: 100%;
+    min-height: 40px;
+
+    margin-top: auto;
+    padding: 9px 11px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--apiary-honey-light),
+            var(--apiary-honey)
+        );
+
+    border:
+        1px solid
+        #785713;
+
+    border-radius:
+        var(--apiary-small-radius);
+
+    box-shadow:
+        0 4px 0
+        #785713;
+}
+
+.apiary-hive-grid .crafting-card button:hover:not(:disabled) {
+    filter:
+        brightness(1.08);
+
+    transform:
+        translateY(-1px);
+}
+
+.apiary-hive-grid .crafting-card button:disabled {
+    cursor:
+        not-allowed;
+
+    color:
+        #99938a;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4b4640,
+            #34302c
+        );
+
+    border-color:
+        #5d5750;
+
+    box-shadow:
+        0 4px 0
+        #211d19;
+
+    opacity:
+        0.65;
+}
+
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.apiary-loading-state {
+    grid-column:
+        1 / -1;
+
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 8px;
+
+    min-height: 230px;
+
+    color:
+        var(--apiary-muted);
+
+    text-align: center;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px dashed
+        rgba(214, 169, 45, 0.28);
+
+    border-radius:
+        var(--apiary-small-radius);
+}
+
+.apiary-loading-state span {
+    font-size: 2.5rem;
+}
+
+.apiary-loading-state p {
+    margin: 0;
+}
+
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1350px) {
+
+    .apiary-hive-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .apiary-summary-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .apiary-hive-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .apiary-locked-panel {
+        grid-template-columns:
+            54px
+            minmax(0, 1fr);
+    }
+
+    .apiary-return-button {
+        grid-column:
+            1 / -1;
+
+        justify-self:
+            start;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .apiary-summary-card,
+    .apiary-tools-heading {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .apiary-summary-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .apiary-hives-heading {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .apiary-hives-badge {
+        grid-column:
+            1 / -1;
+
+        justify-self:
+            start;
+    }
+
+    .apiary-hive-grid {
+        grid-template-columns: 1fr;
+
+        padding: 12px;
+    }
+
+    .apiary-hive-grid .crafting-card {
+        min-height: 0;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .apiary-hive-grid .crafting-card,
+    .apiary-hive-grid .crafting-card button {
+        transition: none;
+    }
+
 }

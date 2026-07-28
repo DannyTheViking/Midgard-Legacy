@@ -1,93 +1,853 @@
+/* =========================================================
+   MIDGARD LEGACY
+   WAGON BUILDER PAGE
+========================================================= */
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
 :root {
-    --wagon-gold: #d5aa26;
-    --wagon-light: #f0d891;
-    --wagon-border: #59400f;
-    --wagon-panel: #111;
-    --wagon-muted: #afa486;
+    --wagon-builder-accent: #b78a4d;
+    --wagon-builder-accent-light: #e5c18b;
+    --wagon-builder-accent-dark: #6a4728;
+    --wagon-builder-accent-rgb: 183, 138, 77;
+
+    --wagon-builder-panel: #211c17;
+    --wagon-builder-panel-light: #2b241d;
+    --wagon-builder-panel-dark: #17130f;
+
+    --wagon-builder-border: #5f4a32;
+    --wagon-builder-border-soft:
+        rgba(183, 138, 77, 0.28);
+
+    --wagon-builder-text: #f3ead8;
+    --wagon-builder-muted: #b9ad9a;
+
+    --wagon-builder-success: #70bc73;
+    --wagon-builder-danger: #d66d65;
+
+    --wagon-builder-radius: 12px;
+    --wagon-builder-small-radius: 8px;
+
+    --wagon-builder-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
 }
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CRAFTSMAN INTRO
+========================================================= */
 
 .wagon-builder-intro {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+
     gap: 18px;
-    margin-bottom: 14px;
-    padding: 18px;
-    background: linear-gradient(145deg, #171717, #0e0e0e);
-    border: 1px solid var(--wagon-border);
-    border-radius: 5px;
+
+    margin-bottom: 16px;
+    padding: 17px 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-panel-light),
+            var(--wagon-builder-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-radius);
+
+    box-shadow:
+        var(--wagon-builder-shadow);
 }
 
-.wagon-builder-intro h2 { margin: 3px 0 7px; color: var(--wagon-light); }
-.wagon-builder-intro p { margin: 0; color: var(--wagon-muted); }
-.wagon-builder-eyebrow { color: var(--wagon-gold); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+.wagon-builder-intro h2 {
+    margin: 3px 0 7px;
+
+    color:
+        var(--wagon-builder-text);
+
+    font-size: 1.35rem;
+}
+
+.wagon-builder-intro p {
+    margin: 0;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+.wagon-builder-eyebrow {
+    color:
+        var(--wagon-builder-accent-light);
+
+    font-size: 0.7rem;
+    font-weight: 850;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   SILVER DISPLAY
+========================================================= */
 
 .wagon-builder-silver {
-    min-width: 150px;
-    padding: 12px 16px;
-    text-align: right;
-    background: #1c1508;
-    border: 1px solid #6c4e13;
-    border-radius: 4px;
-}
-.wagon-builder-silver span { display: block; color: var(--wagon-muted); font-size: 12px; }
-.wagon-builder-silver strong { color: #ffe18b; font-size: 22px; }
+    flex: 0 0 auto;
 
-.wagon-builder-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.wagon-tab {
-    padding: 9px 14px;
-    color: #d8c89f;
-    font-family: inherit;
-    background: #111;
-    border: 1px solid #493711;
-    border-radius: 3px;
-    cursor: pointer;
+    min-width: 165px;
+
+    padding: 11px 14px;
+
+    text-align: right;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--wagon-builder-accent-rgb), 0.13),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(var(--wagon-builder-accent-rgb), 0.38);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
 }
-.wagon-tab.active, .wagon-tab:hover { color: #fff0b4; background: #4d3508; border-color: #93691a; }
+
+.wagon-builder-silver span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.7rem;
+}
+
+.wagon-builder-silver strong {
+    color:
+        var(--wagon-builder-accent-light);
+
+    font-size: 1.25rem;
+}
+
+
+/* =========================================================
+   CATEGORY TABS
+========================================================= */
+
+.wagon-builder-tabs {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+}
+
+.wagon-tab {
+    min-height: 39px;
+
+    padding: 8px 13px;
+
+    cursor: pointer;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 750;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-panel-light),
+            var(--wagon-builder-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+
+    box-shadow:
+        0 3px 0
+        #17120f;
+
+    transition:
+        transform 0.12s ease,
+        border-color 0.15s ease,
+        filter 0.15s ease;
+}
+
+.wagon-tab:hover {
+    color:
+        var(--wagon-builder-text);
+
+    border-color:
+        var(--wagon-builder-accent);
+
+    transform:
+        translateY(-1px);
+}
+
+.wagon-tab.active {
+    color:
+        #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-accent-light),
+            var(--wagon-builder-accent)
+        );
+
+    border-color:
+        var(--wagon-builder-accent-dark);
+
+    box-shadow:
+        0 3px 0
+        var(--wagon-builder-accent-dark);
+}
+
+
+/* =========================================================
+   PARTS GRID
+========================================================= */
 
 .wagon-builder-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
 }
+
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.wagon-builder-loading {
+    grid-column: 1 / -1;
+
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 10px;
+
+    min-height: 260px;
+
+    color:
+        var(--wagon-builder-muted);
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-panel-light),
+            var(--wagon-builder-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-radius);
+}
+
+.wagon-builder-loading > div {
+    font-size: 3rem;
+}
+
+.wagon-builder-loading p {
+    margin: 0;
+}
+
+
+/* =========================================================
+   PART CARDS
+========================================================= */
 
 .wagon-part-card {
+    position: relative;
+
     display: flex;
     flex-direction: column;
-    min-height: 270px;
+
+    min-width: 0;
+    min-height: 310px;
+
     padding: 16px;
-    background: linear-gradient(145deg, #161616, #0d0d0d);
-    border: 1px solid #433212;
-    border-radius: 5px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-panel-light),
+            var(--wagon-builder-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-radius);
+
+    box-shadow:
+        var(--wagon-builder-shadow);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
 }
-.wagon-part-icon { font-size: 40px; }
-.wagon-part-card h3 { margin: 8px 0 4px; color: #e2b951; }
-.wagon-part-tier { color: #bda96f; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
-.wagon-part-description { flex: 1; color: var(--wagon-muted); line-height: 1.5; }
-.wagon-part-meta { display: flex; justify-content: space-between; gap: 10px; margin: 10px 0; color: #d7c9a5; }
-.wagon-part-price { color: #ffe18b; font-weight: bold; }
-.wagon-buy-row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 8px; }
-.wagon-buy-row input { width: 100%; padding: 10px; color: #eee0ba; background: #090909; border: 1px solid #4b3914; border-radius: 3px; }
-.wagon-buy-button { padding: 10px; color: #fff0b5; font-family: inherit; background: #5c4009; border: 1px solid #9a701c; border-radius: 3px; cursor: pointer; }
-.wagon-buy-button:hover { background: #76520c; }
-.wagon-buy-button:disabled { opacity: .55; cursor: not-allowed; }
 
-.wagon-builder-message { min-height: 24px; margin: 14px 0; color: #efd177; text-align: center; }
+.wagon-part-card:hover {
+    transform:
+        translateY(-3px);
 
-.wagon-builder-progression { padding: 18px; background: #111; border: 1px solid var(--wagon-border); border-radius: 5px; }
-.wagon-builder-progression h2 { margin-top: 0; color: var(--wagon-light); }
-.wagon-progression-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-.wagon-progression-grid article { display: flex; flex-direction: column; gap: 5px; padding: 13px; background: #0b0b0b; border: 1px solid #3c2e12; border-radius: 4px; }
-.wagon-progression-grid strong { color: #dfb64d; }
-.wagon-progression-grid span { color: #fff0b5; font-size: 20px; }
-.wagon-progression-grid small { color: var(--wagon-muted); }
+    border-color:
+        var(--wagon-builder-accent);
 
-@media (max-width: 1050px) {
-    .wagon-builder-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .wagon-progression-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    box-shadow:
+        0 11px 24px
+        rgba(0, 0, 0, 0.35);
 }
+
+
+/* =========================================================
+   PART ICON
+========================================================= */
+
+.wagon-part-icon {
+    display: grid;
+    place-items: center;
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 10px;
+
+    font-size: 2.35rem;
+
+    background:
+        rgba(var(--wagon-builder-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--wagon-builder-accent-rgb), 0.30);
+
+    border-radius: 12px;
+}
+
+
+/* =========================================================
+   PART CARD TEXT
+========================================================= */
+
+.wagon-part-tier {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--wagon-builder-accent-light);
+
+    font-size: 0.65rem;
+    font-weight: 850;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.wagon-part-card h3 {
+    margin: 0 0 9px;
+
+    color:
+        var(--wagon-builder-text);
+
+    font-size: 1.08rem;
+    line-height: 1.3;
+}
+
+.wagon-part-description {
+    flex: 1;
+
+    margin: 0;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.81rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   PART META
+========================================================= */
+
+.wagon-part-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin: 15px 0 11px;
+    padding: 9px 10px;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.76rem;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+}
+
+.wagon-part-price {
+    flex: 0 0 auto;
+
+    color:
+        var(--wagon-builder-accent-light);
+
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   PURCHASE CONTROLS
+========================================================= */
+
+.wagon-buy-row {
+    display: grid;
+
+    grid-template-columns:
+        72px
+        minmax(0, 1fr);
+
+    gap: 8px;
+}
+
+.wagon-buy-row input {
+    width: 100%;
+    min-height: 41px;
+
+    padding: 8px 9px;
+
+    color:
+        var(--wagon-builder-text);
+
+    font: inherit;
+    font-size: 0.82rem;
+
+    background:
+        rgba(0, 0, 0, 0.24);
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+
+    outline: none;
+}
+
+.wagon-buy-row input:focus {
+    border-color:
+        var(--wagon-builder-accent);
+}
+
+.wagon-buy-button {
+    min-height: 41px;
+
+    padding: 9px 12px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-accent-light),
+            var(--wagon-builder-accent)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-accent-dark);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--wagon-builder-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.wagon-buy-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform:
+        translateY(-1px);
+}
+
+.wagon-buy-button:active:not(:disabled) {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--wagon-builder-accent-dark);
+}
+
+.wagon-buy-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.wagon-builder-message {
+    display: none;
+
+    margin: 15px 0;
+    padding: 11px 13px;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.4;
+    text-align: left;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--wagon-builder-accent-rgb), 0.09),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border-soft);
+
+    border-left:
+        4px solid
+        var(--wagon-builder-accent);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+}
+
+.wagon-builder-message:not(:empty) {
+    display: block;
+}
+
+
+/* =========================================================
+   PROGRESSION SECTION
+========================================================= */
+
+.wagon-builder-progression {
+    margin-top: 18px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-builder-panel-light),
+            var(--wagon-builder-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-builder-border);
+
+    border-radius:
+        var(--wagon-builder-radius);
+
+    box-shadow:
+        var(--wagon-builder-shadow);
+}
+
+.wagon-builder-progression .section-header {
+    margin: 0;
+
+    border-radius: 0;
+}
+
+.wagon-progression-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    padding: 16px;
+}
+
+
+/* =========================================================
+   PROGRESSION CARDS
+========================================================= */
+
+.transport-progress-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-height: 180px;
+    padding: 14px;
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--wagon-builder-small-radius);
+}
+
+.transport-progress-card.locked {
+    filter:
+        saturate(0.45);
+
+    opacity: 0.68;
+}
+
+.transport-progress-card.locked::after {
+    content: "LOCKED";
+
+    position: absolute;
+
+    top: 9px;
+    right: 9px;
+
+    padding: 3px 7px;
+
+    color:
+        #aaa19a;
+
+    font-size: 0.58rem;
+    font-weight: 900;
+
+    letter-spacing: 0.1em;
+
+    background:
+        rgba(0, 0, 0, 0.28);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+}
+
+.transport-progress-icon {
+    display: grid;
+    place-items: center;
+
+    width: 50px;
+    height: 50px;
+
+    font-size: 1.75rem;
+
+    background:
+        rgba(var(--wagon-builder-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--wagon-builder-accent-rgb), 0.28);
+
+    border-radius: 10px;
+}
+
+.transport-progress-card h3 {
+    margin: 2px 0 0;
+
+    color:
+        var(--wagon-builder-text);
+
+    font-size: 0.92rem;
+}
+
+.transport-progress-card strong {
+    color:
+        var(--wagon-builder-accent-light);
+
+    font-size: 1.15rem;
+}
+
+.transport-progress-card p {
+    margin: 0;
+
+    color:
+        var(--wagon-builder-muted);
+
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .wagon-builder-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .wagon-progression-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 650px) {
-    .wagon-builder-intro { align-items: stretch; flex-direction: column; }
-    .wagon-builder-silver { text-align: left; }
-    .wagon-builder-grid, .wagon-progression-grid { grid-template-columns: 1fr; }
+
+    .wagon-builder-intro {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wagon-builder-silver {
+        width: 100%;
+
+        text-align: left;
+    }
+
+    .wagon-builder-tabs {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .wagon-builder-grid,
+    .wagon-progression-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wagon-part-card {
+        min-height: 0;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .wagon-builder-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .wagon-buy-row {
+        grid-template-columns: 65px minmax(0, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .wagon-tab,
+    .wagon-part-card,
+    .wagon-buy-button {
+        transition: none;
+    }
+
 }

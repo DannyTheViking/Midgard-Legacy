@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en">
 
 <head>
@@ -14,12 +13,16 @@
     <title>
         Midgard Legacy - Profile
     </title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
 
     <link
-        rel="stylesheet"
-        href="../css/style.css?v=4"
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
     >
+
+    <link rel="stylesheet" href="../css/style.css?v=8">
+<link rel="stylesheet" href="../css/game-panels.css?v=1">
+<link rel="stylesheet" href="../css/profile.css?v=3">
 
 </head>
 
@@ -33,36 +36,138 @@
 
             <div id="topbar"></div>
 
-            <section
-                id="profile-card"
-                class="profile-card"
-            >
-                Loading profile...
-            </section>
 
-            <section
-                id="profile-actions"
-                class="profile-actions"
-            ></section>
+            <div class="game-page">
 
-            <section class="card">
 
-                <h3>🛡️ Saga Hall</h3>
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
 
-                <div
-                    id="saga-cards"
-                    class="saga-grid"
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🛡️ Viking Profile
+                        </h1>
+
+                        <p>
+                            View your rank, reputation, account details,
+                            achievements and progress through Midgard.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        ⚔️ Character
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     PROFILE CARD
+                ========================= -->
+
+                <section
+                    id="profile-card"
+                    class="profile-card"
+                    aria-live="polite"
                 >
-                    <p>
-                        No Saga cards unlocked yet.
-                    </p>
-                </div>
 
-            </section>
+                    <div class="profile-loading-state">
+
+                        <span class="profile-loading-icon">
+                            🛡️
+                        </span>
+
+                        <p>
+                            Loading profile...
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     PROFILE ACTIONS
+                ========================= -->
+
+                <section
+                    id="profile-actions"
+                    class="profile-actions"
+                ></section>
+
+
+                <!-- =========================
+                     SAGA HALL
+                ========================= -->
+
+                <section class="saga-hall-card">
+
+                    <header class="profile-section-heading">
+
+                        <div class="profile-section-icon">
+                            📜
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Saga Hall
+                            </h2>
+
+                            <p>
+                                Achievements and legendary moments
+                                from your journey.
+                            </p>
+
+                        </div>
+
+                        <span class="profile-section-badge">
+                            Achievements
+                        </span>
+
+                    </header>
+
+                    <div
+                        id="saga-cards"
+                        class="saga-grid"
+                    >
+
+                        <div class="empty-saga-message">
+
+                            <span>
+                                📜
+                            </span>
+
+                            <strong>
+                                No Saga cards unlocked yet
+                            </strong>
+
+                            <small>
+                                Complete adventures and achievements
+                                to fill your Saga Hall.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
 
         </main>
 
     </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -70,7 +175,7 @@
     <script src="../js/auth.js"></script>
     <script src="../js/game-utils.js"></script>
     <script src="../js/components.js?v=4"></script>
-    <script src="../js/profile.js"></script>
+    <script src="../js/profile.js?v=2"></script>
 
 </body>
 

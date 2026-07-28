@@ -1,0 +1,661 @@
+/* =====================================
+   MIDGARD LEGACY
+   HALL OF FAME
+===================================== */
+
+:root {
+    --hof-accent: #b78a4d;
+    --hof-accent-light: #e5c18b;
+    --hof-accent-dark: #6a4728;
+
+    --hof-panel: #211c17;
+    --hof-panel-light: #2b241d;
+
+    --hof-border: #5f4a32;
+
+    --hof-text: #f3ead8;
+    --hof-muted: #b9ad9a;
+
+    --hof-gold: #e5c158;
+    --hof-silver: #c4c9cf;
+    --hof-bronze: #bd7a4a;
+
+    --hof-radius: 12px;
+    --hof-small-radius: 8px;
+
+    --hof-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   MAIN LAYOUT
+===================================== */
+
+.hof-layout {
+    display: grid;
+
+    grid-template-columns:
+        260px
+        minmax(0, 1fr);
+
+    align-items: start;
+
+    gap: 18px;
+}
+
+
+/* =====================================
+   SHARED PANELS
+===================================== */
+
+.hof-menu-panel,
+.hof-expanded-board {
+    min-width: 0;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--hof-panel-light),
+            var(--hof-panel)
+        );
+
+    border:
+        1px solid
+        var(--hof-border);
+
+    border-radius:
+        var(--hof-radius);
+
+    box-shadow:
+        var(--hof-shadow);
+}
+
+
+/* =====================================
+   PANEL HEADINGS
+===================================== */
+
+.hof-menu-heading,
+.hof-board-heading {
+    display: grid;
+
+    grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(183, 138, 77, 0.12),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        var(--hof-border);
+}
+
+.hof-menu-heading {
+    grid-template-columns:
+        44px
+        minmax(0, 1fr);
+}
+
+.hof-menu-heading h2,
+.hof-board-heading h2 {
+    margin: 0;
+
+    color:
+        var(--hof-text);
+
+    font-size: 1.05rem;
+}
+
+.hof-menu-heading p,
+.hof-board-heading p {
+    margin: 4px 0 0;
+
+    color:
+        var(--hof-muted);
+
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.hof-heading-icon {
+    display: grid;
+    place-items: center;
+
+    width: 44px;
+    height: 44px;
+
+    font-size: 1.25rem;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+
+    border-radius: 9px;
+}
+
+.hof-board-badge {
+    padding: 5px 9px;
+
+    color:
+        var(--hof-accent-light);
+
+    font-size: 0.63rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.35);
+
+    border-radius: 999px;
+}
+
+
+/* =====================================
+   HALL OF FAME MENU
+===================================== */
+
+.hof-menu {
+    display: grid;
+
+    gap: 8px;
+
+    padding: 14px;
+}
+
+.hof-menu button,
+.hof-menu a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    width: 100%;
+    min-height: 43px;
+
+    padding: 9px 11px;
+
+    cursor: pointer;
+
+    color:
+        var(--hof-muted);
+
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 750;
+
+    text-align: left;
+    text-decoration: none;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--hof-small-radius);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.hof-menu button:hover,
+.hof-menu a:hover {
+    transform:
+        translateX(2px);
+
+    color:
+        var(--hof-text);
+
+    background:
+        rgba(183, 138, 77, 0.08);
+
+    border-color:
+        rgba(183, 138, 77, 0.36);
+}
+
+.hof-menu button.active,
+.hof-menu a.active,
+.hof-menu .active {
+    color:
+        #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--hof-accent-light),
+            var(--hof-accent)
+        );
+
+    border-color:
+        var(--hof-accent-dark);
+
+    box-shadow:
+        0 3px 0
+        var(--hof-accent-dark);
+}
+
+
+/* =====================================
+   BOARD CONTENT
+===================================== */
+
+.hof-board-content {
+    min-height: 410px;
+
+    padding: 14px;
+}
+
+
+/* =====================================
+   LOADING / EMPTY STATE
+===================================== */
+
+.hof-loading-state,
+.hof-empty-state {
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 9px;
+
+    min-height: 380px;
+
+    color:
+        var(--hof-muted);
+
+    text-align: center;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px dashed
+        rgba(183, 138, 77, 0.28);
+
+    border-radius:
+        var(--hof-small-radius);
+}
+
+.hof-loading-state span,
+.hof-empty-state span {
+    font-size: 2.5rem;
+}
+
+.hof-loading-state p,
+.hof-empty-state p {
+    margin: 0;
+
+    font-size: 0.82rem;
+}
+
+
+/* =====================================
+   GENERATED LEADERBOARD TABLE
+===================================== */
+
+.hof-table,
+.hof-ranking-list,
+.leaderboard-list {
+    display: grid;
+
+    gap: 8px;
+}
+
+.hof-row,
+.hof-ranking-row,
+.leaderboard-row {
+    display: grid;
+
+    grid-template-columns:
+        54px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 62px;
+    padding: 11px 13px;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--hof-small-radius);
+}
+
+.hof-row:hover,
+.hof-ranking-row:hover,
+.leaderboard-row:hover {
+    background:
+        rgba(183, 138, 77, 0.07);
+
+    border-color:
+        rgba(183, 138, 77, 0.34);
+}
+
+
+/* =====================================
+   RANK NUMBER
+===================================== */
+
+.hof-rank,
+.hof-position,
+.leaderboard-position {
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+
+    color:
+        var(--hof-muted);
+
+    font-size: 0.84rem;
+    font-weight: 900;
+
+    background:
+        rgba(0, 0, 0, 0.20);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 50%;
+}
+
+.hof-row:nth-child(1) .hof-rank,
+.hof-ranking-row:nth-child(1) .hof-position,
+.leaderboard-row:nth-child(1) .leaderboard-position {
+    color:
+        #20170a;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #fff2a1,
+            var(--hof-gold) 58%,
+            #8a6215
+        );
+
+    border-color:
+        #8a6215;
+}
+
+.hof-row:nth-child(2) .hof-rank,
+.hof-ranking-row:nth-child(2) .hof-position,
+.leaderboard-row:nth-child(2) .leaderboard-position {
+    color:
+        #202327;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #f2f5f7,
+            var(--hof-silver) 58%,
+            #747b82
+        );
+
+    border-color:
+        #747b82;
+}
+
+.hof-row:nth-child(3) .hof-rank,
+.hof-ranking-row:nth-child(3) .hof-position,
+.leaderboard-row:nth-child(3) .leaderboard-position {
+    color:
+        #24150e;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #efb082,
+            var(--hof-bronze) 58%,
+            #704127
+        );
+
+    border-color:
+        #704127;
+}
+
+
+/* =====================================
+   PLAYER DETAILS
+===================================== */
+
+.hof-player,
+.hof-player-details,
+.leaderboard-player {
+    min-width: 0;
+}
+
+.hof-player a,
+.hof-player-name,
+.leaderboard-player a {
+    color:
+        var(--hof-accent-light);
+
+    font-weight: 850;
+
+    text-decoration: none;
+}
+
+.hof-player a:hover,
+.leaderboard-player a:hover {
+    text-decoration: underline;
+}
+
+.hof-player small,
+.hof-player-details small,
+.leaderboard-player small {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        var(--hof-muted);
+
+    font-size: 0.7rem;
+}
+
+
+/* =====================================
+   SCORE
+===================================== */
+
+.hof-score,
+.hof-value,
+.leaderboard-score {
+    flex: 0 0 auto;
+
+    color:
+        var(--hof-text);
+
+    font-size: 0.86rem;
+    font-weight: 850;
+
+    text-align: right;
+}
+
+.hof-score small,
+.hof-value small,
+.leaderboard-score small {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        var(--hof-muted);
+
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+
+/* =====================================
+   ACTUAL GENERATED CONTENT FALLBACK
+===================================== */
+
+#hof-board-content > div {
+    min-width: 0;
+}
+
+#hof-board-content table {
+    width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+#hof-board-content th {
+    padding: 9px 11px;
+
+    color:
+        var(--hof-accent-light);
+
+    font-size: 0.7rem;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+#hof-board-content td {
+    padding: 11px;
+
+    color:
+        var(--hof-muted);
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+#hof-board-content td:first-child {
+    border-left:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--hof-small-radius)
+        0
+        0
+        var(--hof-small-radius);
+}
+
+#hof-board-content td:last-child {
+    border-right:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        0
+        var(--hof-small-radius)
+        var(--hof-small-radius)
+        0;
+}
+
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 900px) {
+
+    .hof-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hof-menu {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 600px) {
+
+    .hof-board-heading {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .hof-board-badge {
+        grid-column: 1 / -1;
+
+        justify-self: start;
+    }
+
+    .hof-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .hof-row,
+    .hof-ranking-row,
+    .leaderboard-row {
+        grid-template-columns:
+            45px
+            minmax(0, 1fr);
+    }
+
+    .hof-score,
+    .hof-value,
+    .leaderboard-score {
+        grid-column: 2;
+
+        text-align: left;
+    }
+
+}

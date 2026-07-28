@@ -1,0 +1,1069 @@
+/* =========================================================
+   MIDGARD LEGACY
+   STORAGE YARD PAGE
+========================================================= */
+
+
+/* =========================================================
+   STORAGE THEME
+========================================================= */
+
+:root {
+    --storage-accent: #b78a4d;
+    --storage-accent-light: #e5c18b;
+    --storage-accent-dark: #6a4728;
+    --storage-accent-rgb: 183, 138, 77;
+
+    --storage-panel: #211c17;
+    --storage-panel-light: #2b241d;
+    --storage-panel-dark: #17130f;
+
+    --storage-border: #5f4a32;
+    --storage-border-soft: rgba(183, 138, 77, 0.28);
+
+    --storage-text: #f3ead8;
+    --storage-muted: #b9ad9a;
+
+    --storage-success: #70bc73;
+    --storage-danger: #d66d65;
+    --storage-warning: #d3a84c;
+
+    --storage-radius: 12px;
+    --storage-small-radius: 8px;
+
+    --storage-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.storage-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        300px;
+
+    align-items: start;
+
+    gap: 18px;
+}
+
+.storage-main {
+    min-width: 0;
+}
+
+.storage-side {
+    position: sticky;
+
+    top: 18px;
+
+    display: grid;
+
+    gap: 15px;
+}
+
+
+/* =========================================================
+   CATEGORY TABS
+========================================================= */
+
+.storage-tabs {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            7,
+            minmax(100px, 1fr)
+        );
+
+    gap: 9px;
+
+    margin-bottom: 16px;
+}
+
+.storage-tab {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+    min-height: 58px;
+
+    padding: 9px 10px;
+
+    cursor: pointer;
+
+    color:
+        var(--storage-muted);
+
+    font: inherit;
+    font-size: 0.78rem;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-panel-light),
+            var(--storage-panel)
+        );
+
+    border:
+        1px solid
+        var(--storage-border);
+
+    border-radius:
+        var(--storage-small-radius);
+
+    box-shadow:
+        0 4px 10px
+        rgba(0, 0, 0, 0.20);
+
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease;
+}
+
+.storage-tab:hover {
+    transform:
+        translateY(-2px);
+
+    color:
+        var(--storage-text);
+
+    border-color:
+        var(--storage-accent);
+}
+
+.storage-tab.active {
+    color:
+        #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-accent-light),
+            var(--storage-accent)
+        );
+
+    border-color:
+        var(--storage-accent-dark);
+
+    box-shadow:
+        0 4px 0
+        var(--storage-accent-dark);
+}
+
+.storage-tab > span:first-child {
+    font-size: 1.35rem;
+}
+
+.storage-tab strong {
+    min-width: 0;
+
+    overflow: hidden;
+
+    font-size: 0.78rem;
+    text-align: left;
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.storage-tab small {
+    display: grid;
+    place-items: center;
+
+    min-width: 24px;
+    height: 24px;
+
+    padding: 2px 5px;
+
+    color:
+        var(--storage-accent-light);
+
+    font-size: 0.66rem;
+    font-weight: 850;
+
+    background:
+        rgba(0, 0, 0, 0.20);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+}
+
+.storage-tab.active small {
+    color:
+        #17120d;
+
+    background:
+        rgba(255, 255, 255, 0.20);
+
+    border-color:
+        rgba(0, 0, 0, 0.20);
+}
+
+
+/* =========================================================
+   CATEGORY PANEL
+========================================================= */
+
+.storage-category-panel {
+    overflow: hidden;
+
+    padding: 0;
+
+    text-align: left;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-panel-light),
+            var(--storage-panel)
+        );
+
+    border:
+        1px solid
+        var(--storage-border);
+
+    border-radius:
+        var(--storage-radius);
+
+    box-shadow:
+        var(--storage-shadow);
+}
+
+.storage-category-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin: 0;
+    padding: 16px 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--storage-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        var(--storage-border);
+}
+
+.storage-category-heading h2 {
+    margin: 0;
+
+    color:
+        var(--storage-text);
+
+    font-size: 1.15rem;
+}
+
+.storage-category-heading p {
+    margin: 5px 0 0;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.storage-item-count {
+    flex: 0 0 auto;
+
+    padding: 5px 9px;
+
+    color:
+        var(--storage-accent-light);
+
+    font-size: 0.68rem;
+    font-weight: 850;
+
+    white-space: nowrap;
+
+    background:
+        rgba(var(--storage-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--storage-accent-rgb), 0.32);
+
+    border-radius: 999px;
+}
+
+#storage-items {
+    padding: 8px 18px 16px;
+}
+
+
+/* =========================================================
+   STORAGE ITEM ROWS
+========================================================= */
+
+.storage-item-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1fr)
+        minmax(340px, auto);
+
+    align-items: center;
+
+    gap: 16px;
+
+    min-height: 78px;
+
+    padding: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius:
+        var(--storage-small-radius);
+}
+
+.storage-item-row + .storage-item-row {
+    margin-top: 9px;
+}
+
+.storage-item-row:hover {
+    border-color:
+        rgba(var(--storage-accent-rgb), 0.32);
+
+    background:
+        rgba(var(--storage-accent-rgb), 0.05);
+}
+
+.storage-item-details {
+    min-width: 0;
+}
+
+.storage-item-details strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--storage-accent-light);
+
+    font-size: 0.92rem;
+}
+
+.storage-item-details span {
+    display: block;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.75rem;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   LOADING CONTROLS
+========================================================= */
+
+.storage-load-controls {
+    display: grid;
+
+    grid-template-columns:
+        90px
+        minmax(220px, 1fr);
+
+    align-items: end;
+
+    gap: 8px;
+}
+
+.storage-load-controls label {
+    color:
+        var(--storage-muted);
+
+    font-size: 0.7rem;
+}
+
+.storage-quantity-input {
+    width: 100%;
+    min-height: 39px;
+
+    margin-top: 5px;
+    padding: 7px 9px;
+
+    color:
+        var(--storage-text);
+
+    font: inherit;
+    font-size: 0.84rem;
+
+    background:
+        rgba(0, 0, 0, 0.22);
+
+    border:
+        1px solid
+        var(--storage-border);
+
+    border-radius:
+        var(--storage-small-radius);
+
+    outline: none;
+}
+
+.storage-quantity-input:focus {
+    border-color:
+        var(--storage-accent);
+}
+
+.storage-quick-amounts,
+.storage-destination-buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.storage-quick-amounts button,
+.storage-destination-buttons button {
+    min-height: 39px;
+
+    cursor: pointer;
+
+    color:
+        var(--storage-text);
+
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 750;
+
+    background:
+        linear-gradient(
+            180deg,
+            #3a322a,
+            #29231d
+        );
+
+    border:
+        1px solid
+        var(--storage-border);
+
+    border-radius:
+        var(--storage-small-radius);
+
+    box-shadow:
+        0 3px 0
+        #17120f;
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.storage-quick-amounts button {
+    min-width: 42px;
+
+    padding: 6px 8px;
+}
+
+.storage-quick-amounts button:hover,
+.storage-destination-buttons button:hover {
+    filter: brightness(1.1);
+
+    transform:
+        translateY(-1px);
+}
+
+.storage-quick-amounts button:active,
+.storage-destination-buttons button:active {
+    transform:
+        translateY(2px);
+
+    box-shadow:
+        0 1px 0
+        #17120f;
+}
+
+.storage-destination-buttons {
+    grid-column: 1 / -1;
+
+    justify-content: flex-end;
+}
+
+.storage-destination-buttons button {
+    min-width: 130px;
+
+    padding: 8px 11px;
+
+    color:
+        #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-accent-light),
+            var(--storage-accent)
+        );
+
+    border-color:
+        var(--storage-accent-dark);
+
+    box-shadow:
+        0 3px 0
+        var(--storage-accent-dark);
+}
+
+.storage-load-controls button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.45;
+}
+
+
+/* =========================================================
+   CARRY CARDS
+========================================================= */
+
+.storage-carry-card {
+    overflow: hidden;
+
+    padding: 0;
+
+    text-align: left;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-panel-light),
+            var(--storage-panel)
+        );
+
+    border:
+        1px solid
+        var(--storage-border);
+
+    border-radius:
+        var(--storage-radius);
+
+    box-shadow:
+        var(--storage-shadow);
+}
+
+.storage-carry-card h3 {
+    margin: 0;
+    padding: 14px 15px;
+
+    color:
+        var(--storage-text);
+
+    font-size: 0.98rem;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--storage-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        var(--storage-border);
+}
+
+#backpack-capacity,
+#transport-capacity,
+#backpack-items,
+#transport-items {
+    margin-inline:
+        14px;
+}
+
+#backpack-capacity,
+#transport-capacity {
+    margin-top:
+        14px;
+}
+
+.storage-capacity {
+    margin-bottom: 12px;
+    padding: 10px 11px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius:
+        var(--storage-small-radius);
+}
+
+.storage-capacity-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.75rem;
+}
+
+.storage-capacity-row strong {
+    color:
+        var(--storage-accent-light);
+}
+
+.storage-capacity small {
+    display: block;
+
+    margin-top: 6px;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.68rem;
+    text-align: right;
+}
+
+.storage-carry-row {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+.storage-carry-row:last-child {
+    border-bottom: 0;
+}
+
+.storage-carry-row span {
+    min-width: 0;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.75rem;
+}
+
+.storage-carry-row > strong {
+    flex: 0 0 auto;
+
+    color:
+        var(--storage-accent-light);
+
+    font-size: 0.78rem;
+}
+
+.storage-carry-row span strong {
+    display: block;
+
+    color:
+        var(--storage-text);
+
+    font-size: 0.78rem;
+}
+
+.storage-carry-row small {
+    display: block;
+
+    margin-top: 3px;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.67rem;
+}
+
+
+/* =========================================================
+   UNLOAD BUTTONS
+========================================================= */
+
+.storage-unload-button {
+    width:
+        calc(100% - 28px);
+
+    min-height: 40px;
+
+    margin: 13px 14px 14px;
+    padding: 9px 12px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--storage-accent-light),
+            var(--storage-accent)
+        );
+
+    border:
+        1px solid
+        var(--storage-accent-dark);
+
+    border-radius:
+        var(--storage-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--storage-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.storage-unload-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform:
+        translateY(-1px);
+}
+
+.storage-unload-button:active:not(:disabled) {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--storage-accent-dark);
+}
+
+.storage-unload-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.45;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.storage-empty {
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 8px;
+
+    min-height: 170px;
+    padding: 22px;
+
+    color:
+        var(--storage-muted);
+
+    text-align: center;
+
+    background:
+        rgba(0, 0, 0, 0.10);
+
+    border:
+        1px dashed
+        rgba(var(--storage-accent-rgb), 0.28);
+
+    border-radius:
+        var(--storage-small-radius);
+}
+
+.storage-empty span {
+    font-size: 2.5rem;
+
+    opacity: 0.72;
+}
+
+.storage-empty p {
+    margin: 0;
+
+    font-size: 0.82rem;
+}
+
+.storage-empty-text {
+    color:
+        var(--storage-muted);
+
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+
+/* =========================================================
+   MESSAGE BOX
+========================================================= */
+
+.storage-message {
+    display: none;
+
+    min-height: 20px;
+
+    margin: 0;
+    padding: 11px 12px;
+
+    color:
+        var(--storage-muted);
+
+    font-size: 0.78rem;
+    line-height: 1.4;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--storage-accent-rgb), 0.08),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        var(--storage-border-soft);
+
+    border-left:
+        4px solid
+        var(--storage-accent);
+
+    border-radius:
+        var(--storage-small-radius);
+}
+
+.storage-message:not(:empty) {
+    display: block;
+}
+
+.storage-message-success {
+    display: block;
+
+    color:
+        #a7dda7;
+
+    border-color:
+        rgba(112, 188, 115, 0.45);
+
+    border-left-color:
+        var(--storage-success);
+}
+
+.storage-message-error {
+    display: block;
+
+    color:
+        #efaaa4;
+
+    border-color:
+        rgba(214, 109, 101, 0.45);
+
+    border-left-color:
+        var(--storage-danger);
+}
+
+.storage-message-info {
+    display: block;
+
+    color:
+        var(--storage-accent-light);
+}
+
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .storage-tabs {
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(110px, 1fr)
+            );
+    }
+
+    .storage-item-row {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-load-controls {
+        grid-template-columns:
+            100px
+            minmax(0, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .storage-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-side {
+        position: static;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .storage-message {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .storage-tabs {
+        display: flex;
+
+        overflow-x: auto;
+
+        padding-bottom: 6px;
+
+        scrollbar-width: thin;
+    }
+
+    .storage-tab {
+        flex:
+            0 0 130px;
+    }
+
+    .storage-side {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-message {
+        grid-column: auto;
+    }
+
+    .storage-category-heading {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .storage-load-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-quick-amounts,
+    .storage-destination-buttons {
+        grid-column: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .storage-quick-amounts {
+        grid-template-columns:
+            repeat(
+                5,
+                minmax(0, 1fr)
+            );
+    }
+
+    .storage-quick-amounts button,
+    .storage-destination-buttons button {
+        width: 100%;
+        min-width: 0;
+
+        padding-inline: 5px;
+    }
+
+    #storage-items {
+        padding:
+            8px 12px 13px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .storage-quick-amounts {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .storage-tab,
+    .storage-item-row,
+    .storage-unload-button,
+    .storage-quick-amounts button,
+    .storage-destination-buttons button {
+        transition: none;
+    }
+
+}

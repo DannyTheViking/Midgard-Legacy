@@ -2,58 +2,204 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Midgard Legacy - The King</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>👑 The King's Longhall</h1>
-                <p>Stand before the King and speak carefully.</p>
+
+            <!-- =========================
+                 KING PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            👑 The King’s Longhall
+                        </h1>
+
+                        <p>
+                            Stand before King Harald and speak
+                            carefully. Your future may depend on it.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        👑 Royal Court
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     KING DIALOGUE
+                ========================= -->
+
+                <section class="king-layout">
+
+                    <article
+                        class="page-panel king-dialogue-panel"
+                        id="king-dialogue-card"
+                    >
+
+                        <header class="section-header">
+
+                            <h2>
+                                👑 King Harald
+                            </h2>
+
+                            <span class="game-badge">
+                                King of Retskni
+                            </span>
+
+                        </header>
+
+                        <div class="panel-body">
+
+                            <div class="king-portrait">
+                                👑
+                            </div>
+
+                            <div
+                                id="king-dialogue"
+                                class="king-dialogue"
+                            >
+                                Loading...
+                            </div>
+
+                            <div
+                                id="king-actions"
+                                class="king-actions"
+                            ></div>
+
+                            <p
+                                id="king-message"
+                                class="king-message"
+                                aria-live="polite"
+                            ></p>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- =========================
+                         ROYAL INFORMATION
+                    ========================= -->
+
+                    <aside class="king-sidebar">
+
+                        <section class="page-panel">
+
+                            <header class="section-header">
+
+                                <h2>
+                                    🛡️ Royal Court
+                                </h2>
+
+                            </header>
+
+                            <div class="panel-body">
+
+                                <p>
+                                    King Harald rules Retskni and
+                                    decides who may earn the rights
+                                    of a free Viking.
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                        <section class="page-panel">
+
+                            <header class="section-header">
+
+                                <h2>
+                                    📜 Speak Carefully
+                                </h2>
+
+                            </header>
+
+                            <div class="panel-body">
+
+                                <p>
+                                    Complete the King’s requirements,
+                                    prove your worth and return when
+                                    you are ready.
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                    </aside>
+
+                </section>
+
             </div>
-        </section>
 
-        <section class="crafting-grid">
+        </main>
 
-            <div class="crafting-card" id="king-dialogue-card">
+    </div>
 
-                <h3>👑 King Harald</h3>
 
-                <div id="king-dialogue">
-                    Loading...
-                </div>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-                <div id="king-actions"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-                <p id="king-message"></p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/king.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/king.js"></script>
 
 </body>
 

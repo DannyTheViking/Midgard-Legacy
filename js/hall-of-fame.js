@@ -1,179 +1,307 @@
-async function board(
-    title,
-    column,
-    formatter = value => value
-) {
+const HALL_BOARDS = [
+    {
+        key: "reputation",
+        title: "Village Reputation",
+        icon: "👑",
+        description: "The most respected names in Midgard.",
+        column: "reputation",
+        formatter: value => Number(value || 0).toLocaleString()
+    },
+    {
+        key: "skill",
+        title: "Total Skill",
+        icon: "🏆",
+        description: "The most experienced players across every skill.",
+        calculated: true
+    },
+    {
+        key: "wealth",
+        title: "Wealth Ranking",
+        icon: "💰",
+        description: "The richest players in Midgard.",
+        column: "net_worth",
+        formatter: value =>
+            `${Number(value || 0).toLocaleString()} value · ${wealthTitle(value)}`
+    },
+    {
+        key: "revivers",
+        title: "Revivers",
+        icon: "🌿",
+        description: "Players who have restored the most lives.",
+        column: "revive_count",
+        formatter: value => Number(value || 0).toLocaleString()
+    },
+    {
+        key: "jailbreakers",
+        title: "Jailbreakers",
+        icon: "🔓",
+        description: "Players responsible for the most successful escapes.",
+        column: "jailbreak_count",
+        formatter: value => Number(value || 0).toLocaleString()
+    },
+    {
+        key: "pvp",
+        title: "PvP Victories",
+        icon: "⚔️",
+        description: "The most successful warriors in player combat.",
+        column: "pvp_wins",
+        formatter: value => Number(value || 0).toLocaleString()
+    }
+];
+
+let activeHallBoard = "reputation";
+let hallBoardCache = {};
+
+function hallMedal(index) {
+    if (index === 0) {
+        return "🥇";
+    }
+
+    if (index === 1) {
+        return "🥈";
+    }
+
+    if (index === 2) {
+        return "🥉";
+    }
+
+    return `${index + 1}.`;
+}
+
+function escapeHallText(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+async function loadStandardBoard(board) {
     const { data, error } = await supabaseClient
         .from("players")
-        .select(`id, player_number, username, ${column}`)
-        .order(column, { ascending: false })
+        .select(`
+            id,
+            player_number,
+            username,
+            ${board.column}
+        `)
+        .order(board.column, {
+            ascending: false
+        })
         .limit(10);
 
     if (error) {
-        console.error(`${title} failed to load:`, error);
+        console.error(`${board.title} failed to load:`, error);
+        throw error;
     }
 
-    return `
-        <section class="card">
-            <h3>${title}</h3>
-
-            ${
-                (data || [])
-                    .map(
-                        (player, index) => `
-                            <p>
-                                ${index + 1}.
-                                <a href="profile.html?id=${player.player_number}">
-                                    ${player.username}
-                                </a>
-                                —
-                                ${formatter(player[column] || 0)}
-                            </p>
-                        `
-                    )
-                    .join("") ||
-                "<p>No players yet.</p>"
-            }
-        </section>
-    `;
+    return (data || []).map(player => ({
+        id: player.id,
+        playerNumber: player.player_number,
+        username: player.username,
+        value: player[board.column] || 0,
+        formattedValue: board.formatter(player[board.column] || 0)
+    }));
 }
 
-
-/* =====================================
-   CALCULATED PLAYER LEVEL BOARD
-===================================== */
-
-async function playerLevelBoard() {
-
-    const { data: players, error: playerError } =
-        await supabaseClient
+async function loadTotalSkillBoard() {
+    const [
+        playersResult,
+        skillsResult
+    ] = await Promise.all([
+        supabaseClient
             .from("players")
-            .select("id, player_number, username");
+            .select(`
+                id,
+                player_number,
+                username
+            `),
 
-    if (playerError) {
-        console.error(
-            "Total Skill board failed to load:",
-            playerError
-        );
-
-        return `
-            <section class="card">
-                <h3>Total Skill</h3>
-                <p>Could not load rankings.</p>
-            </section>
-        `;
-    }
-
-    const { data: skills, error: skillsError } =
-        await supabaseClient
+        supabaseClient
             .from("skills")
-            .select("*");
+            .select("*")
+    ]);
 
-    if (skillsError) {
-        console.error(
-            "Player skills failed to load:",
-            skillsError
-        );
+    if (playersResult.error) {
+        throw playersResult.error;
     }
 
-    const rankedPlayers = (players || [])
-        .map(player => {
+    if (skillsResult.error) {
+        throw skillsResult.error;
+    }
 
-            const playerSkills = (skills || []).find(
+    return (playersResult.data || [])
+        .map(player => {
+            const playerSkills = (skillsResult.data || []).find(
                 skill => skill.player_id === player.id
             );
 
-            const calculatedLevel = playerSkills
+            const totalSkill = playerSkills
                 ? totalSkillFromSkills(playerSkills)
                 : 0;
 
             return {
-                ...player,
-                calculatedLevel
+                id: player.id,
+                playerNumber: player.player_number,
+                username: player.username,
+                value: totalSkill,
+                formattedValue: totalSkill.toLocaleString()
             };
-
         })
-        .sort(
-            (a, b) =>
-                b.calculatedLevel -
-                a.calculatedLevel
-        )
+        .sort((first, second) => second.value - first.value)
         .slice(0, 10);
-
-    return `
-        <section class="card">
-            <h3>Total Skill</h3>
-
-            ${
-                rankedPlayers
-                    .map(
-                        (player, index) => `
-                            <p>
-                                ${index + 1}.
-                                <a href="profile.html?id=${player.player_number}">
-                                    ${player.username}
-                                </a>
-                                —
-                                ${player.calculatedLevel}
-                            </p>
-                        `
-                    )
-                    .join("") ||
-                "<p>No players yet.</p>"
-            }
-        </section>
-    `;
 }
 
+async function getHallBoardData(board) {
+    if (hallBoardCache[board.key]) {
+        return hallBoardCache[board.key];
+    }
 
-/* =====================================
-   LOAD HALL OF FAME
-===================================== */
+    const rows = board.calculated
+        ? await loadTotalSkillBoard()
+        : await loadStandardBoard(board);
+
+    hallBoardCache[board.key] = rows;
+
+    return rows;
+}
+
+function renderHallMenu() {
+    const menu = document.getElementById("hof-menu");
+
+    menu.innerHTML = HALL_BOARDS
+        .map(board => {
+            const activeClass =
+                board.key === activeHallBoard
+                    ? "active"
+                    : "";
+
+            return `
+                <button
+                    type="button"
+                    class="hof-menu-button ${activeClass}"
+                    data-hof-board="${board.key}"
+                >
+                    <span class="hof-menu-icon">${board.icon}</span>
+
+                    <span class="hof-menu-text">
+                        <strong>${board.title}</strong>
+                        <small>${board.description}</small>
+                    </span>
+
+                    <span class="hof-menu-arrow">
+                        ${board.key === activeHallBoard ? "▼" : "▶"}
+                    </span>
+                </button>
+            `;
+        })
+        .join("");
+
+    menu
+        .querySelectorAll("[data-hof-board]")
+        .forEach(button => {
+            button.addEventListener("click", async () => {
+                activeHallBoard = button.dataset.hofBoard;
+
+                renderHallMenu();
+                await renderActiveHallBoard();
+            });
+        });
+}
+
+async function renderActiveHallBoard() {
+    const container =
+        document.getElementById("hof-board-content");
+
+    const board = HALL_BOARDS.find(
+        item => item.key === activeHallBoard
+    );
+
+    if (!board) {
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="hof-loading">
+            Loading ${escapeHallText(board.title)}...
+        </div>
+    `;
+
+    try {
+        const rows = await getHallBoardData(board);
+
+        container.innerHTML = `
+            <div class="hof-board-header">
+                <div>
+                    <h2>${board.icon} ${escapeHallText(board.title)}</h2>
+                    <p>${escapeHallText(board.description)}</p>
+                </div>
+
+                <span class="hof-top-ten-badge">Top 10</span>
+            </div>
+
+            <div class="hof-ranking-list">
+                ${
+                    rows.length
+                        ? rows
+                            .map((player, index) => `
+                                <article class="hof-ranking-row hof-rank-${index + 1}">
+
+                                    <span class="hof-rank-position">
+                                        ${hallMedal(index)}
+                                    </span>
+
+                                    <div class="hof-player-details">
+                                        <a
+                                            href="profile.html?id=${player.playerNumber}"
+                                            class="hof-player-name"
+                                        >
+                                            ${escapeHallText(player.username)}
+                                        </a>
+                                    </div>
+
+                                    <strong class="hof-ranking-value">
+                                        ${escapeHallText(player.formattedValue)}
+                                    </strong>
+
+                                </article>
+                            `)
+                            .join("")
+                        : `
+                            <div class="hof-empty">
+                                No players have entered this ranking yet.
+                            </div>
+                        `
+                }
+            </div>
+        `;
+    } catch (error) {
+        console.error(
+            `${board.title} failed to render:`,
+            error
+        );
+
+        container.innerHTML = `
+            <div class="hof-error">
+                Could not load this leaderboard.
+            </div>
+        `;
+    }
+}
 
 async function loadHall() {
+    try {
+        await refreshMyNetWorth();
+    } catch (error) {
+        console.error(
+            "Could not refresh net worth:",
+            error
+        );
+    }
 
-    await refreshMyNetWorth();
-
-    const hallGrid =
-        document.getElementById("hof-grids");
-
-    hallGrid.innerHTML = (
-        await Promise.all([
-
-            board(
-                "Village Reputation",
-                "reputation",
-                value =>
-                    Number(value).toLocaleString()
-            ),
-
-            playerLevelBoard(),
-
-            board(
-                "Wealth Ranking",
-                "net_worth",
-                value =>
-                    `${Number(value).toLocaleString()} value · ${wealthTitle(value)}`
-            ),
-
-            board(
-                "Revivers",
-                "revive_count"
-            ),
-
-            board(
-                "Jailbreakers",
-                "jailbreak_count"
-            ),
-
-            board(
-                "PvP Victories",
-                "pvp_wins"
-            )
-
-        ])
-    ).join("");
-
+    renderHallMenu();
+    await renderActiveHallBoard();
 }
 
 loadHall();

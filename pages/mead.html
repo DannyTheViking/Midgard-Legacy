@@ -2,45 +2,137 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Midgard Legacy - Mead Hall</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🍺 Mead Hall</h1>
-                <p>Add barrels, fill them with honey and water, then brew young mead.</p>
+
+            <!-- =========================
+                 MEAD HALL PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🍺 Sindre’s Mead Hall
+                        </h1>
+
+                        <p>
+                            Add barrels, fill them with honey and
+                            water, then brew young mead.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🍯 Brewing
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     BREWING SHELVES
+                ========================= -->
+
+                <section
+                    id="mead-shelves"
+                    class="mead-shelves"
+                >
+
+                    <div class="empty-state">
+
+                        <div>
+
+                            <div class="empty-state-icon">
+                                🛢️
+                            </div>
+
+                            <p>
+                                Checking the brewing shelves...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     PAGE MESSAGE
+                ========================= -->
+
+                <div
+                    id="mead-page-message"
+                    class="mead-page-message"
+                    aria-live="polite"
+                ></div>
+
             </div>
-        </section>
 
-        <section id="mead-shelves" class="crafting-grid"></section>
+        </main>
 
-        <p id="mead-page-message"></p>
+    </div>
 
-    </main>
 
-</div>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/skills.js"></script>
-<script src="../js/mead.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/skills.js"></script>
+    <script src="../js/mead.js"></script>
 
 </body>
 

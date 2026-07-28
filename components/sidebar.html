@@ -1,19 +1,115 @@
 <aside class="sidebar">
-<button type="button" id="mobile-nav-toggle" class="mobile-nav-toggle" aria-expanded="false" aria-controls="mobile-nav-links">☰ Menu</button>
-<div id="mobile-nav-links" class="mobile-nav-links">
-<div class="logo">
-    <img src="../images/Logo/main logo.png" alt="Midgard Legacy">
-</div>
-<a href="home.html" class="nav">🏠 Home</a>
-<a href="inventory.html" class="nav">🎒 Backpack</a>
-<a href="wildness.html" class="nav">🏞️ Wilderness</a>
-<a href="village.html" class="nav">🏘️ Village</a>
-<a href="village-healer.html" class="nav">🌿 Village Healer</a>
-<a href="property.html" id="property-nav" class="nav">🏡 Property</a>
-<a href="profile.html" class="nav">👤 Profile</a>
-<a href="friends-enemies.html" class="nav">🤝 Friends &amp; Enemies</a>
-<a href="hall-of-fame.html" class="nav">🏛 Hall of Fame</a>
-<a href="lottery.html" class="nav">🍀 King's Raffle</a>
-<button type="button" class="nav nav-button" onclick="logoutGame()">🚪 Log Out</button>
-</div>
+
+    <button
+        type="button"
+        id="mobile-nav-toggle"
+        class="mobile-nav-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-nav-links"
+    >
+        ☰ Menu
+    </button>
+
+    <div
+        id="mobile-nav-links"
+        class="mobile-nav-links"
+    >
+
+        <div class="logo">
+            <img
+                src="../images/Logo/main logo.png"
+                alt="Midgard Legacy"
+            >
+        </div>
+
+        <nav class="sidebar-navigation">
+
+            <a href="home.html" class="nav">
+                🏠 Home
+            </a>
+
+            <a href="wildness.html" class="nav">
+                🏞️ Wilderness
+            </a>
+
+            <a href="village.html" class="nav">
+                🏘️ Village
+            </a>
+
+            <a href="village-healer.html" class="nav">
+                🌿 Village Healer
+            </a>
+
+            <details class="sidebar-group">
+
+                <summary class="nav sidebar-group-toggle">
+                    🏡 Property
+                </summary>
+
+                <div class="sidebar-submenu">
+
+                    <a
+                        href="property.html"
+                        id="property-nav"
+                        class="nav nav-sub"
+                    >
+                        🏠 Homestead
+                    </a>
+
+                    <a
+                        href="storage.html"
+                        class="nav nav-sub"
+                    >
+                        📦 Storage Yard
+                    </a>
+
+                    <a
+                        href="wagon-shed.html"
+                        class="nav nav-sub"
+                    >
+                        🛒 Wagon Shed
+                    </a>
+
+                    <a
+                        href="apiary.html"
+                        class="nav nav-sub"
+                    >
+                        🐝 Apiary
+                    </a>
+
+                </div>
+
+            </details>
+
+            <a href="profile.html" class="nav">
+                👤 Profile
+            </a>
+
+            <a href="friends-enemies.html" class="nav">
+                🤝 Friends &amp; Enemies
+            </a>
+
+            <a href="hall-of-fame.html" class="nav">
+                🏛 Hall of Fame
+            </a>
+
+            <a href="lottery.html" class="nav">
+                🍀 King's Raffle
+            </a>
+
+            <button
+                type="button"
+                class="nav nav-button"
+                onclick="logoutGame()"
+            >
+                🚪 Log Out
+            </button>
+
+        </nav>
+        
+    <div>
+<div class="sidebar-clock">
+            <div id="sidebar-date"></div>
+            <div id="sidebar-time"></div>
+        </div>
 </aside>

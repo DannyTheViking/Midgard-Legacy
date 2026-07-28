@@ -2,99 +2,390 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
     <title>Midgard Legacy - Village</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <!-- =========================
-             VILLAGE HEADER
-        ========================= -->
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🏘️ Retskni Village</h1>
-                <p>Visit the craftsmen and traders of Midgard.</p>
+
+            <!-- =========================
+                 VILLAGE PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🏘️ Retskni Village
+                        </h1>
+
+                        <p>
+                            Visit the craftsmen, traders and
+                            important figures of Midgard.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🛡️ Village
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     VILLAGE BUILDINGS
+                ========================= -->
+
+                <section class="village-grid">
+
+
+                    <!-- King Harald -->
+
+                    <a
+                        href="king.html"
+                        id="king-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image king-building">
+                            👑
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                King Harald’s Longhall
+                            </h2>
+
+                            <p>
+                                Stand before the King and ask
+                                for your freedom.
+                            </p>
+
+                            <span class="village-status open">
+                                Enter Longhall
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Blacksmith -->
+
+                    <a
+                        href="blacksmith.html"
+                        id="blacksmith-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image blacksmith-building">
+                            ⚒️
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Blacksmith
+                            </h2>
+
+                            <p>
+                                Repair tools, maintain equipment
+                                and prepare items for battle.
+                            </p>
+
+                            <span class="village-status open">
+                                Visit Blacksmith
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Sawmill -->
+
+                    <a
+                        href="sawmill.html"
+                        id="sawmill-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image sawmill-building">
+                            🪚
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Sawmill
+                            </h2>
+
+                            <p>
+                                Turn gathered logs into usable
+                                planks and timber.
+                            </p>
+
+                            <span class="village-status open">
+                                Visit Sawmill
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Carpenter -->
+
+                    <a
+                        href="carpenter.html"
+                        id="carpenter-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image carpenter-building">
+                            🪵
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Carpenter
+                            </h2>
+
+                            <p>
+                                Craft shafts, staves, handles,
+                                barrels and wooden equipment.
+                            </p>
+
+                            <span class="village-status open">
+                                Visit Carpenter
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Forge -->
+
+                    <a
+                        href="forge.html"
+                        id="forge-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image forge-building">
+                            🔥
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Forge
+                            </h2>
+
+                            <p>
+                                Smelt ore, heat metal and shape
+                                weapons, armour and tools.
+                            </p>
+
+                            <span class="village-status open">
+                                Enter Forge
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Mead Hall -->
+
+                    <a
+                        href="mead.html"
+                        id="mead-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image mead-building">
+                            🍺
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Mead Hall
+                            </h2>
+
+                            <p>
+                                Brew mead, ale and powerful drinks
+                                for courage and celebration.
+                            </p>
+
+                            <span class="village-status open">
+                                Visit Mead Hall
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Village Apiary -->
+
+                    <a
+                        href="village-apiary.html"
+                        id="apiary-building-card"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image apiary-building">
+                            🐝
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Village Apiary
+                            </h2>
+
+                            <p>
+                                Keep bees, care for hives and
+                                harvest wax and honey.
+                            </p>
+
+                            <span class="village-status open">
+                                Visit Apiary
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Royal Raffle -->
+
+                    <a
+                        href="lottery.html"
+                        class="village-card unlocked"
+                    >
+
+                        <div class="village-card-image raffle-building">
+                            🍀
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Royal Raffle
+                            </h2>
+
+                            <p>
+                                Enter once each day using silver
+                                or valuable resources.
+                            </p>
+
+                            <span class="village-status open">
+                                Enter Raffle
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Marketplace -->
+
+                    <article class="village-card locked">
+
+                        <div class="village-card-image market-building">
+                            🏪
+                        </div>
+
+                        <div class="village-card-content">
+
+                            <h2>
+                                Torstein’s Marketplace
+                            </h2>
+
+                            <p>
+                                Buy and sell goods with traders
+                                and other players.
+                            </p>
+
+                            <span class="village-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-        <!-- =========================
-             VILLAGE BUILDINGS
-        ========================= -->
-        <section class="building-grid">
+        </main>
 
-            <a
-                href="king.html"
-                id="king-building-card"
-                class="building-card"
-            >
-                <h2>👑 King Harald’s Longhall</h2>
-                <p>Stand before the King and ask for your freedom.</p>
-            </a>
+    </div>
 
-            <a href="blacksmith.html" id="blacksmith-building-card" class="building-card">
-                <h2>⚒️ Bjørn the Blacksmith</h2>
-                <p>Repair tools and craft equipment.</p>
-            </a>
 
-            <a href="sawmill.html" id="sawmill-building-card" class="building-card">
-                <h2>🪚 Stig’s Sawmill</h2>
-                <p>Turn logs into usable planks.</p>
-            </a>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-            <a href="carpenter.html" id="carpenter-building-card" class="building-card">
-                <h2>🪵 Leif the Carpenter</h2>
-                <p>Craft shafts, staves and barrels.</p>
-            </a>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-              <a href="forge.html" id="forge-building-card" class="building-card">
-                <h2>🔥 Ivar’s Forge</h2>
-                <p>Smelt and shape </p>
-            </a>
-
-            <a href="mead.html" id="mead-building-card" class="building-card">
-                <h2>🍺 Sindre’s Mead Hall</h2>
-                <p>Brew mead and ale.</p>
-                <span>Brew Some Teaste</span>
-            </a>
-
-            <a href="village-apiary.html" id="apiary-building-card" class="building-card">
-                <h2>🐝 Ragnhild’s Village Apiary</h2>
-                <p>Keep bees and harvest honey.</p>
-                <span></span>
-            </a>
-
-            <a href="lottery.html" class="building-card"><h2>🍀 Knut’s Royal Raffle</h2><p>Enter once each day using silver or resources.</p></a>
-
-            <a href="#" class="building-card locked">
-                <h2>🏪 Torstein’s Marketplace</h2>
-                <p>Buy and sell goods.</p>
-                <span></span>
-            </a>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/village.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/village.js"></script>
 
 </body>
+
 </html>

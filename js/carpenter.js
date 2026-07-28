@@ -746,58 +746,660 @@ updateCarpenterWoodLabels();
 /* =====================================
    PROPERTY BEAMS
 ===================================== */
+
+
+/* =====================================
+   FIND ITEM BY NAME
+===================================== */
+
 async function getNamedItem(name) {
-    const { data, error } = await supabaseClient.from("items").select("id,name").eq("name", name).single();
-    if (error) throw error;
+
+    const { data, error } = await supabaseClient
+        .from("items")
+        .select("id, name, weight_kg")
+        .eq("name", name)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
     return data;
 }
 
-async function craftNamedBeam(woodName, beamName, amountInputId, messageId) {
-    const amount = getCraftAmount(amountInputId);
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) return;
-    const [wood, beam] = await Promise.all([getNamedItem(woodName), getNamedItem(beamName)]);
-    const required = amount;
-    const { data: woodRow, error: woodError } = await supabaseClient.from("inventory")
-        .select("id,quantity").eq("player_id", user.id).eq("item_id", wood.id).maybeSingle();
-    if (woodError) throw woodError;
-    if (!woodRow || Number(woodRow.quantity) < required) {
-        showTemporaryMessage(messageId, `❌ You need ${required} ${woodName}${required === 1 ? "" : "s"}.`);
+
+/* =====================================
+   GET ACTIVE CART
+===================================== */
+
+async function getActivePlayerCart(playerId) {
+
+    const { data, error } = await supabaseClient
+        .from("player_carts")
+        .select("id, name")
+        .eq("player_id", playerId)
+        .eq("is_active", true)
+        .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
+
+/* =====================================
+   GET ITEM FROM ALL LOCATIONS
+===================================== */
+
+async function getItemAcrossPlayerStorage(
+    playerId,
+    itemId
+) {
+
+    const activeCart =
+        await getActivePlayerCart(playerId);
+
+    const [
+        backpackResult,
+        storageResult,
+        cartResult
+    ] = await Promise.all([
+
+        supabaseClient
+            .from("inventory")
+            .select("id, quantity")
+            .eq("player_id", playerId)
+            .eq("item_id", itemId)
+            .maybeSingle(),
+
+        supabaseClient
+            .from("player_storage")
+            .select("id, quantity")
+            .eq("player_id", playerId)
+            .eq("item_id", itemId)
+            .maybeSingle(),
+
+        activeCart
+            ? supabaseClient
+                .from("cart_items")
+                .select("id, quantity")
+                .eq("cart_id", activeCart.id)
+                .eq("item_id", itemId)
+                .maybeSingle()
+            : Promise.resolve({
+                data: null,
+                error: null
+            })
+
+    ]);
+
+    if (backpackResult.error) {
+        throw backpackResult.error;
+    }
+
+    if (storageResult.error) {
+        throw storageResult.error;
+    }
+
+    if (cartResult.error) {
+        throw cartResult.error;
+    }
+
+    const backpackQuantity =
+        Number(backpackResult.data?.quantity || 0);
+
+    const storageQuantity =
+        Number(storageResult.data?.quantity || 0);
+
+    const cartQuantity =
+        Number(cartResult.data?.quantity || 0);
+
+    return {
+        activeCart,
+
+        backpackRow:
+            backpackResult.data,
+
+        storageRow:
+            storageResult.data,
+
+        cartRow:
+            cartResult.data,
+
+        backpackQuantity,
+        storageQuantity,
+        cartQuantity,
+
+        totalQuantity:
+            backpackQuantity +
+            storageQuantity +
+            cartQuantity
+    };
+}
+
+
+/* =====================================
+   REMOVE QUANTITY FROM A ROW
+===================================== */
+
+async function removeQuantityFromRow(
+    tableName,
+    row,
+    amount
+) {
+
+    if (!row || amount <= 0) {
         return;
     }
-    const { error: spendError } = await supabaseClient.from("inventory")
-        .update({ quantity: Number(woodRow.quantity) - required }).eq("id", woodRow.id);
-    if (spendError) throw spendError;
-    const { data: beamRow, error: beamReadError } = await supabaseClient.from("inventory")
-        .select("id,quantity").eq("player_id", user.id).eq("item_id", beam.id).maybeSingle();
-    if (beamReadError) throw beamReadError;
-    const result = beamRow
-        ? await supabaseClient.from("inventory").update({ quantity: Number(beamRow.quantity) + amount }).eq("id", beamRow.id)
-        : await supabaseClient.from("inventory").insert({ player_id: user.id, item_id: beam.id, quantity: amount });
-    if (result.error) throw result.error;
-    if (typeof addCarpentryXP === "function") await addCarpentryXP(amount * (beamName.startsWith("Oak") ? 20 : 10));
-    showTemporaryMessage(messageId, `🪚 You craft <strong>${amount} ${beamName}${amount === 1 ? "" : "s"}</strong>.`);
-    await loadBeamStock();
+
+    const currentQuantity =
+        Number(row.quantity || 0);
+
+    const quantityToRemove =
+        Math.min(
+            currentQuantity,
+            Number(amount)
+        );
+
+    const remainingQuantity =
+        currentQuantity - quantityToRemove;
+
+    if (remainingQuantity > 0) {
+
+        const { error } = await supabaseClient
+            .from(tableName)
+            .update({
+                quantity: remainingQuantity
+            })
+            .eq("id", row.id);
+
+        if (error) {
+            throw error;
+        }
+
+    } else {
+
+        const { error } = await supabaseClient
+            .from(tableName)
+            .delete()
+            .eq("id", row.id);
+
+        if (error) {
+            throw error;
+        }
+
+    }
 }
+
+
+/* =====================================
+   SPEND MATERIAL FROM CART,
+   BACKPACK AND STORAGE
+===================================== */
+
+async function spendItemAcrossPlayerStorage(
+    playerId,
+    itemId,
+    amount
+) {
+
+    const sources =
+        await getItemAcrossPlayerStorage(
+            playerId,
+            itemId
+        );
+
+    const required =
+        Number(amount || 0);
+
+    if (sources.totalQuantity < required) {
+
+        return {
+            success: false,
+            available: sources.totalQuantity
+        };
+
+    }
+
+    let remaining = required;
+
+    /*
+        Use resources in this order:
+
+        1. Active cart
+        2. Backpack
+        3. Storage Yard
+    */
+
+    if (
+        remaining > 0 &&
+        sources.cartRow
+    ) {
+
+        const used = Math.min(
+            remaining,
+            sources.cartQuantity
+        );
+
+        await removeQuantityFromRow(
+            "cart_items",
+            sources.cartRow,
+            used
+        );
+
+        remaining -= used;
+    }
+
+    if (
+        remaining > 0 &&
+        sources.backpackRow
+    ) {
+
+        const used = Math.min(
+            remaining,
+            sources.backpackQuantity
+        );
+
+        await removeQuantityFromRow(
+            "inventory",
+            sources.backpackRow,
+            used
+        );
+
+        remaining -= used;
+    }
+
+    if (
+        remaining > 0 &&
+        sources.storageRow
+    ) {
+
+        const used = Math.min(
+            remaining,
+            sources.storageQuantity
+        );
+
+        await removeQuantityFromRow(
+            "player_storage",
+            sources.storageRow,
+            used
+        );
+
+        remaining -= used;
+    }
+
+    return {
+        success: remaining === 0,
+        available: sources.totalQuantity
+    };
+}
+
+
+/* =====================================
+   ADD FINISHED ITEM TO BACKPACK
+===================================== */
+
+async function addCraftedItemToBackpack(
+    playerId,
+    itemId,
+    amount
+) {
+
+    const { data: existingItem, error } =
+        await supabaseClient
+            .from("inventory")
+            .select("id, quantity")
+            .eq("player_id", playerId)
+            .eq("item_id", itemId)
+            .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    if (existingItem) {
+
+        const { error: updateError } =
+            await supabaseClient
+                .from("inventory")
+                .update({
+                    quantity:
+                        Number(existingItem.quantity) +
+                        Number(amount)
+                })
+                .eq("id", existingItem.id);
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        return;
+    }
+
+    const { error: insertError } =
+        await supabaseClient
+            .from("inventory")
+            .insert({
+                player_id: playerId,
+                item_id: itemId,
+                quantity: amount
+            });
+
+    if (insertError) {
+        throw insertError;
+    }
+}
+
+
+/* =====================================
+   CRAFT PROPERTY BEAM
+===================================== */
+
+async function craftNamedBeam(
+    woodName,
+    beamName,
+    amountInputId,
+    messageId
+) {
+
+    try {
+
+        const amount =
+            getCraftAmount(amountInputId);
+
+        const {
+            data: { user }
+        } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            return;
+        }
+
+        const [wood, beam] =
+            await Promise.all([
+                getNamedItem(woodName),
+                getNamedItem(beamName)
+            ]);
+
+        /*
+            One log makes one beam.
+        */
+
+        const logsRequired = amount;
+
+        const materialResult =
+            await spendItemAcrossPlayerStorage(
+                user.id,
+                wood.id,
+                logsRequired
+            );
+
+        if (!materialResult.success) {
+
+            showTemporaryMessage(
+                messageId,
+                `❌ You need ${logsRequired} ${woodName}${
+                    logsRequired === 1 ? "" : "s"
+                }. You currently have ${
+                    materialResult.available
+                } across your cart, backpack and Storage Yard.`
+            );
+
+            return;
+        }
+
+        await addCraftedItemToBackpack(
+            user.id,
+            beam.id,
+            amount
+        );
+
+        if (
+            typeof addCarpentryXP === "function"
+        ) {
+
+            await addCarpentryXP(
+                amount *
+                (
+                    beamName.startsWith("Oak")
+                        ? 20
+                        : 10
+                )
+            );
+        }
+
+        if (
+            typeof addPlayerXP === "function"
+        ) {
+
+            await addPlayerXP(
+                Math.max(1, amount)
+            );
+        }
+
+        if (
+            typeof recordCraftingStatistics ===
+            "function"
+        ) {
+
+            await recordCraftingStatistics({
+                itemsCrafted: amount,
+                carpentryItems: amount
+            });
+        }
+
+        showTemporaryMessage(
+            messageId,
+            `🪚 You craft <strong>${amount} ${beamName}${
+                amount === 1 ? "" : "s"
+            }</strong>.`
+        );
+
+        await loadBeamStock();
+
+        if (
+            typeof loadHomePage === "function"
+        ) {
+            await loadHomePage();
+        }
+
+        if (
+            typeof loadCartCard === "function"
+        ) {
+            await loadCartCard();
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Beam crafting failed:",
+            error
+        );
+
+        showTemporaryMessage(
+            messageId,
+            `❌ ${error.message}`
+        );
+    }
+}
+
+
+/* =====================================
+   LOAD BEAM STOCK
+===================================== */
 
 async function loadBeamStock() {
+
     try {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return;
-        const { data, error } = await supabaseClient.from("inventory").select("quantity,items(name)").eq("player_id", user.id);
-        if (error) throw error;
-        const stock = new Map((data || []).map(row => [row.items?.name, Number(row.quantity || 0)]));
-        const birch = document.getElementById("birch-beam-stock");
-        const oak = document.getElementById("oak-beam-stock");
-        if (birch) birch.textContent = `${stock.get("Birch Log") || 0} Birch Logs · ${stock.get("Birch Beam") || 0} Beams`;
-        if (oak) oak.textContent = `${stock.get("Oak Log") || 0} Oak Logs · ${stock.get("Oak Beam") || 0} Beams`;
-    } catch (error) { console.error("Beam stock failed:", error); }
+
+        const {
+            data: { user }
+        } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            return;
+        }
+
+        const [
+            birchLog,
+            birchBeam,
+            oakLog,
+            oakBeam
+        ] = await Promise.all([
+            getNamedItem("Birch Log"),
+            getNamedItem("Birch Beam"),
+            getNamedItem("Oak Log"),
+            getNamedItem("Oak Beam")
+        ]);
+
+        const [
+            birchLogs,
+            birchBeams,
+            oakLogs,
+            oakBeams
+        ] = await Promise.all([
+
+            getItemAcrossPlayerStorage(
+                user.id,
+                birchLog.id
+            ),
+
+            getItemAcrossPlayerStorage(
+                user.id,
+                birchBeam.id
+            ),
+
+            getItemAcrossPlayerStorage(
+                user.id,
+                oakLog.id
+            ),
+
+            getItemAcrossPlayerStorage(
+                user.id,
+                oakBeam.id
+            )
+
+        ]);
+
+        const birchElement =
+            document.getElementById(
+                "birch-beam-stock"
+            );
+
+        const oakElement =
+            document.getElementById(
+                "oak-beam-stock"
+            );
+
+        if (birchElement) {
+
+            birchElement.innerHTML = `
+                <strong>
+                    ${birchLogs.totalQuantity}
+                    Birch Logs available
+                </strong>
+
+                <br>
+
+                <small>
+                    🛒 Cart:
+                    ${birchLogs.cartQuantity}
+                    · 🎒 Backpack:
+                    ${birchLogs.backpackQuantity}
+                    · 🏚️ Storage:
+                    ${birchLogs.storageQuantity}
+                </small>
+
+                <br>
+
+                <span>
+                    ${birchBeams.totalQuantity}
+                    Birch Beams owned
+                </span>
+            `;
+        }
+
+        if (oakElement) {
+
+            oakElement.innerHTML = `
+                <strong>
+                    ${oakLogs.totalQuantity}
+                    Oak Logs available
+                </strong>
+
+                <br>
+
+                <small>
+                    🛒 Cart:
+                    ${oakLogs.cartQuantity}
+                    · 🎒 Backpack:
+                    ${oakLogs.backpackQuantity}
+                    · 🏚️ Storage:
+                    ${oakLogs.storageQuantity}
+                </small>
+
+                <br>
+
+                <span>
+                    ${oakBeams.totalQuantity}
+                    Oak Beams owned
+                </span>
+            `;
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Beam stock failed:",
+            error
+        );
+    }
 }
 
-document.getElementById("craft-birch-beam-button")?.addEventListener("click", () =>
-    craftNamedBeam("Birch Log", "Birch Beam", "birch-beam-amount", "birch-beam-message").catch(error => showTemporaryMessage("birch-beam-message", `❌ ${error.message}`))
-);
-document.getElementById("craft-oak-beam-button")?.addEventListener("click", () =>
-    craftNamedBeam("Oak Log", "Oak Beam", "oak-beam-amount", "oak-beam-message").catch(error => showTemporaryMessage("oak-beam-message", `❌ ${error.message}`))
-);
+
+/* =====================================
+   BEAM BUTTON EVENTS
+===================================== */
+
+document
+    .getElementById(
+        "craft-birch-beam-button"
+    )
+    ?.addEventListener(
+        "click",
+        function () {
+
+            craftNamedBeam(
+                "Birch Log",
+                "Birch Beam",
+                "birch-beam-amount",
+                "birch-beam-message"
+            );
+        }
+    );
+
+document
+    .getElementById(
+        "craft-oak-beam-button"
+    )
+    ?.addEventListener(
+        "click",
+        function () {
+
+            craftNamedBeam(
+                "Oak Log",
+                "Oak Beam",
+                "oak-beam-amount",
+                "oak-beam-message"
+            );
+        }
+    );
+
+
+/* =====================================
+   START BEAM STOCK
+===================================== */
+
 loadBeamStock();

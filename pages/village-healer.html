@@ -28,7 +28,12 @@
 
     <link
         rel="stylesheet"
-        href="../css/village-healer.css?v=2"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/village-healer.css?v=3"
     >
 
 </head>
@@ -37,127 +42,237 @@
 
     <div class="game-layout">
 
-        <!-- Shared sidebar -->
         <div id="sidebar"></div>
 
         <main class="main-area healer-page">
 
-            <!-- Shared topbar -->
             <div id="topbar"></div>
 
-            <section class="page-header">
 
-                <div class="page-title">
+            <!-- =========================
+                 HEALER PAGE
+            ========================= -->
 
-                    <h1>
-                        🌿 Village Healer
-                    </h1>
+            <div class="game-page">
 
-                    <p>
-                        Recover naturally, or use your training
-                        to get someone back on their feet.
-                    </p>
 
-                </div>
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
 
-            </section>
+                <section class="game-page-header">
 
-            <div
-                id="healer-message"
-                class="healer-message"
-                aria-live="polite"
-            ></div>
+                    <div class="game-page-heading">
 
-            <section
-                id="my-hospital-card"
-                class="my-hospital-card"
-                hidden
-            ></section>
+                        <h1>
+                            🌿 Village Healer
+                        </h1>
 
-            <section class="healer-summary">
+                        <p>
+                            Recover naturally, or use your training
+                            to get another Viking back on their feet.
+                        </p>
 
-                <div>
+                    </div>
 
-                    <span>
-                        Yrsa jobs
-                    </span>
+                    <div class="game-badge">
+                        🩹 Healer Hut
+                    </div>
 
-                    <strong id="healer-jobs">
-                        0
-                    </strong>
+                </section>
 
-                </div>
 
-                <div>
-
-                    <span>
-                        Healing unlocked
-                    </span>
-
-                    <strong id="healing-level">
-                        Locked
-                    </strong>
-
-                </div>
-
-                <div>
-
-                    <span>
-                        Ward patients
-                    </span>
-
-                    <strong id="patient-count">
-                        0
-                    </strong>
-
-                </div>
-
-            </section>
-
-            <section>
-
-                <h2>
-                    Patients in the healer hut
-                </h2>
-
-                <p class="patient-sort-note">Longest recovery time is shown first.</p>
+                <!-- =========================
+                     MESSAGE AREA
+                ========================= -->
 
                 <div
-                    id="hospital-grid"
-                    class="hospital-grid"
-                >
+                    id="healer-message"
+                    class="healer-message"
+                    aria-live="polite"
+                ></div>
 
-                    <p>
-                        Checking the beds...
-                    </p>
 
-                </div>
+                <!-- =========================
+                     YOUR HOSPITAL STATUS
+                ========================= -->
 
-                <nav id="hospital-pagination" class="hospital-pagination" aria-label="Patient pages" hidden>
-                    <button id="patient-page-previous" type="button">← Previous</button>
-                    <span id="patient-page-label">Page 1 of 1</span>
-                    <button id="patient-page-next" type="button">Next →</button>
-                </nav>
+                <section
+                    id="my-hospital-card"
+                    class="page-panel my-hospital-card"
+                    hidden
+                ></section>
 
-            </section>
+
+                <!-- =========================
+                     HEALER SUMMARY
+                ========================= -->
+
+                <section class="healer-summary">
+
+                    <article class="stat-card">
+
+                        <p class="stat-card-label">
+                            Yrsa Jobs
+                        </p>
+
+                        <p
+                            id="healer-jobs"
+                            class="stat-card-value"
+                        >
+                            0
+                        </p>
+
+                        <p class="stat-card-subtext">
+                            Healer work completed
+                        </p>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <p class="stat-card-label">
+                            Healing Unlocked
+                        </p>
+
+                        <p
+                            id="healing-level"
+                            class="stat-card-value"
+                        >
+                            Locked
+                        </p>
+
+                        <p class="stat-card-subtext">
+                            Your current healer training
+                        </p>
+
+                    </article>
+
+
+                    <article class="stat-card">
+
+                        <p class="stat-card-label">
+                            Ward Patients
+                        </p>
+
+                        <p
+                            id="patient-count"
+                            class="stat-card-value"
+                        >
+                            0
+                        </p>
+
+                        <p class="stat-card-subtext">
+                            Vikings currently recovering
+                        </p>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =========================
+                     PATIENT WARD
+                ========================= -->
+
+                <section class="page-panel healer-ward-panel">
+
+                    <header class="section-header">
+
+                        <h2>
+                            🛏️ Patients in the Healer Hut
+                        </h2>
+
+                        <span class="game-badge">
+                            Recovery Ward
+                        </span>
+
+                    </header>
+
+                    <div class="panel-body">
+
+                        <p class="patient-sort-note">
+                            The longest recovery time is shown first.
+                        </p>
+
+                        <div
+                            id="hospital-grid"
+                            class="hospital-grid"
+                        >
+
+                            <div class="empty-state">
+
+                                <div>
+
+                                    <div class="empty-state-icon">
+                                        🛏️
+                                    </div>
+
+                                    <p>
+                                        Checking the beds...
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <nav
+                            id="hospital-pagination"
+                            class="hospital-pagination"
+                            aria-label="Patient pages"
+                            hidden
+                        >
+
+                            <button
+                                id="patient-page-previous"
+                                type="button"
+                                class="game-button secondary"
+                            >
+                                ← Previous
+                            </button>
+
+                            <span id="patient-page-label">
+                                Page 1 of 1
+                            </span>
+
+                            <button
+                                id="patient-page-next"
+                                type="button"
+                                class="game-button secondary"
+                            >
+                                Next →
+                            </button>
+
+                        </nav>
+
+                    </div>
+
+                </section>
+
+            </div>
 
         </main>
 
     </div>
 
-    <!-- Supabase library -->
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
 
-    <!-- Shared game files -->
     <script src="../js/config.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/game-utils.js"></script>
     <script src="../js/constants.js"></script>
     <script src="../js/components.js?v=4"></script>
 
-    <!-- Village Healer -->
     <script src="../js/village-healer.js?v=2"></script>
 
 </body>

@@ -2,153 +2,759 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Midgard Legacy - Carpenter</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🪵 Carpenter</h1>
-                <p>Welcome to my workshop <span id="home-username"></span>, here you can craft wooden parts and barrels.</p>
+
+            <!-- =========================
+                 CARPENTER PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🪵 Leif the Carpenter
+                        </h1>
+
+                        <p>
+                            Welcome to my workshop,
+                            <span id="home-username"></span>.
+                            Craft wooden parts, beams, buckets
+                            and barrels.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🪚 Carpenter
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     CARPENTER RECIPES
+                ========================= -->
+
+                <section class="carpenter-grid">
+
+
+                    <!-- Wooden Shaft -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image shaft-area">
+                            🪵
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Wooden Shaft
+                                </h2>
+
+                                <p>
+                                    Carve a simple shaft for tools,
+                                    weapons and equipment.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="shaft-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Birch Plank</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Wooden Shaft
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="shaft-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="shaft-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-shaft-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Shaft
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="carpenter-message">
+                                    Ready to carve.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Empty Bucket -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image bucket-area">
+                            🪣
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Empty Bucket
+                                </h2>
+
+                                <p>
+                                    Build a wooden bucket held
+                                    together with iron hoops.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="bucket-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Planks</span>
+
+                                    <span
+                                        id="lid-wood-label"
+                                        class="green"
+                                    >
+                                        5 Birch Planks
+                                    </span>
+                                </p>
+
+                                <p>
+                                    <span>⚙️ Iron Hoops</span>
+                                    <span class="green">3</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Empty Bucket
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="bucket-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="bucket-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-bucket-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Bucket
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="bucket-message">
+                                    Ready to build.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Barrel Staves -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image staves-area">
+                            🛢️
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2 id="staves-title">
+                                    Birch Barrel Staves
+                                </h2>
+
+                                <p>
+                                    Shape planks into curved staves
+                                    for barrel construction.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="staves-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Planks</span>
+
+                                    <span
+                                        id="staves-wood-label"
+                                        class="green"
+                                    >
+                                        30 Birch Planks
+                                    </span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        30 Barrel Staves
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="staves-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="staves-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-staves-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Staves
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="staves-message">
+                                    Ready to shape timber.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Barrel Lid -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image lid-area">
+                            🪵
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2 id="lid-title">
+                                    Birch Barrel Lid
+                                </h2>
+
+                                <p>
+                                    Craft a fitted wooden lid for
+                                    barrel construction.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="lid-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Birch Planks</span>
+                                    <span class="green">5</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Barrel Lid
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="lid-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="lid-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-lid-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Lid
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="lid-message">
+                                    Ready to craft.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Empty Barrel -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image barrel-area">
+                            🛢️
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2 id="barrel-title">
+                                    Birch Barrel
+                                </h2>
+
+                                <p>
+                                    Assemble staves, a lid and iron
+                                    hoops into a strong barrel.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="barrel-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Barrel Staves</span>
+                                    <span class="green">30</span>
+                                </p>
+
+                                <p>
+                                    <span>🪵 Barrel Lid</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>⚙️ Iron Hoops</span>
+                                    <span class="green">6</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Empty Barrel
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="barrel-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="barrel-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-barrel-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Barrel
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="barrel-message">
+                                    Ready to assemble.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Birch Beam -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image birch-beam-area">
+                            🪚
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Birch Beam
+                                </h2>
+
+                                <p>
+                                    Shape a Birch Log into a sturdy
+                                    construction beam.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="birch-beam-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Birch Log</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Birch Beam
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="birch-beam-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="birch-beam-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-birch-beam-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Birch Beam
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="birch-beam-message">
+                                    Ready to shape.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Oak Beam -->
+
+                    <article class="carpenter-card">
+
+                        <div class="carpenter-card-image oak-beam-area">
+                            🪚
+                        </div>
+
+                        <header class="carpenter-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Oak Beam
+                                </h2>
+
+                                <p>
+                                    Shape an Oak Log into a heavy,
+                                    durable building beam.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="oak-beam-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="carpenter-card-body">
+
+                            <div class="carpenter-requirements">
+
+                                <p>
+                                    <span>🪵 Oak Log</span>
+                                    <span class="green">1</span>
+                                </p>
+
+                                <p>
+                                    <span>🎁 Produces</span>
+                                    <span class="green">
+                                        1 Oak Beam
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <div class="carpenter-controls">
+
+                                <label for="oak-beam-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="oak-beam-amount"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                                <button
+                                    id="craft-oak-beam-button"
+                                    type="button"
+                                    class="carpenter-button"
+                                >
+                                    🪵 Craft Oak Beam
+                                </button>
+
+                            </div>
+
+                            <div class="carpenter-message">
+
+                                <h4>Latest Action</h4>
+
+                                <p id="oak-beam-message">
+                                    Ready to shape.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-        <section class="crafting-grid">
+        </main>
 
-            <!-- wooden shaft -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3>🪵 Wooden Shaft</h3>
-                    <div class="craft-stock" id="shaft-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">1 Birch Plank</span></p>
-                <p>Produces: <span class="green">1 Wooden Shaft</span></p>
-
-                <div class="craft-controls">
-                    <input class="craft-amount" id="shaft-amount" type="number" min="1" value="1">
-                    <button id="craft-shaft-button">🪵 Craft</button>
-                </div>
-
-                <p id="carpenter-message">Ready to carve.</p>
-            </div>
-
-            <!-- empty bucket -->
-<div class="crafting-card">
-    <div class="craft-card-heading">
-        <h3>🪣 Empty Bucket</h3>
-        <div class="craft-stock" id="bucket-stock">Loading...</div>
     </div>
 
-    <p>Requires: <span id="lid-wood-label" class="green">5 Birch Planks</span></p>
-    <p>Requires: <span class="green">3 Iron Hoops</span></p>
-    <p>Produces: <span class="green">1 Empty Bucket</span></p>
 
-    <div class="craft-controls">
-        <input class="craft-amount" id="bucket-amount" type="number" min="1" value="1">
-        <button id="craft-bucket-button">🪵 Craft</button>
-    </div>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-    <p id="bucket-message"></p>
-</div>
-
-            <!-- barrel staves -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3 id="staves-title">🛢️ Birch Barrel Staves</h3>
-                    <div class="craft-stock" id="staves-stock">Loading...</div>
-                </div>
-                <p>Requires: <span id="staves-wood-label" class="green">30 Birch Planks</span></p>
-                <p>Produces: <span class="green">30 Barrel Staves</span></p>
-
-                <div class="craft-controls">
-                    <input class="craft-amount" id="staves-amount" type="number" min="1" value="1">
-                    <button id="craft-staves-button">🪵 Craft</button>
-                </div>
-
-                <p id="staves-message"></p>
-            </div>
-
-            <!-- barrel lid -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3 id="lid-title">🛢️ Birch Barrel Lid</h3>
-                    <div class="craft-stock" id="lid-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">5 Birch Planks</span></p>
-                <p>Produces: <span class="green">1 Barrel Lid</span></p>
-
-                <div class="craft-controls">
-                    <input class="craft-amount" id="lid-amount" type="number" min="1" value="1">
-                    <button id="craft-lid-button">🪵 Craft</button>
-                </div>
-
-                <p id="lid-message"></p>
-            </div>
-
-            <!-- empty barrel -->
-            <div class="crafting-card">
-                <div class="craft-card-heading">
-                    <h3 id="barrel-title">🛢️ Birch Barrel</h3>
-                    <div class="craft-stock" id="barrel-stock">Loading...</div>
-                </div>
-                <p>Requires: <span class="green">30 Barrel Staves</span></p>
-                <p>Requires: <span class="green">1 Barrel Lid</span></p>
-                <p>Requires: <span class="green">6 Iron Hoops</span></p>
-                <p>Produces: <span class="green">1 Empty Barrel</span></p>
-
-                <div class="craft-controls">
-                    <input class="craft-amount" id="barrel-amount" type="number" min="1" value="1">
-                    <button id="craft-barrel-button">🪵 Craft</button>
-                </div>
-
-                <p id="barrel-message"></p>
-            </div>
-
-
-            <div class="crafting-card">
-                <div class="craft-card-heading"><h3>🪚 Birch Beam</h3><div class="craft-stock" id="birch-beam-stock">Loading...</div></div>
-                <p>Requires: <span class="green">1 Birch Log</span></p>
-                <p>Produces: <span class="green">1 Birch Beam</span></p>
-                <div class="craft-controls"><input class="craft-amount" id="birch-beam-amount" type="number" min="1" value="1"><button id="craft-birch-beam-button">🪵 Craft</button></div>
-                <p id="birch-beam-message"></p>
-            </div>
-
-            <div class="crafting-card">
-                <div class="craft-card-heading"><h3>🪚 Oak Beam</h3><div class="craft-stock" id="oak-beam-stock">Loading...</div></div>
-                <p>Requires: <span class="green">1 Oak Log</span></p>
-                <p>Produces: <span class="green">1 Oak Beam</span></p>
-                <div class="craft-controls"><input class="craft-amount" id="oak-beam-amount" type="number" min="1" value="1"><button id="craft-oak-beam-button">🪵 Craft</button></div>
-                <p id="oak-beam-message"></p>
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/config.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/game-utils.js"></script>
-<script src="../js/constants.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/skills.js"></script>
-<script src="../js/carpenter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/skills.js"></script>
+    <script src="../js/carpenter.js"></script>
 
 </body>
+
 </html>

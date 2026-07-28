@@ -1,72 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
     <title>Midgard Legacy - Sawmill</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
-    <div id="sidebar"></div>
+    <div class="game-layout">
 
-    <main class="main-area">
-        <div id="topbar"></div>
+        <div id="sidebar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🪚 Sawmill</h1>
-                <p>Welcome to the sawmill <span id="home-username"></span> here you can Turn rough logs into usable planks.</p>
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+
+            <!-- =========================
+                 SAWMILL PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🪚 Stig’s Sawmill
+                        </h1>
+
+                        <p>
+                            Welcome to the sawmill,
+                            <span id="home-username"></span>.
+                            Turn rough logs into usable planks.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🪵 Sawmill
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     SAWMILL CARDS
+                ========================= -->
+
+                <section class="sawmill-grid">
+
+
+                    <!-- =========================
+                         BIRCH PLANKS
+                    ========================= -->
+
+                    <article class="sawmill-card">
+
+                        <div class="sawmill-card-image birch-plank-area">
+                            🪚
+                        </div>
+
+                        <header class="sawmill-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Birch Planks
+                                </h2>
+
+                                <p>
+                                    Cut Birch Logs into light,
+                                    usable building planks.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="birch-plank-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="sawmill-card-body">
+
+                            <div class="sawmill-requirements">
+
+                                <p>
+
+                                    <span>
+                                        🪵 Birch Log
+                                    </span>
+
+                                    <span class="green">
+                                        1
+                                    </span>
+
+                                </p>
+
+                                <p>
+
+                                    <span>
+                                        🎁 Produces
+                                    </span>
+
+                                    <span class="green">
+                                        2 Birch Planks
+                                    </span>
+
+                                </p>
+
+                            </div>
+
+                            <div class="sawmill-controls">
+
+                                <label for="birch-saw-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="birch-saw-amount"
+                                    type="number"
+                                    min="1"
+                                    max="9999"
+                                    value="1"
+                                    aria-label="Birch Logs to saw"
+                                >
+
+                                <button
+                                    id="saw-birch-button"
+                                    type="button"
+                                    class="sawmill-button"
+                                >
+                                    🪚 Saw Birch Logs
+                                </button>
+
+                            </div>
+
+                            <div class="sawmill-message">
+
+                                <h4>
+                                    Latest Action
+                                </h4>
+
+                                <p id="sawmill-message">
+                                    Ready to cut timber.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- =========================
+                         OAK PLANKS
+                    ========================= -->
+
+                    <article
+                        class="sawmill-card locked"
+                        id="oak-sawmill-card"
+                    >
+
+                        <div class="sawmill-card-image oak-plank-area">
+                            🪵
+                        </div>
+
+                        <header class="sawmill-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Oak Planks
+                                </h2>
+
+                                <p>
+                                    Cut heavy Oak Logs into strong
+                                    construction planks.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="oak-plank-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="sawmill-card-body">
+
+                            <div class="sawmill-requirements">
+
+                                <p>
+
+                                    <span>
+                                        🪵 Oak Log
+                                    </span>
+
+                                    <span class="green">
+                                        1
+                                    </span>
+
+                                </p>
+
+                                <p>
+
+                                    <span>
+                                        🎁 Produces
+                                    </span>
+
+                                    <span class="green">
+                                        2 Oak Planks
+                                    </span>
+
+                                </p>
+
+                            </div>
+
+                            <div class="sawmill-controls">
+
+                                <label for="oak-saw-amount">
+                                    Amount
+                                </label>
+
+                                <input
+                                    class="craft-amount"
+                                    id="oak-saw-amount"
+                                    type="number"
+                                    min="1"
+                                    max="9999"
+                                    value="1"
+                                    aria-label="Oak Logs to saw"
+                                    disabled
+                                >
+
+                                <button
+                                    id="saw-oak-button"
+                                    type="button"
+                                    class="sawmill-button"
+                                    disabled
+                                >
+                                    🔒 Earn Your Freedom
+                                </button>
+
+                            </div>
+
+                            <div class="sawmill-message">
+
+                                <h4>
+                                    Latest Action
+                                </h4>
+
+                                <p id="oak-sawmill-message">
+                                    Earn your freedom to use Oak.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-       <!--birch planks-->
-<section class="crafting-grid">
+        </main>
 
-    <div class="crafting-card">
-        <div class="craft-card-heading">
-            <h3>🪚 Birch Planks</h3>
-            <div class="craft-stock" id="birch-plank-stock">Loading...</div>
-        </div>
-
-        <p>Requires: <span class="green">1 Birch Log</span></p>
-
-        <p>Produces: <span class="green">2 Birch Planks</span></p>
-
-        <div class="craft-controls">
-            <input class="craft-amount" id="birch-saw-amount" type="number" min="1" max="9999" value="1" aria-label="Birch Logs to saw">
-            <button id="saw-birch-button">🪚 Craft</button>
-        </div>
-
-        <p id="sawmill-message">Ready to cut timber.</p>
     </div>
 
-<div class="crafting-card locked" id="oak-sawmill-card">
-        <div class="craft-card-heading">
-            <h3>🪚 Oak Planks</h3>
-            <div class="craft-stock" id="oak-plank-stock">Loading...</div>
-        </div>
-        <p>Requires: <span class="green">1 Oak Log</span></p>
-        <p>Produces: <span class="green">2 Oak Planks</span></p>
-        <div class="craft-controls">
-            <input class="craft-amount" id="oak-saw-amount" type="number" min="1" max="9999" value="1" aria-label="Oak Logs to saw" disabled>
-            <button id="saw-oak-button" disabled>🔒 Earn Your Freedom</button>
-        </div>
-        <p id="oak-sawmill-message"></p>
-    </div></section>
-    </main>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/skills.js"></script>
-<script src="../js/sawmill.js"></script>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/skills.js"></script>
+    <script src="../js/sawmill.js"></script>
 
 </body>
+
 </html>

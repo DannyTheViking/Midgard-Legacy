@@ -1,0 +1,735 @@
+/* =====================================
+   MIDGARD LEGACY
+   FRIENDS & ENEMIES PAGE
+===================================== */
+
+:root {
+    --social-accent: #b78a4d;
+    --social-accent-light: #e5c18b;
+    --social-accent-dark: #6a4728;
+
+    --social-panel: #211c17;
+    --social-panel-light: #2b241d;
+
+    --social-border: #5f4a32;
+
+    --social-text: #f3ead8;
+    --social-muted: #b9ad9a;
+
+    --social-friend: #70bc73;
+    --social-enemy: #d66d65;
+
+    --social-radius: 12px;
+    --social-small-radius: 8px;
+
+    --social-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =====================================
+   PAGE GRID
+===================================== */
+
+.social-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+/* =====================================
+   MAIN PANELS
+===================================== */
+
+.social-section {
+    min-width: 0;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--social-panel-light),
+            var(--social-panel)
+        );
+
+    border:
+        1px solid
+        var(--social-border);
+
+    border-radius:
+        var(--social-radius);
+
+    box-shadow:
+        var(--social-shadow);
+}
+
+
+/* =====================================
+   PANEL HEADINGS
+===================================== */
+
+.social-section-heading {
+    display: grid;
+
+    grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(183, 138, 77, 0.12),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        var(--social-border);
+}
+
+.social-section-heading h2 {
+    margin: 0;
+
+    color:
+        var(--social-text);
+
+    font-size: 1.05rem;
+}
+
+.social-section-heading h2 span {
+    color:
+        var(--social-accent-light);
+
+    font-size: 0.8rem;
+}
+
+.social-section-heading p {
+    margin: 4px 0 0;
+
+    color:
+        var(--social-muted);
+
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.social-section-icon {
+    display: grid;
+    place-items: center;
+
+    width: 44px;
+    height: 44px;
+
+    font-size: 1.25rem;
+
+    background:
+        rgba(112, 188, 115, 0.10);
+
+    border:
+        1px solid
+        rgba(112, 188, 115, 0.32);
+
+    border-radius: 9px;
+}
+
+.social-section-icon.enemy-icon {
+    background:
+        rgba(214, 109, 101, 0.10);
+
+    border-color:
+        rgba(214, 109, 101, 0.32);
+}
+
+.social-section-badge {
+    padding: 5px 9px;
+
+    font-size: 0.63rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    border-radius: 999px;
+}
+
+.friend-badge {
+    color:
+        #aee0ae;
+
+    background:
+        rgba(112, 188, 115, 0.10);
+
+    border:
+        1px solid
+        rgba(112, 188, 115, 0.32);
+}
+
+.enemy-badge {
+    color:
+        #efaaa4;
+
+    background:
+        rgba(214, 109, 101, 0.10);
+
+    border:
+        1px solid
+        rgba(214, 109, 101, 0.32);
+}
+
+
+/* =====================================
+   LISTS
+===================================== */
+
+.social-list {
+    display: grid;
+
+    gap: 10px;
+
+    min-height: 230px;
+
+    padding: 14px;
+}
+
+
+/* =====================================
+   GENERATED RELATION CARDS
+===================================== */
+
+.social-player-card,
+.relation-card,
+.friend-card,
+.enemy-card {
+    display: grid;
+
+    grid-template-columns:
+        48px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+    padding: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius:
+        var(--social-small-radius);
+}
+
+.social-player-card:hover,
+.relation-card:hover,
+.friend-card:hover,
+.enemy-card:hover {
+    border-color:
+        rgba(183, 138, 77, 0.38);
+}
+
+.social-player-avatar,
+.relation-avatar {
+    display: grid;
+    place-items: center;
+
+    width: 48px;
+    height: 48px;
+
+    overflow: hidden;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+
+    border-radius: 9px;
+}
+
+.social-player-avatar img,
+.relation-avatar img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.social-player-details,
+.relation-details {
+    min-width: 0;
+}
+
+.social-player-details h3,
+.relation-details h3 {
+    margin: 0 0 4px;
+
+    color:
+        var(--social-text);
+
+    font-size: 0.9rem;
+}
+
+.social-player-details p,
+.relation-details p {
+    margin: 0;
+
+    color:
+        var(--social-muted);
+
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.social-player-actions,
+.relation-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    justify-content: flex-end;
+}
+
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.social-player-actions button,
+.social-player-actions a,
+.relation-actions button,
+.relation-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 36px;
+    padding: 7px 10px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 850;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--social-accent-light),
+            var(--social-accent)
+        );
+
+    border:
+        1px solid
+        var(--social-accent-dark);
+
+    border-radius:
+        var(--social-small-radius);
+
+    box-shadow:
+        0 3px 0
+        var(--social-accent-dark);
+}
+
+.social-player-actions button:hover,
+.social-player-actions a:hover,
+.relation-actions button:hover,
+.relation-actions a:hover {
+    filter: brightness(1.08);
+}
+
+.remove-friend-button,
+.remove-enemy-button {
+    color:
+        #f7e8df !important;
+
+    background:
+        linear-gradient(
+            180deg,
+            #8a4329,
+            #5d2818
+        ) !important;
+
+    border-color:
+        #3e170d !important;
+
+    box-shadow:
+        0 3px 0
+        #3e170d !important;
+}
+
+
+/* =====================================
+   LOADING / EMPTY STATES
+===================================== */
+
+.social-loading-state,
+.social-empty {
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 8px;
+
+    min-height: 190px;
+
+    color:
+        var(--social-muted);
+
+    text-align: center;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px dashed
+        rgba(183, 138, 77, 0.28);
+
+    border-radius:
+        var(--social-small-radius);
+}
+
+.social-loading-state span,
+.social-empty span {
+    font-size: 2rem;
+}
+
+.social-loading-state p,
+.social-empty p {
+    margin: 0;
+
+    font-size: 0.8rem;
+}
+
+
+/* =====================================
+   MESSAGE
+===================================== */
+
+.social-message {
+    display: none;
+
+    margin-bottom: 15px;
+    padding: 11px 13px;
+
+    color:
+        var(--social-muted);
+
+    font-size: 0.78rem;
+    line-height: 1.4;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(183, 138, 77, 0.09),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.28);
+
+    border-left:
+        4px solid
+        var(--social-accent);
+
+    border-radius:
+        var(--social-small-radius);
+}
+
+.social-message:not(:empty) {
+    display: block;
+}
+
+.social-message-success {
+    color:
+        #aee0ae;
+
+    border-left-color:
+        var(--social-friend);
+}
+
+.social-message-error {
+    color:
+        #efaaa4;
+
+    border-left-color:
+        var(--social-enemy);
+}
+
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 900px) {
+
+    .social-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 600px) {
+
+    .social-section-heading {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .social-section-badge {
+        grid-column: 1 / -1;
+
+        justify-self: start;
+    }
+
+    .social-player-card,
+    .relation-card,
+    .friend-card,
+    .enemy-card {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .social-player-actions,
+    .relation-actions {
+        grid-column: 1 / -1;
+
+        justify-content: stretch;
+    }
+
+    .social-player-actions button,
+    .social-player-actions a,
+    .relation-actions button,
+    .relation-actions a {
+        flex: 1;
+    }
+
+}
+
+/* =====================================
+   ACTUAL GENERATED FRIEND / ENEMY ROWS
+===================================== */
+
+.social-list > div {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 13px 14px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+
+    border-radius: 9px;
+}
+
+.social-list > div + div {
+    margin-top: 9px;
+}
+
+.social-list > div:hover {
+    background:
+        rgba(183, 138, 77, 0.07);
+
+    border-color:
+        rgba(183, 138, 77, 0.38);
+}
+
+
+/* Player name */
+
+.social-list a {
+    color:
+        #e5c18b;
+
+    font-weight: 800;
+
+    text-decoration: none;
+}
+
+.social-list a:hover {
+    color:
+        #f3d39f;
+
+    text-decoration: underline;
+}
+
+
+/* Buttons container */
+
+.social-list > div > div:last-child {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    justify-content: flex-end;
+}
+
+
+/* All relation buttons */
+
+.social-list button {
+    min-height: 37px;
+
+    padding: 7px 11px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            #e5c18b,
+            #b78a4d
+        );
+
+    border:
+        1px solid
+        #6a4728;
+
+    border-radius: 7px;
+
+    box-shadow:
+        0 3px 0
+        #6a4728;
+}
+
+.social-list button:hover:not(:disabled) {
+    filter:
+        brightness(1.08);
+
+    transform:
+        translateY(-1px);
+}
+
+.social-list button:disabled {
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.45;
+}
+
+
+/* Remove button */
+
+.social-list button:last-child {
+    color:
+        #f7e8df;
+
+    background:
+        linear-gradient(
+            180deg,
+            #8a4329,
+            #5d2818
+        );
+
+    border-color:
+        #3e170d;
+
+    box-shadow:
+        0 3px 0
+        #3e170d;
+}
+
+
+/* Empty text */
+
+.social-list > p {
+    margin: 0;
+
+    padding: 18px;
+
+    color:
+        #b9ad9a;
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    border:
+        1px dashed
+        rgba(183, 138, 77, 0.28);
+
+    border-radius:
+        8px;
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+
+    .social-list > div {
+        grid-template-columns: 1fr;
+    }
+
+    .social-list > div > div:last-child {
+        justify-content: flex-start;
+    }
+
+    .social-list button {
+        flex:
+            1 1 120px;
+    }
+
+}

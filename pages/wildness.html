@@ -2,90 +2,311 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
     <title>Midgard Legacy - Wildness</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <!-- =========================
-              HEADER
-        ========================= -->
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🏘️ Retskni Wildness</h1>
-                <p>Visit the mines, forests, and other natural areas of Midgard.</p>
+
+            <!-- =========================
+                 WILDNESS PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🏞️ Retskni Wildness
+                        </h1>
+
+                        <p>
+                            Visit the mines, forests and other
+                            natural areas of Midgard.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🌲 Wilderness
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     WILDNESS LOCATIONS
+                ========================= -->
+
+                <section class="wildness-grid">
+
+
+                    <!-- Forest -->
+
+                    <a
+                        href="forest.html"
+                        id="forest-building-card"
+                        class="wildness-card unlocked"
+                    >
+
+                        <div class="wildness-card-image forest-area">
+                            🌲
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Rimskog Forest
+                            </h2>
+
+                            <p>
+                                Explore the dense woods and gather
+                                logs, branches and rare timber.
+                            </p>
+
+                            <span class="wildness-status open">
+                                Enter Forest
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Mining -->
+
+                    <a
+                        href="mining.html"
+                        id="mining-building-card"
+                        class="wildness-card unlocked"
+                    >
+
+                        <div class="wildness-card-image mining-area">
+                            ⛏️
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Retskni Mines
+                            </h2>
+
+                            <p>
+                                Extract bog iron, coal and valuable
+                                ores from beneath the earth.
+                            </p>
+
+                            <span class="wildness-status open">
+                                Enter Mines
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- Fishing -->
+
+                    <article class="wildness-card locked">
+
+                        <div class="wildness-card-image fishing-area">
+                            🎣
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Fishing Waters
+                            </h2>
+
+                            <p>
+                                Catch fish from rivers, lakes and
+                                coastal waters.
+                            </p>
+
+                            <span class="wildness-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Hunting -->
+
+                    <article class="wildness-card locked">
+
+                        <div class="wildness-card-image hunting-area">
+                            🏹
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Hunting Grounds
+                            </h2>
+
+                            <p>
+                                Track wildlife and gather meat,
+                                leather and animal materials.
+                            </p>
+
+                            <span class="wildness-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Digging -->
+
+                    <article class="wildness-card locked">
+
+                        <div class="wildness-card-image digging-area">
+                            🪏
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Digging Sites
+                            </h2>
+
+                            <p>
+                                Search the earth for clay, relics
+                                and buried treasures.
+                            </p>
+
+                            <span class="wildness-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Exploration -->
+
+                    <article class="wildness-card locked">
+
+                        <div class="wildness-card-image exploration-area">
+                            🗺️
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Exploration
+                            </h2>
+
+                            <p>
+                                Discover hidden paths, new regions
+                                and forgotten secrets.
+                            </p>
+
+                            <span class="wildness-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Foraging -->
+
+                    <article class="wildness-card locked">
+
+                        <div class="wildness-card-image foraging-area">
+                            🍒
+                        </div>
+
+                        <div class="wildness-card-content">
+
+                            <h2>
+                                Foraging Grounds
+                            </h2>
+
+                            <p>
+                                Collect fruit, herbs, mushrooms
+                                and other natural resources.
+                            </p>
+
+                            <span class="wildness-status">
+                                Coming Soon
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-        <!-- =========================
-             WILDNESS CARDS
-        ========================= -->
-        <section class="building-grid">
+        </main>
 
-            <a href="forest.html" id="forest-building-card" class="building-card">
-                <h2>⚒️ Forest</h2>
-                <p>Explore the dense woods and gather resources.</p>
-            </a>
+    </div>
 
-            <a href="mining.html" id="mining-building-card" class="building-card">
-                <h2>⛏️ Mining</h2>
-                <p>Extract ores and minerals from the earth.</p>
-            </a>
 
-            <a href="fishing.html" class="building-card locked">
-                <h2>🎣 Fishing</h2>
-                <p>Catch fish from rivers and lakes.</p>
-                <span>coming soon</span>
-            </a>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-              <a href="hunting.html" class="building-card locked">
-                <h2>🏹 Hunting</h2>
-                <p>Track and hunt wildlife in the wild.</p>
-                <span>coming soon</span>
-            </a>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-            <a href="digging.html" class="building-card locked">
-                <h2>⛏️ Digging</h2>
-                <p>Uncover artifacts and treasures in the earth.</p>
-                <span>coming soon</span>
-            </a>
-
-            <a href="Exploration.html" class="building-card locked">
-                <h2>🗺️ Exploration</h2>
-                <p>Discover new lands and hidden secrets.</p>
-                <span>coming soon</span>
-            </a>
-
-            <a href="Foraging.html" class="building-card locked">
-                <h2>🍒 Foraging</h2>
-                <p>Collect fruits, nuts, and other natural resources.</p>
-                <span>coming soon</span>
-            </a>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/wildness.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/wildness.js"></script>
 
 </body>
+
 </html>

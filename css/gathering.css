@@ -1,0 +1,1080 @@
+/* ==========================================
+   MIDGARD LEGACY
+   SHARED GATHERING PAGE STYLES
+========================================== */
+
+
+/* ==========================================
+   GATHERING COLOUR SETTINGS
+
+   Mining is the default colour.
+========================================== */
+
+body {
+    --gather-accent: #89939b;
+    --gather-accent-light: #c1c8cd;
+    --gather-accent-dark: #4b555c;
+    --gather-accent-rgb: 137, 147, 155;
+
+    --gather-panel: #211c17;
+    --gather-panel-light: #2b241d;
+
+    --gather-border: #5f4a32;
+
+    --gather-text: #f3ead8;
+    --gather-muted: #b9ad9a;
+
+    --gather-success: #70bc73;
+    --gather-warning: #d3a84c;
+    --gather-danger: #c85d54;
+
+    --gather-radius: 12px;
+
+    --gather-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.32);
+}
+
+
+/* ==========================================
+   PROFESSION COLOURS
+
+   Add one of these classes to the body.
+========================================== */
+
+body.gathering-theme-mining {
+    --gather-accent: #89939b;
+    --gather-accent-light: #c1c8cd;
+    --gather-accent-dark: #4b555c;
+    --gather-accent-rgb: 137, 147, 155;
+}
+
+body.gathering-theme-woodcutting {
+    --gather-accent: #6f9b58;
+    --gather-accent-light: #a6cf8d;
+    --gather-accent-dark: #3e6232;
+    --gather-accent-rgb: 111, 155, 88;
+}
+
+body.gathering-theme-fishing {
+    --gather-accent: #4e8da8;
+    --gather-accent-light: #86c2da;
+    --gather-accent-dark: #2d6076;
+    --gather-accent-rgb: 78, 141, 168;
+}
+
+body.gathering-theme-hunting {
+    --gather-accent: #9a7048;
+    --gather-accent-light: #c89b6d;
+    --gather-accent-dark: #604126;
+    --gather-accent-rgb: 154, 112, 72;
+}
+
+body.gathering-theme-foraging {
+    --gather-accent: #87954d;
+    --gather-accent-light: #bac775;
+    --gather-accent-dark: #535f2d;
+    --gather-accent-rgb: 135, 149, 77;
+}
+
+body.gathering-theme-beekeeping {
+    --gather-accent: #d2a637;
+    --gather-accent-light: #f0cf6a;
+    --gather-accent-dark: #82651d;
+    --gather-accent-rgb: 210, 166, 55;
+}
+
+body.gathering-theme-farming {
+    --gather-accent: #bc9654;
+    --gather-accent-light: #dfbf7f;
+    --gather-accent-dark: #73572d;
+    --gather-accent-rgb: 188, 150, 84;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    width: 100%;
+
+    margin: 18px 0 22px;
+    padding: 22px 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--gather-accent-rgb), 0.16),
+            rgba(0, 0, 0, 0.08) 55%
+        ),
+        linear-gradient(
+            180deg,
+            var(--gather-panel-light),
+            var(--gather-panel)
+        );
+
+    border: 1px solid var(--gather-border);
+    border-left: 4px solid var(--gather-accent);
+    border-radius: var(--gather-radius);
+
+    box-shadow: var(--gather-shadow);
+}
+
+.page-title {
+    min-width: 0;
+}
+
+.page-title h1 {
+    margin: 0 0 7px;
+
+    color: var(--gather-text);
+
+    font-size: clamp(
+        1.55rem,
+        2.5vw,
+        2.25rem
+    );
+
+    line-height: 1.15;
+}
+
+.page-title p {
+    max-width: 700px;
+
+    margin: 0;
+
+    color: var(--gather-muted);
+
+    font-size: 0.98rem;
+    line-height: 1.55;
+}
+
+
+/* ==========================================
+   SKILL BADGE
+========================================== */
+
+.skill-badge {
+    flex: 0 0 178px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 13px 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--gather-accent-rgb), 0.16),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(var(--gather-accent-rgb), 0.65);
+
+    border-radius: 10px;
+}
+
+.skill-circle {
+    display: grid;
+    place-items: center;
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 8px;
+
+    color: #17120d;
+
+    font-size: 1.45rem;
+    font-weight: 900;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            var(--gather-accent-light),
+            var(--gather-accent) 52%,
+            var(--gather-accent-dark)
+        );
+
+    border: 3px solid #75501f;
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 2px rgba(0, 0, 0, 0.35),
+        0 5px 12px rgba(0, 0, 0, 0.35);
+}
+
+.skill-badge > p {
+    margin: 0;
+
+    color: var(--gather-accent-light);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+
+    letter-spacing: 0.16em;
+}
+
+.skill-badge .skill-xp-text {
+    margin-top: 5px;
+
+    color: var(--gather-muted);
+
+    font-size: 0.74rem;
+    font-weight: 600;
+
+    letter-spacing: 0.02em;
+}
+
+
+/* ==========================================
+   XP BAR
+========================================== */
+
+.xp-bar {
+    width: 100%;
+    height: 9px;
+
+    margin-top: 9px;
+
+    overflow: hidden;
+
+    background: #100d0b;
+
+    border: 1px solid #4e4031;
+    border-radius: 999px;
+
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.75);
+}
+
+.xp-fill,
+.skill-xp-fill {
+    width: 0%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gather-accent-dark),
+            var(--gather-accent),
+            var(--gather-accent-light)
+        );
+
+    border-radius: inherit;
+
+    box-shadow:
+        0 0 8px
+        rgba(var(--gather-accent-rgb), 0.72);
+
+    transition: width 0.35s ease;
+}
+
+
+/* ==========================================
+   MAIN GATHERING LAYOUT
+========================================== */
+
+.gathering-page {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        280px;
+
+    align-items: start;
+
+    gap: 20px;
+
+    width: 100%;
+
+    padding-bottom: 30px;
+}
+
+.gathering-main {
+    min-width: 0;
+}
+
+
+/* ==========================================
+   GATHERING GRID
+========================================== */
+
+.gathering-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                min(100%, 235px),
+                1fr
+            )
+        );
+
+    align-items: stretch;
+
+    gap: 18px;
+}
+
+
+/* ==========================================
+   GATHERING CARDS
+========================================== */
+
+.gathering-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 390px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--gather-panel-light),
+            var(--gather-panel)
+        );
+
+    border: 1px solid var(--gather-border);
+    border-radius: var(--gather-radius);
+
+    box-shadow: var(--gather-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.gathering-card.unlocked:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--gather-accent);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.42),
+        0 0 0 1px
+        rgba(var(--gather-accent-rgb), 0.2);
+}
+
+.gathering-card h2 {
+    margin: 15px 16px 11px;
+
+    color: var(--gather-text);
+
+    font-size: 1.22rem;
+    line-height: 1.25;
+
+    text-align: center;
+}
+
+.gathering-card.unlocked h2 {
+    color: var(--gather-accent-light);
+}
+
+
+/* ==========================================
+   GATHERING IMAGES
+========================================== */
+
+.gathering-image {
+    display: grid;
+    place-items: center;
+
+    width: 100%;
+    min-height: 125px;
+
+    overflow: hidden;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 2.3rem;
+    line-height: 1.1;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--gather-accent-rgb), 0.25),
+            rgba(0, 0, 0, 0.18)
+        ),
+        #2c2c2c;
+
+    border-bottom: 1px solid var(--gather-border);
+}
+
+
+/* Bog Iron background */
+
+.grass-bg {
+    background:
+        radial-gradient(
+            circle at 25% 35%,
+            rgba(179, 202, 118, 0.25),
+            transparent 20%
+        ),
+        linear-gradient(
+            145deg,
+            #5c6736,
+            #374326 52%,
+            #222a1c
+        );
+}
+
+
+/* Locked resource background */
+
+.locked-bg {
+    background:
+        linear-gradient(
+            145deg,
+            #363636,
+            #262626 58%,
+            #191919
+        );
+}
+
+
+/* Secret resource background */
+
+.secret-bg {
+    background:
+        radial-gradient(
+            circle,
+            rgba(160, 103, 194, 0.28),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #2d2233,
+            #1a151f
+        );
+
+    color: #d8b4ef;
+
+    font-size: 3rem;
+    font-weight: 900;
+
+    text-shadow:
+        0 0 13px
+        rgba(190, 119, 235, 0.7);
+}
+
+
+/* ==========================================
+   RESOURCE INFORMATION
+========================================== */
+
+.gathering-requirements {
+    display: grid;
+
+    gap: 7px;
+
+    margin: 0 16px 15px;
+    padding: 12px 13px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+
+    box-shadow:
+        inset 0 2px 8px
+        rgba(0, 0, 0, 0.2);
+}
+
+.gathering-requirements p {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin: 0;
+
+    color: var(--gather-muted);
+
+    font-size: 0.84rem;
+    line-height: 1.35;
+}
+
+.gathering-requirements p span {
+    text-align: right;
+}
+
+.green {
+    color: var(--gather-success);
+
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   GATHERING BUTTONS
+========================================== */
+
+.gathering-card button {
+    position: relative;
+    z-index: 2;
+
+    width: calc(100% - 32px);
+    min-height: 42px;
+
+    margin: auto 16px 14px;
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--gather-accent-light),
+            var(--gather-accent)
+        );
+
+    border:
+        1px solid
+        var(--gather-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--gather-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease,
+        box-shadow 0.12s ease;
+}
+
+.gathering-card button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.gathering-card button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--gather-accent-dark);
+}
+
+.gathering-card button:focus-visible {
+    outline:
+        3px solid
+        rgba(var(--gather-accent-rgb), 0.38);
+
+    outline-offset: 3px;
+}
+
+.gathering-card button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+
+    filter: grayscale(0.7);
+}
+
+
+/* ==========================================
+   LATEST ACTION
+========================================== */
+
+.gathering-action {
+    margin: 0 16px 16px;
+    padding: 11px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--gather-accent-rgb), 0.1),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--gather-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.gathering-action h4 {
+    margin: 0 0 5px;
+
+    color: var(--gather-accent-light);
+
+    font-size: 0.75rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.1em;
+}
+
+.gathering-action p {
+    min-height: 20px;
+
+    margin: 0;
+
+    color: var(--gather-muted);
+
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+
+/* ==========================================
+   LOCKED CARDS
+========================================== */
+
+.gathering-card.locked {
+    min-height: 350px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #24211e,
+            #191715
+        );
+
+    border-color: #49413a;
+
+    filter: saturate(0.45);
+
+    opacity: 0.78;
+}
+
+.gathering-card.locked::before {
+    content: "LOCKED";
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    z-index: 3;
+
+    padding: 4px 8px;
+
+    color: #d6cbc0;
+
+    font-size: 0.63rem;
+    font-weight: 900;
+
+    letter-spacing: 0.13em;
+
+    background:
+        rgba(17, 14, 12, 0.88);
+
+    border: 1px solid #655a50;
+    border-radius: 999px;
+}
+
+.gathering-card.locked h2 {
+    color: #aaa19a;
+}
+
+.gathering-card.locked .gathering-requirements {
+    margin-top: auto;
+}
+
+.gathering-card.locked .gathering-requirements p {
+    color: #918a84;
+}
+
+
+/* ==========================================
+   SECRET CARD
+========================================== */
+
+.gathering-card.secret {
+    border-color: #5d4568;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.32),
+        inset 0 0 28px
+        rgba(110, 66, 136, 0.12);
+}
+
+.gathering-card.secret::before {
+    content: "MYSTERY";
+
+    border-color: #725783;
+
+    color: #d4b9e2;
+}
+
+
+/* ==========================================
+   GATHERING SIDEBAR
+========================================== */
+
+.gathering-sidebar {
+    position: sticky;
+
+    top: 18px;
+
+    display: grid;
+
+    gap: 15px;
+
+    min-width: 0;
+}
+
+
+/* ==========================================
+   SIDEBAR PANELS
+========================================== */
+
+.side-panel {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--gather-panel-light),
+            var(--gather-panel)
+        );
+
+    border: 1px solid var(--gather-border);
+    border-radius: var(--gather-radius);
+
+    box-shadow: var(--gather-shadow);
+}
+
+.side-panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--gather-accent),
+            transparent
+        );
+}
+
+.side-panel h3 {
+    margin: 0 0 13px;
+    padding-bottom: 9px;
+
+    color: var(--gather-text);
+
+    font-size: 1rem;
+    line-height: 1.3;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+.side-panel h4 {
+    margin: 0 0 7px;
+
+    color: var(--gather-accent-light);
+
+    font-size: 0.92rem;
+}
+
+.side-panel p {
+    margin: 0;
+
+    color: var(--gather-muted);
+
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   TOOL BELT
+========================================== */
+
+.gathering-tool-name {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 10px 11px;
+
+    background:
+        rgba(var(--gather-accent-rgb), 0.1);
+
+    border:
+        1px solid
+        rgba(var(--gather-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.gathering-tool-description {
+    margin-top: 9px !important;
+}
+
+
+/* ==========================================
+   RECENT LOOT
+========================================== */
+
+#mining-log,
+#woodcutting-log,
+.gathering-loot-log {
+    min-height: 46px;
+
+    padding: 10px 11px;
+
+    background:
+        rgba(0, 0, 0, 0.17);
+
+    border-left:
+        3px solid
+        var(--gather-accent);
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================
+   RESOURCE CART
+========================================== */
+
+#resource-cart-card {
+    padding: 0;
+}
+
+#resource-cart-card > resource-cart-card {
+    display: block;
+
+    width: 100%;
+}
+
+
+/* ==========================================
+   MESSAGE COLOURS
+========================================== */
+
+.gathering-success {
+    color:
+        var(--gather-success) !important;
+}
+
+.gathering-warning {
+    color:
+        var(--gather-warning) !important;
+}
+
+.gathering-danger,
+.gathering-error {
+    color:
+        var(--gather-danger) !important;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+    .page-header {
+        align-items: stretch;
+    }
+
+    .gathering-page {
+        grid-template-columns: 1fr;
+    }
+
+    .gathering-sidebar {
+        position: static;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        grid-row: 1;
+    }
+
+    .gathering-sidebar
+    #resource-cart-card {
+        grid-column: 1 / -1;
+    }
+
+    .gathering-main {
+        grid-row: 2;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+    .page-header {
+        flex-direction: column;
+
+        gap: 16px;
+
+        margin: 12px 0 16px;
+        padding: 17px;
+    }
+
+    .page-title {
+        text-align: center;
+    }
+
+    .page-title h1 {
+        font-size: 1.55rem;
+    }
+
+    .page-title p {
+        font-size: 0.9rem;
+    }
+
+    .skill-badge {
+        flex: 0 0 auto;
+
+        width: 100%;
+    }
+
+    .skill-circle {
+        width: 52px;
+        height: 52px;
+
+        font-size: 1.25rem;
+    }
+
+    .gathering-sidebar {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    .gathering-sidebar
+    #resource-cart-card {
+        grid-column: auto;
+    }
+
+    .gathering-grid {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+    }
+
+    .gathering-card,
+    .gathering-card.locked {
+        min-height: 0;
+    }
+
+    .gathering-image {
+        min-height: 112px;
+    }
+
+    .gathering-card h2 {
+        margin-top: 13px;
+    }
+
+    .gathering-requirements {
+        margin-left: 13px;
+        margin-right: 13px;
+    }
+
+    .gathering-card button {
+        width: calc(100% - 26px);
+
+        margin-left: 13px;
+        margin-right: 13px;
+    }
+
+    .gathering-action {
+        margin-left: 13px;
+        margin-right: 13px;
+    }
+
+}
+
+
+/* ==========================================
+   VERY SMALL PHONES
+========================================== */
+
+@media (max-width: 390px) {
+
+    .page-header {
+        padding: 14px;
+    }
+
+    .page-title h1 {
+        font-size: 1.36rem;
+    }
+
+    .gathering-requirements p {
+        align-items: flex-start;
+
+        font-size: 0.8rem;
+    }
+
+    .gathering-card button {
+        font-size: 0.82rem;
+    }
+
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .gathering-card,
+    .gathering-card button,
+    .xp-fill,
+    .skill-xp-fill {
+        transition: none;
+    }
+
+}

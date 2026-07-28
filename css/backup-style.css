@@ -1,0 +1,2347 @@
+/* =========================
+   GLOBAL
+========================= */
+
+body {
+    margin: 0;
+    font-family: Georgia, serif;
+    background: #080808;
+    color: #f5e6c8;
+}
+
+a {
+    color: gold;
+    text-decoration: none;
+}
+
+.green {
+    color: #6dd96d;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.game-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 190px;
+    background: #111;
+    border-right: 2px solid #6d4b20;
+    padding: 10px;
+}
+
+.logo {
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: 12px;
+    margin-bottom: 18px;
+}
+
+.main-area {
+    flex: 1;
+    padding: 8px;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.nav {
+    display: block;
+    color: #f5e6c8;
+    padding: 9px 12px;
+    margin: 6px 0;
+    background: #181818;
+    border: 1px solid #3a2a13;
+    font-size: 14px;
+}
+
+.nav:hover,
+.nav.active {
+    background: #5a3512;
+    color: gold;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.logo img {
+    width: 180px;
+    height: auto;
+    display: block;
+}
+/* =========================
+   TOP BAR
+========================= */
+
+.top-bar {
+    min-height: 34px;
+    padding: 5px 12px;
+    margin-bottom: 8px;
+    background: #111;
+    border: 1px solid #6d4b20;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.player-info {
+    min-width: 180px;
+}
+
+.player-info h2 {
+    margin: 0;
+    color: white;
+    font-size: 15px;
+}
+
+.player-info p {
+    margin: 2px 0 0;
+    color: #cdb68a;
+    font-size: 11px;
+}
+
+.player-stats {
+    display: flex;
+    gap: 22px;
+    justify-content: center;
+    flex: 1;
+}
+
+.top-stat {
+    color: gold;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.top-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.icon-button:hover {
+    transform: scale(1.15);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+    background: #6d3b12;
+    color: white;
+    border: 2px solid gold;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #8f5425;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #555;
+}
+
+.menu-item {
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.menu-item:hover {
+    background: #3b2a12;
+    border-color: #ffd54a;
+}
+/* =========================
+   PAGE HEADER
+========================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #111;
+    border: 1px solid #6d4b20;
+
+    padding: 12px;
+    margin-bottom: 10px;
+    min-height: 70px;
+}
+
+.page-title {
+    flex: 1;
+    text-align: center;
+}
+
+.page-title h1 {
+    margin: 0;
+    color: gold;
+    font-size: 28px;
+}
+
+.page-title p {
+    margin: 5px 0 0;
+    font-size: 13px;
+}
+
+/* =========================
+   SKILL BADGE
+========================= */
+
+.skill-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.skill-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 3px solid gold;
+    background: #181818;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.skill-badge p {
+    color: gold;
+    font-weight: bold;
+    margin: 0;
+    font-size: 12px;
+}
+
+/* =========================
+   PANELS
+========================= */
+
+.card,
+.side-panel,
+.quick-actions {
+    background: #111;
+    border: 1px solid #6d4b20;
+    padding: 10px;
+}
+
+.side-panel h3,
+.card h3 {
+    color: gold;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.side-panel p {
+    font-size: 12px;
+}
+
+/* =========================
+   FOREST / MINE GRID
+========================= */
+
+.forest-page {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.forest-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.tree-card {
+    background: rgba(15,15,15,0.95);
+    border: 1px solid #6d4b20;
+    padding: 10px;
+    text-align: center;
+}
+
+.tree-card h2 {
+    color: #f5e6c8;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.tree-card p {
+    font-size: 12px;
+}
+
+.tree-card.unlocked {
+    border-color: gold;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.35);
+}
+
+.tree-card.locked {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.tree-image {
+    height: 90px;
+    border: 1px solid #6d4b20;
+    margin-bottom: 8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 34px;
+    background-size: cover;
+    background-position: center;
+}
+
+.birch-bg {
+    background-image: linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.45)),
+    url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80");
+}
+
+.locked-bg {
+    background: #111;
+    color: #aaa;
+}
+
+.secret-bg {
+    background: radial-gradient(circle, #333, #050505);
+    color: gold;
+}
+
+/* =========================
+   ACTION MESSAGE
+========================= */
+
+.tree-message {
+    margin-top: 10px;
+    padding: 8px;
+    border-top: 1px solid #6d4b20;
+    color: #ddd;
+    min-height: 40px;
+    text-align: left;
+}
+
+.tree-message h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: gold;
+    font-size: 15px;
+}
+
+/* =========================
+   RIGHT PANELS
+========================= */
+
+.forest-right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool-name {
+    font-size: 22px;
+    color: gold;
+    margin: 8px 0 12px;
+}
+
+.tool-description {
+    color: #9d9d9d;
+    font-style: italic;
+}
+
+/* =========================
+   BARS
+========================= */
+
+.durability-bar,
+.skill-bar,
+.xp-bar {
+    width: 100%;
+    height: 10px;
+    background: #222;
+    border: 1px solid #6d4b20;
+    margin-top: 6px;
+}
+
+.durability-fill,
+.skill-fill,
+.xp-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.durability-green {
+    background: #45b649;
+}
+
+.durability-orange {
+    background: #ff9800;
+}
+
+.durability-red {
+    background: #e53935;
+}
+
+/* =========================
+   INVENTORY
+========================= */
+
+.inventory-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #181818;
+    border: 1px solid #6d4b20;
+
+    margin-bottom: 6px;
+    padding: 6px 12px;
+    transition: .2s;
+}
+
+.inventory-row:hover {
+    border-color: gold;
+    background: #222;
+}
+
+.item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.item-icon {
+    font-size: 20px;
+}
+
+.item-name {
+    font-size: 15px;
+    color: gold;
+    font-weight: bold;
+}
+
+.item-description {
+    color: #bbb;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.item-quantity {
+    font-size: 16px;
+    color: #6dd96d;
+    font-weight: bold;
+}
+
+/* =========================
+   VILLAGE / BUILDING GRID
+========================= */
+
+.building-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.building-card {
+    display: block;
+    background: #111;
+    border: 1px solid #6d4b20;
+    padding: 10px;
+    min-height: 80px;
+
+    text-align: center;
+    color: #f5e6c8;
+    transition: 0.2s;
+}
+
+.building-card h2 {
+    color: gold;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.building-card p {
+    font-size: 12px;
+}
+
+.building-card:hover {
+    transform: translateY(-3px);
+    border-color: gold;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+}
+
+.building-card.locked {
+    opacity: 0.45;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+/* =========================
+   AUTH PAGES
+========================= */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(rgba(20,20,20,0.8), rgba(20,20,20,0.8)),
+    url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=80");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.auth-box {
+    text-align: center;
+    background: #111;
+    border: 1px solid #6d4b20;
+    padding: 30px;
+    width: 380px;
+}
+
+input {
+    width: 280px;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid gold;
+    background: #222;
+    color: white;
+}
+
+/* =========================
+   HOME PAGE
+========================= */
+
+.hero-panel {
+    margin-top: 10px;
+    padding: 25px;
+    text-align: center;
+
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+    url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1600&q=80");
+
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #6d4b20;
+}
+
+.hero-panel h2 {
+    font-size: 30px;
+    color: gold;
+}
+
+.quote {
+    font-size: 18px;
+}
+
+.cards {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.card {
+    flex: 1;
+    text-align: center;
+}
+
+.quick-actions {
+    margin-top: 10px;
+}
+
+.quick-actions a {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 10px 18px;
+    background: #5a3512;
+    color: white;
+    border: 1px solid gold;
+}
+
+/* =========================
+   CRAFTING GRID
+========================= */
+
+.crafting-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.crafting-card {
+    background: #111;
+    border: 1px solid #6d4b20;
+    padding: 12px;
+    min-height: 180px;
+}
+
+.crafting-card h3 {
+    color: gold;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.crafting-card p {
+    font-size: 12px;
+}
+
+.crafting-card button {
+    margin-top: 8px;
+}
+
+.craft-controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:12px 0;
+}
+
+.craft-controls .craft-amount{
+    width:70px;
+    margin:0;
+}
+
+/* =====================================
+   MOBILE LAYOUT
+===================================== */
+
+@media (max-width: 768px) {
+
+    .game-layout {
+        display: block;
+    }
+
+    .main-area {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .crafting-grid,
+    .forest-grid,
+    .village-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .crafting-card,
+    .tree-card,
+    .mine-card,
+    .building-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .craft-controls {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .craft-amount {
+        width: 70px;
+        flex: 0 0 70px;
+    }
+
+    button {
+        min-height: 44px;
+    }
+
+    .craft-controls button {
+        flex: 1;
+    }
+
+    .recipe-window-content {
+        width: 95vw;
+        max-height: 85vh;
+    }
+
+}
+
+/* =====================================
+   TUTORIAL NOTICE
+===================================== */
+
+.tutorial-notice {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2000;
+
+    width: min(360px, calc(100vw - 40px));
+    padding: 14px;
+
+    background: #15120e;
+    border: 2px solid #b58a35;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55);
+
+    color: #f3e5bd;
+    font-size: 15px;
+}
+
+.tutorial-highlight {
+    position: relative;
+    border: 2px solid gold !important;
+    animation: tutorial-pulse 1.5s infinite;
+}
+
+/*.tutorial-highlight::after {
+    content: "📜 Current Objective";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 7px;
+    background: #6b3f12;
+    border: 1px solid gold;
+    color: gold;
+    font-size: 12px;
+}*/
+
+@keyframes tutorial-pulse {
+    0% {
+        box-shadow: 0 0 3px gold;
+    }
+
+    50% {
+        box-shadow: 0 0 15px gold;
+    }
+
+    100% {
+        box-shadow: 0 0 3px gold;
+    }
+}
+
+/* =====================================
+   PERMANENT TUTORIAL OBJECTIVE PANEL
+===================================== */
+.tutorial-objective-panel {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 2100;
+    width: min(370px, calc(100vw - 36px));
+    background: #15120e;
+    border: 2px solid #b58a35;
+    box-shadow: 0 10px 30px rgba(0,0,0,.65);
+    color: #f3e5bd;
+}
+.tutorial-objective-head { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#2a1b0d; color:gold; }
+.tutorial-objective-head button { min-height:0; padding:2px 9px; margin:0; }
+#tutorial-objective-body { padding:12px; }
+#tutorial-objective-body h3 { margin:0 0 8px; color:gold; }
+#tutorial-objective-body p { line-height:1.45; }
+.tutorial-objective-panel.collapsed #tutorial-objective-body { display:none; }
+.tutorial-progress-text { margin:10px 0 5px; font-weight:bold; color:#d7f7bb; }
+.tutorial-progress-bar { height:12px; background:#302419; border:1px solid #6d4b20; overflow:hidden; }
+.tutorial-progress-bar > div { height:100%; background:#76a94e; transition:width .25s ease; }
+.tutorial-progress-lines { display:grid; gap:7px; margin:10px 0; }
+.tutorial-route { border-top:1px solid #6d4b20; padding-top:9px; }
+
+@media (max-width: 768px) {
+    .tutorial-objective-panel { right:10px; bottom:10px; width:calc(100vw - 20px); }
+    .sidebar { width:100%; }
+}
+
+
+/* TESTER BUILD UI */
+.nav-button{width:100%;text-align:left;font-family:inherit}.locked-nav{opacity:.55}.tutorial-highlight{border-color:gold!important;animation:tutorialPulse 1.5s infinite}@keyframes tutorialPulse{50%{box-shadow:0 0 18px rgba(255,215,0,.85)}}
+.home-grid,.hof-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.profile-card{display:flex;gap:18px;background:#111;border:1px solid #6d4b20;padding:18px}.avatar-placeholder{width:120px;height:120px;border:2px solid gold;display:grid;place-items:center;font-size:64px;overflow:hidden}.avatar-placeholder img{width:100%;height:100%;object-fit:cover}.profile-ranks{display:flex;flex-wrap:wrap;gap:8px}.profile-ranks span{background:#181818;border:1px solid #6d4b20;padding:7px}.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.saga-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}.resource-cart-card{min-width:230px;align-self:start;margin-left:10px}.game-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:grid;place-items:center;z-index:9999}.modal-card{max-width:430px;background:#111;border:2px solid gold;padding:20px;text-align:center}.modal-card button{display:block;width:100%;margin:8px 0}.muted{opacity:.7}
+@media(max-width:768px){.game-layout{display:block}.sidebar{width:auto}.main-area{padding:8px}.home-grid,.hof-grid{grid-template-columns:1fr}.profile-card{flex-direction:column}.resource-cart-card{margin:10px 0}.top-bar{flex-wrap:wrap}.player-stats{flex-wrap:wrap;gap:8px}.building-grid,.crafting-grid,.forest-grid{grid-template-columns:1fr!important}}
+
+/* =====================================
+   INLINE TUTORIAL GUIDE
+   This sits inside the page and never covers navigation.
+===================================== */
+.tutorial-guide {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    margin: 12px 0 18px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #21170d, #120f0b);
+    border: 2px solid #b58a35;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, .45);
+    color: #f3e5bd;
+}
+
+.tutorial-guide-icon {
+    font-size: 34px;
+    line-height: 1;
+}
+
+.tutorial-guide-kicker {
+    color: #d6ad53;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.tutorial-guide h2 {
+    margin: 2px 0 4px;
+    color: #ffd76a;
+    font-size: 19px;
+}
+
+.tutorial-guide p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.tutorial-guide-route {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    color: #d9c79d;
+}
+
+.tutorial-guide-route strong {
+    color: #fff1b8;
+}
+
+.tutorial-guide-button {
+    min-width: 155px;
+    padding: 11px 13px;
+    border: 1px solid #e3b955;
+    background: #624215;
+    color: #fff3c4;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.tutorial-guide-button:hover {
+    background: #81591d;
+}
+
+.tutorial-guide-button.current-location {
+    cursor: default;
+    opacity: .78;
+}
+
+.tutorial-guide-progress-label {
+    margin-top: 9px;
+    color: #d8f5be;
+}
+
+.tutorial-guide-progress-bar {
+    height: 10px;
+    max-width: 430px;
+    margin-top: 5px;
+    overflow: hidden;
+    border: 1px solid #735523;
+    background: #302419;
+}
+
+.tutorial-guide-progress-bar > div {
+    height: 100%;
+    background: #82ad50;
+    transition: width .25s ease;
+}
+
+.tutorial-guide-progress-lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 9px;
+    color: #d8f5be;
+}
+
+/* Stronger guidance without adding a floating label over buttons. */
+.tutorial-highlight {
+    position: relative;
+    z-index: 3;
+    outline: 3px solid #ffd84e !important;
+    outline-offset: 2px;
+    animation: midgard-tutorial-glow 1.15s ease-in-out infinite !important;
+}
+
+@keyframes midgard-tutorial-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(255, 216, 78, .55), inset 0 0 0 rgba(255, 216, 78, 0);
+        filter: brightness(1);
+    }
+    50% {
+        box-shadow: 0 0 23px rgba(255, 216, 78, 1), inset 0 0 12px rgba(255, 216, 78, .16);
+        filter: brightness(1.16);
+    }
+}
+
+@media (max-width: 760px) {
+    .tutorial-guide {
+        grid-template-columns: auto 1fr;
+    }
+
+    .tutorial-guide-button {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
+
+/* =====================================
+   PROFILE
+===================================== */
+
+.profile-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.avatar-placeholder {
+    width: 110px;
+    min-width: 110px;
+    height: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+    overflow: hidden;
+
+    font-size: 64px;
+}
+
+.profile-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-default-avatar {
+    line-height: 1;
+}
+
+.profile-information {
+    flex: 1;
+}
+
+.profile-ranks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.profile-rank-badge {
+    display: inline-block;
+
+    padding: 7px 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+
+    cursor: help;
+}
+
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
+
+    .profile-card {
+        flex-direction: column;
+    }
+
+    .avatar-placeholder {
+        width: 90px;
+        min-width: 90px;
+        height: 90px;
+
+        font-size: 52px;
+    }
+}
+
+
+
+/* Prevent async player data from briefly showing false defaults. */
+.oak-loading {
+    visibility: hidden;
+}
+
+
+/* Forest data loading screen: prevents locked cards and placeholder stats flashing. */
+.forest-loading-screen {
+    display: none;
+}
+
+body.forest-data-loading .page-header,
+body.forest-data-loading .forest-page {
+    visibility: hidden;
+}
+
+body.forest-data-loading .forest-loading-screen {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    background: #080808;
+}
+
+.forest-loading-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border: 1px solid #d8b400;
+    color: #f3d500;
+    background: #111;
+}
+
+.forest-loading-icon {
+    font-size: 28px;
+}
+
+/* =====================================
+   PUBLIC LANDING + LOGIN PAGES
+===================================== */
+.landing-body {
+    min-height: 100vh;
+    background: #080808;
+}
+
+.landing-page {
+    width: min(1180px, calc(100% - 28px));
+    margin: 0 auto;
+    padding: 14px 0 24px;
+}
+
+.landing-hero {
+    min-height: 410px;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid #6d4b20;
+    background:
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.88)),
+        url("https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1800&q=85");
+    background-size: cover;
+    background-position: center;
+}
+
+.landing-hero-overlay {
+    width: 100%;
+    padding: 42px;
+    text-align: center;
+}
+
+.landing-kicker {
+    margin: 0 0 7px;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.landing-hero h1,
+.login-story-panel h1 {
+    margin: 0;
+    color: gold;
+    font-size: clamp(34px, 6vw, 62px);
+}
+
+.landing-tagline {
+    max-width: 700px;
+    margin: 13px auto 24px;
+    font-size: 18px;
+}
+
+.landing-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.landing-primary-button,
+.landing-secondary-button {
+    display: inline-block;
+    padding: 11px 19px;
+    border: 1px solid gold;
+    font-weight: bold;
+}
+
+.landing-primary-button {
+    background: #6d3b12;
+    color: white;
+}
+
+.landing-secondary-button {
+    background: #151515;
+    color: gold;
+}
+
+.landing-primary-button:hover,
+.landing-secondary-button:hover {
+    background: #8f5425;
+    color: white;
+}
+
+.landing-grid,
+.login-layout {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.landing-panel,
+.login-story-panel {
+    padding: 22px;
+    background: #111;
+    border: 1px solid #6d4b20;
+}
+
+.landing-panel h2,
+.auth-box-modern h2 {
+    margin: 0 0 12px;
+    color: gold;
+}
+
+.landing-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.landing-features span {
+    padding: 9px;
+    text-align: center;
+    background: #181818;
+    border: 1px solid #3a2a13;
+    color: #f5e6c8;
+}
+
+.landing-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.landing-stat {
+    min-height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+    background: #181818;
+    border: 1px solid #3a2a13;
+}
+
+.landing-stat strong {
+    color: gold;
+    font-size: clamp(27px, 4vw, 43px);
+    line-height: 1;
+}
+
+.landing-stat span {
+    margin-top: 8px;
+    color: #cdb68a;
+    font-size: 12px;
+}
+
+.landing-status {
+    margin: 14px 0 0;
+}
+
+.landing-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #45b649;
+    box-shadow: 0 0 8px rgba(69,182,73,.8);
+}
+
+.landing-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 12px;
+    padding: 13px 3px 0;
+    border-top: 1px solid #3a2a13;
+    color: #9d9d9d;
+    font-size: 12px;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.login-brand {
+    color: gold;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.login-layout {
+    min-height: 610px;
+    align-items: stretch;
+}
+
+.login-story-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background:
+        linear-gradient(rgba(0,0,0,.32), rgba(0,0,0,.92)),
+        url("https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1400&q=85");
+    background-size: cover;
+    background-position: center;
+}
+
+.login-story-panel h1 {
+    font-size: clamp(35px, 5vw, 56px);
+}
+
+.login-story-panel > p:not(.landing-kicker):not(.landing-status) {
+    max-width: 620px;
+    font-size: 17px;
+}
+
+.login-stats {
+    margin-top: 25px;
+}
+
+.auth-box-modern {
+    width: auto;
+    padding: 32px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-box-modern input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 15px;
+}
+
+.auth-label {
+    color: #f5e6c8;
+    font-size: 13px;
+}
+
+.auth-submit-button {
+    width: 100%;
+    min-height: 45px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.auth-message {
+    min-height: 20px;
+    color: #ffb4a8;
+}
+
+.auth-switch {
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .landing-grid,
+    .login-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-hero {
+        min-height: 360px;
+    }
+
+    .landing-hero-overlay {
+        padding: 26px 17px;
+    }
+
+    .landing-features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .login-layout {
+        min-height: 0;
+    }
+
+    .login-story-panel {
+        min-height: 430px;
+    }
+}
+
+@media (max-width: 520px) {
+    .landing-page {
+        width: min(100% - 16px, 1180px);
+    }
+
+    .landing-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .landing-stat {
+        min-height: 76px;
+    }
+
+    .login-header,
+    .landing-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+/* =====================================
+   AUTH STATUS + MOBILE ALPHA POLISH
+===================================== */
+.auth-message {
+    display: block;
+    min-height: 22px;
+    margin: 12px 0 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+.auth-message-error { color: #ffb4a8; }
+.auth-message-success {
+    padding: 12px;
+    color: #d8f5be;
+    background: #132012;
+    border: 1px solid #5b8f4d;
+}
+.auth-message-info { color: #f2d78c; }
+.auth-box-modern select {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 15px;
+    padding: 11px;
+    background: #181818;
+    color: #f5e6c8;
+    border: 2px solid #9b741f;
+    font: inherit;
+}
+.mobile-nav-toggle { display: none; }
+
+@media (max-width: 760px) {
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body { font-size: 15px; }
+
+    .game-layout { display: block; min-height: 100vh; }
+    .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 3000;
+        width: auto;
+        padding: 7px 9px;
+        border-right: 0;
+        border-bottom: 2px solid #6d4b20;
+    }
+    .sidebar .logo { margin: 2px 0 7px; }
+    .mobile-nav-toggle {
+        display: block;
+        width: 100%;
+        min-height: 44px;
+        margin: 0;
+        text-align: left;
+    }
+    .mobile-nav-links { display: none; }
+    .mobile-nav-links.mobile-nav-open { display: block; }
+    .nav { min-height: 26px; padding: 10px 12px; }
+
+    .main-area { width: auto; min-width: 0; padding: 6px; }
+    .top-bar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 8px;
+    }
+    .player-info { min-width: 0; }
+    .player-stats {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: 6px;
+    }
+    .top-stat {
+        padding: 6px;
+        text-align: center;
+        background: #181818;
+        border: 1px solid #3a2a13;
+        white-space: normal;
+    }
+    .top-icons { align-self: start; }
+
+    .page-header { min-height: 0; padding: 10px; }
+    .page-title { width: 100%; }
+    .page-title h1 { font-size: clamp(23px, 8vw, 30px); }
+
+    .forest-page { display: block; }
+    .forest-grid,
+    .building-grid,
+    .crafting-grid,
+    .home-grid,
+    .hof-grid,
+    .cards,
+    .landing-features { grid-template-columns: 1fr !important; }
+    .forest-right,
+    .resource-cart-card { width: auto; min-width: 0; margin: 10px 0 0; }
+    .tree-card,
+    .building-card,
+    .crafting-card,
+    .card,
+    .side-panel { box-sizing: border-box; max-width: 100%; }
+
+    .inventory-row { align-items: flex-start; gap: 10px; }
+    .item-left { min-width: 0; }
+    .item-description { overflow-wrap: anywhere; }
+
+    button,
+    input,
+    select,
+    textarea { font-size: 16px; }
+    input,
+    select,
+    textarea { max-width: 100%; box-sizing: border-box; }
+
+    .tutorial-guide {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 8px;
+    }
+    .tutorial-guide-icon { display: none; }
+    .tutorial-guide-button { grid-column: auto; min-width: 0; box-sizing: border-box; }
+
+    .login-header { flex-direction: row; align-items: center; }
+    .login-brand { font-size: 17px; }
+    .login-header .landing-secondary-button { padding: 9px 10px; }
+    .login-layout { display: flex; flex-direction: column; gap: 8px; }
+    .auth-box-modern { order: 1; padding: 20px 16px; }
+    .login-story-panel { order: 2; min-height: 260px; padding: 18px; }
+    .signup-story-panel { min-height: 220px; }
+    .landing-page { width: min(100% - 12px, 1180px); }
+    .landing-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+
+@media (min-width: 761px) {
+    .mobile-nav-links { display: block !important; }
+}
+
+/* =====================================
+   FRIENDS & ENEMIES
+===================================== */
+.social-page-header {
+    min-height: 72px;
+}
+
+.social-section {
+    margin-top: 10px;
+}
+
+.social-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #5d421b;
+    margin-bottom: 8px;
+}
+
+.social-section-heading h2 {
+    margin: 0 0 10px;
+    color: #ffd700;
+}
+
+.social-list {
+    display: grid;
+    gap: 8px;
+}
+
+.social-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    background: #151515;
+    border: 1px solid #4b3518;
+}
+
+.social-player-name {
+    color: #f5d45f;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.social-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.social-actions button {
+    min-height: 38px;
+    margin: 0;
+}
+
+.social-status-button {
+    opacity: 0.75;
+    cursor: default;
+}
+
+.danger-button {
+    border-color: #9a493c;
+}
+
+.social-message {
+    min-height: 22px;
+    margin: 8px 0;
+    padding: 0 4px;
+}
+
+.social-message-success { color: #a8e6a3; }
+.social-message-error { color: #ffaaa0; }
+.social-message-info { color: #f2d78c; }
+
+@media (max-width: 760px) {
+    .social-row {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .social-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-content: stretch;
+    }
+
+    .social-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .social-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Skill progression */
+.skill-xp-text {
+    margin: 4px 0;
+    font-size: 0.85rem;
+    color: #d6c59a;
+    white-space: nowrap;
+}
+.skill-badge .xp-bar {
+    min-width: 150px;
+    max-width: 220px;
+    margin-inline: auto;
+}
+.skill-xp-fill {
+    background: #d4a017;
+}
+
+
+/* Compact, wrapping online-player links */
+.online-player-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem;
+    margin: 0;
+}
+
+.online-player-links a {
+    white-space: nowrap;
+}
+
+.online-player-separator {
+    opacity: 0.75;
+}
+
+
+/* Crafting-card stock and bulk controls */
+.craft-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.craft-card-heading h3 {
+    margin: 0;
+}
+
+.craft-stock {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    padding: 6px 9px;
+    border: 1px solid rgba(212, 160, 23, 0.55);
+    background: rgba(0, 0, 0, 0.28);
+    color: #d6c59a;
+    font-size: 0.76rem;
+    line-height: 1.25;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.craft-controls {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.craft-amount {
+    width: 96px;
+    min-height: 42px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+    .craft-card-heading {
+        flex-direction: column;
+    }
+
+    .craft-stock {
+        align-items: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+        white-space: normal;
+    }
+
+    .craft-controls {
+        display: grid;
+        grid-template-columns: minmax(82px, 0.7fr) minmax(130px, 1.3fr);
+    }
+
+    .craft-amount {
+        width: 100%;
+    }
+}
+
+
+/* Named crafting stock wording */
+.craft-stock span {
+    display: block;
+}
+
+
+/* TOP-BAR REGEN TOOLTIP v3 */
+.regen-stat { position: relative; cursor: help; outline-offset: 3px; }
+.stat-regen-tooltip {
+ position:absolute; z-index:2147483647; left:50%; top:calc(100% + 8px);
+ width:max-content; max-width:280px; padding:8px 10px;
+ border:1px solid #b8862f; border-radius:4px; background:#080808; color:#f2dfad;
+ font-size:12px; line-height:1.35; text-align:center; white-space:normal;
+ opacity:0; visibility:hidden; pointer-events:none; transform:translate(-50%,-4px);
+ transition:opacity .12s ease, transform .12s ease, visibility .12s ease;
+}
+.regen-stat:hover .stat-regen-tooltip, .regen-stat:focus .stat-regen-tooltip, .regen-stat:focus-within .stat-regen-tooltip { opacity:1; visibility:visible; transform:translate(-50%,0); }
+.top-bar, .player-stats, .top-stat, #topbar { overflow:visible !important; }
+
+.avatar-upload-box{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;border:1px solid #6d4b20;background:#111}.avatar-upload-box label{width:100%;color:gold}.avatar-upload-box input{max-width:260px}.avatar-upload-box small{width:100%;color:#cdb68a}
+
+
+/* Backpack and transport weight displays */
+.backpack-capacity,.transport-capacity{margin:12px 0 18px;padding:12px;background:#111;border:1px solid #59400f;border-radius:4px}.backpack-capacity-row,.transport-capacity-row{display:flex;justify-content:space-between;gap:12px;color:#eee0ba}.weight-bar{height:10px;margin-top:9px;overflow:hidden;background:#292929;border:1px solid #4d3a16;border-radius:99px}.weight-bar span{display:block;height:100%;background:linear-gradient(90deg,#9b741d,#e4b94e)}.inventory-row small{display:block;margin-top:5px;color:#afa486}.transport-item-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #32270f}.transport-item-row button{padding:7px 10px}.wagon-repair-list{display:grid;gap:8px;margin:14px 0}.wagon-repair-item{display:flex;justify-content:space-between;padding:10px;background:#111;border:1px solid #44330f}.wagon-ready{color:#6dd96d}.wagon-missing{color:#ef7777}
+
+
+/* =====================================
+   STORAGE YARD
+===================================== */
+
+.storage-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 12px;
+    align-items: start;
+}
+
+.storage-main {
+    min-width: 0;
+}
+
+.storage-side {
+    position: sticky;
+    top: 10px;
+    display: grid;
+    gap: 10px;
+}
+
+.storage-tabs {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(90px, 1fr));
+    gap: 7px;
+    margin-bottom: 10px;
+}
+
+.storage-tab {
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid #5a421d;
+    background: #151515;
+    color: #f5e6c8;
+    font-family: inherit;
+}
+
+.storage-tab span {
+    font-size: 20px;
+}
+
+.storage-tab strong {
+    text-align: left;
+}
+
+.storage-tab small {
+    min-width: 22px;
+    padding: 3px 5px;
+    background: #080808;
+    border: 1px solid #493611;
+    color: #d8c597;
+    text-align: center;
+}
+
+.storage-tab:hover,
+.storage-tab.active {
+    border-color: gold;
+    background: #5a3512;
+    color: gold;
+}
+
+.storage-category-panel {
+    text-align: left;
+}
+
+.storage-category-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid #5a421d;
+}
+
+.storage-category-heading h2 {
+    margin: 0;
+    color: gold;
+}
+
+.storage-category-heading p {
+    margin: 5px 0 0;
+    color: #cdb68a;
+    font-size: 12px;
+}
+
+.storage-item-count {
+    padding: 6px 9px;
+    background: #181818;
+    border: 1px solid #5a421d;
+    color: #f5df9e;
+    white-space: nowrap;
+}
+
+.storage-item-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(330px, auto);
+    align-items: center;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid #33270f;
+}
+
+.storage-item-row:last-child {
+    border-bottom: 0;
+}
+
+.storage-item-details {
+    min-width: 0;
+}
+
+.storage-item-details strong {
+    display: block;
+    margin-bottom: 4px;
+    color: gold;
+    font-size: 15px;
+}
+
+.storage-item-details span {
+    display: block;
+    color: #b8ab88;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.storage-load-controls {
+    display: grid;
+    grid-template-columns: 90px minmax(220px, auto);
+    gap: 7px;
+    align-items: end;
+}
+
+.storage-load-controls label {
+    color: #cdb68a;
+    font-size: 11px;
+}
+
+.storage-quantity-input {
+    width: 100%;
+    min-height: 38px;
+    margin-top: 4px;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.storage-quick-amounts,
+.storage-destination-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.storage-quick-amounts button {
+    min-height: 38px;
+    padding: 5px 9px;
+    border-width: 1px;
+}
+
+.storage-destination-buttons {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+}
+
+.storage-destination-buttons button {
+    min-width: 130px;
+}
+
+.storage-carry-card {
+    text-align: left;
+}
+
+.storage-carry-card h3 {
+    margin-bottom: 10px;
+}
+
+.storage-capacity {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #181818;
+    border: 1px solid #493611;
+}
+
+.storage-capacity-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: #e9dab5;
+    font-size: 12px;
+}
+
+.storage-capacity small {
+    display: block;
+    margin-top: 6px;
+    color: #b7aa88;
+    text-align: right;
+}
+
+.storage-carry-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #33270f;
+}
+
+.storage-carry-row span {
+    min-width: 0;
+}
+
+.storage-carry-row strong {
+    color: #f5df9e;
+}
+
+.storage-carry-row span strong {
+    display: block;
+    color: #f5e6c8;
+}
+
+.storage-carry-row small {
+    display: block;
+    margin-top: 3px;
+    color: #a99d80;
+}
+
+.storage-unload-button {
+    width: 100%;
+    margin-top: 11px;
+}
+
+.storage-empty {
+    min-height: 170px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 7px;
+    color: #b8ab88;
+    text-align: center;
+}
+
+.storage-empty span {
+    font-size: 42px;
+    opacity: 0.7;
+}
+
+.storage-empty p {
+    margin: 0;
+}
+
+.storage-empty-text {
+    color: #a99d80;
+    font-style: italic;
+}
+
+.storage-message {
+    min-height: 20px;
+    margin: 0;
+    padding: 10px;
+    background: #111;
+    border: 1px solid #493611;
+    line-height: 1.4;
+}
+
+.storage-message-success {
+    color: #a8e6a3;
+    border-color: #477a3d;
+}
+
+.storage-message-error {
+    color: #ffaaa0;
+    border-color: #8f4239;
+}
+
+.storage-message-info {
+    color: #f2d78c;
+}
+
+@media (max-width: 1150px) {
+    .storage-tabs {
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+    }
+
+    .storage-item-row {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-load-controls {
+        grid-template-columns: 100px 1fr;
+    }
+}
+
+@media (max-width: 850px) {
+    .storage-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-side {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .storage-message {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 620px) {
+    .storage-tabs {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .storage-tab {
+        flex: 0 0 125px;
+    }
+
+    .storage-side {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-message {
+        grid-column: auto;
+    }
+
+    .storage-category-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .storage-load-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .storage-quick-amounts,
+    .storage-destination-buttons {
+        grid-column: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .storage-quick-amounts {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .storage-quick-amounts button,
+    .storage-destination-buttons button {
+        min-width: 0;
+        width: 100%;
+        padding-inline: 5px;
+    }
+}
+
+.sidebar-clock {
+    text-align: center;
+    padding: 10px 8px;
+    margin-bottom: 12px;
+    border-top: 1px solid #6b4a12;
+    border-bottom: 1px solid #6b4a12;
+}
+
+#sidebar-date {
+    color: gold;
+    font-size: 13px;
+    font-weight: bold;
+}
+#sidebar-time {
+    margin-top: 4px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================
+   KING'S RAFFLE COUNTDOWN
+===================================== */
+
+.raffle-draw-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #181818;
+    border: 1px solid #6d4b20;
+    color: #f5e6c8;
+}
+
+.raffle-draw-panel strong {
+    color: gold;
+}
+
+#raffle-next-draw {
+    color: #cdb68a;
+}
+
+#raffle-countdown {
+    min-width: 210px;
+    color: #6dd96d;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 620px) {
+    .raffle-draw-panel {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* =====================================
+   HALL OF FAME
+===================================== */
+
+.hof-layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+}
+
+.hof-menu {
+    display: grid;
+    gap: 7px;
+}
+
+.hof-menu-button {
+    width: 100%;
+    min-height: 72px;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: inherit;
+    background: #111;
+    border: 1px solid #5b421d;
+    color: #f5e6c8;
+}
+
+.hof-menu-button:hover,
+.hof-menu-button.active {
+    background: #5a3512;
+    border-color: gold;
+}
+
+.hof-menu-icon {
+    font-size: 24px;
+    text-align: center;
+}
+
+.hof-menu-text {
+    min-width: 0;
+}
+
+.hof-menu-text strong {
+    display: block;
+    color: gold;
+    font-size: 15px;
+}
+
+.hof-menu-text small {
+    display: block;
+    margin-top: 4px;
+    color: #bcae8b;
+    line-height: 1.3;
+}
+
+.hof-menu-arrow {
+    color: #d4af37;
+    font-size: 12px;
+}
+
+.hof-expanded-board {
+    min-height: 420px;
+    text-align: left;
+}
+
+.hof-board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    padding-bottom: 13px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #5b421d;
+}
+
+.hof-board-header h2 {
+    margin: 0;
+    color: gold;
+    font-size: 24px;
+}
+
+.hof-board-header p {
+    margin: 5px 0 0;
+    color: #cdb68a;
+    font-size: 13px;
+}
+
+.hof-top-ten-badge {
+    padding: 7px 10px;
+    border: 1px solid #6d4b20;
+    background: #181818;
+    color: #f5d45f;
+    white-space: nowrap;
+}
+
+.hof-ranking-list {
+    display: grid;
+    gap: 7px;
+}
+
+.hof-ranking-row {
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr) minmax(130px, auto);
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 7px 12px;
+    background: #151515;
+    border: 1px solid #3f3016;
+}
+
+.hof-ranking-row:hover {
+    border-color: #b78a29;
+    background: #1b1811;
+}
+
+.hof-rank-1 {
+    border-color: #d6ad2f;
+    background: linear-gradient(
+        90deg,
+        rgba(120, 84, 10, 0.35),
+        #151515 45%
+    );
+}
+
+.hof-rank-2 {
+    border-color: #8f8f8f;
+}
+
+.hof-rank-3 {
+    border-color: #9c6634;
+}
+
+.hof-rank-position {
+    color: gold;
+    font-size: 20px;
+    text-align: center;
+}
+
+.hof-player-details {
+    min-width: 0;
+}
+
+.hof-player-name {
+    display: block;
+    color: gold;
+    font-size: 16px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.hof-player-details small {
+    display: block;
+    margin-top: 3px;
+    color: #9f9479;
+}
+
+.hof-ranking-value {
+    color: #f5e6c8;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.hof-loading,
+.hof-empty,
+.hof-error {
+    min-height: 260px;
+    display: grid;
+    place-items: center;
+    color: #cdb68a;
+    text-align: center;
+}
+
+.hof-error {
+    color: #ffaaa0;
+}
+
+@media (max-width: 850px) {
+    .hof-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hof-menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hof-menu-button {
+        min-height: 68px;
+    }
+}
+
+@media (max-width: 580px) {
+    .hof-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .hof-menu-text small {
+        display: none;
+    }
+
+    .hof-menu-button {
+        min-height: 52px;
+    }
+
+    .hof-ranking-row {
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+
+    .hof-ranking-value {
+        grid-column: 2;
+        text-align: left;
+        color: #d8c597;
+    }
+
+    .hof-board-header {
+        flex-direction: column;
+    }
+}

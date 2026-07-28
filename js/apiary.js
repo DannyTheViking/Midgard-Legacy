@@ -13,16 +13,35 @@
    SETTINGS
 ===================================== */
 
-const MAX_HIVES = 5;
+
 
 const PLANK_COST = 30;
 const NAIL_COST = 100;
 
+const HIVES_PER_PROPERTY_LEVEL = 5;
+const MAX_HIVES = 20;
+
 function getUnlockedHiveSlots(propertyLevel) {
     const level = Math.max(0, Number(propertyLevel) || 0);
-    if (level < 1) return 0;
-    if (level >= 4) return 5;
-    return level;
+
+    return Math.min(
+        MAX_HIVES,
+        level * HIVES_PER_PROPERTY_LEVEL
+    );
+}
+
+function getVisibleHiveSlots(hives) {
+    const builtHives = Number(hives?.length || 0);
+
+    // Show the current group of five.
+    // Once all five are built, reveal the next group.
+    const visibleGroups =
+        Math.floor(builtHives / HIVES_PER_PROPERTY_LEVEL) + 1;
+
+    return Math.min(
+        MAX_HIVES,
+        visibleGroups * HIVES_PER_PROPERTY_LEVEL
+    );
 }
 
 /*
@@ -104,12 +123,21 @@ async function loadApiary() {
     const hiveSlots =
         document.getElementById("hive-slots");
 
-    hiveSlots.innerHTML = "";
+   hiveSlots.innerHTML = "";
 
-    for (let slot = 1; slot <= MAX_HIVES; slot++) {
+const visibleHiveSlots =
+    getVisibleHiveSlots(hives);
 
-        const hive =
-            (hives || []).find(h => h.slot === slot);
+for (
+    let slot = 1;
+    slot <= visibleHiveSlots;
+    slot++
+) {
+
+    const hive =
+        (hives || []).find(
+            h => h.slot === slot
+        );
 
         if (hive) {
             hiveSlots.innerHTML += buildHiveCard(hive);
@@ -253,9 +281,6 @@ function isHoneyReady(lastCollected) {
 
     const now =
         new Date();
-
-    const hoursPassed =
-        (now - last) / 1000 / 60 / 60;
 
     return (now - last) / 1000 >= APIARY_HONEY_TIME_SECONDS;
 

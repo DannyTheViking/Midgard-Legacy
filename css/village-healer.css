@@ -1,5 +1,602 @@
-.healer-page h2{color:#e8d6a8;font-size:18px;margin:14px 0 8px}.healer-message{display:none;padding:10px;margin-bottom:10px;border:1px solid #6d4b20;background:#111}.healer-message:not(:empty){display:block}.healer-message.success{border-color:#3d8b45}.healer-message.error{border-color:#9d3636}.healer-message.info{border-color:#7b6524}.my-hospital-card{background:#18120d;border:1px solid #9a6c2d;padding:12px;margin-bottom:10px}.my-hospital-card h2{margin-top:0;color:gold}.hospital-stats,.health-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.hospital-stats strong,.health-row strong{color:#f0c861}.regen-note{font-size:12px;color:#cdb68a}.healer-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.healer-summary>div{background:#111;border:1px solid #4b3517;padding:10px;display:flex;justify-content:space-between}.healer-summary span{color:#bfae8f;font-size:12px}.healer-summary strong{color:gold}.hospital-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.patient-card{background:#111;border:1px solid #4b3517;padding:11px}.patient-card header{display:flex;align-items:center;gap:10px;border-bottom:1px solid #30230f;padding-bottom:8px}.patient-card h3{margin:0;color:#f4e4c3;font-size:17px}.patient-card header p{margin:3px 0 0;color:#a99778;font-size:11px}.patient-card header span{color:#d1a74b}.patient-icon{font-size:30px}.injury{min-height:38px;color:#ccc;font-size:12px}.health-row{font-size:12px;margin:8px 0}.health-track{height:10px;background:#2c1515;border:1px solid #512626;margin-bottom:9px}.health-track div{height:100%;background:#8f2f2f;width:1%;transition:width .3s}.patient-card button{width:100%}.patient-card button:disabled{opacity:.55;cursor:not-allowed}@media(max-width:800px){.hospital-grid{grid-template-columns:1fr}.healer-summary{grid-template-columns:1fr}.patient-card .injury{min-height:auto}}
+/* =========================================================
+   MIDGARD LEGACY
+   VILLAGE HEALER PAGE
 
-.patient-icon img{width:100%;height:100%;object-fit:cover}.patient-card h3 a{color:inherit;text-decoration:none}.patient-card h3 a:hover{color:gold;text-decoration:underline}
+   CONTENTS
 
-.patient-sort-note{margin:0 0 10px;color:#a99778;font-size:12px}.hospital-pagination{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0 4px}.hospital-pagination span{color:#e8d6a8;font-weight:700}.hospital-pagination button{min-width:110px}.hospital-pagination button:disabled{opacity:.45;cursor:not-allowed}.patient-icon{width:52px;height:52px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#1a130d;border:1px solid #6d4b20;text-decoration:none;flex:0 0 52px}.patient-card[data-self="true"]{border-color:#b8872f;box-shadow:inset 0 0 0 1px rgba(255,215,0,.08)}@media(max-width:500px){.hospital-pagination{flex-wrap:wrap}.hospital-pagination span{order:-1;width:100%;text-align:center}}
+   01. Page
+   02. Messages
+   03. My Hospital
+   04. Summary
+   05. Patient Grid
+   06. Patient Cards
+   07. Health Bar
+   08. Pagination
+   09. Responsive
+========================================================= */
+
+
+/* =========================================================
+   01. PAGE
+========================================================= */
+
+.healer-page h2 {
+    margin: 14px 0 8px;
+    color: #e8d6a8;
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   02. MESSAGES
+========================================================= */
+
+.healer-message {
+    display: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #6d4b20;
+    background: #111111;
+}
+
+.healer-message:not(:empty) {
+    display: block;
+}
+
+.healer-message.success {
+    border-color: #3d8b45;
+}
+
+.healer-message.error {
+    border-color: #9d3636;
+}
+
+.healer-message.info {
+    border-color: #7b6524;
+}
+
+
+/* =========================================================
+   03. MY HOSPITAL
+========================================================= */
+
+.my-hospital-card {
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #9a6c2d;
+    background: #18120d;
+}
+
+.my-hospital-card h2 {
+    margin-top: 0;
+    color: gold;
+}
+
+.hospital-stats,
+.health-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hospital-stats strong,
+.health-row strong {
+    color: #f0c861;
+}
+
+.regen-note {
+    color: #cdb68a;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   04. SUMMARY
+========================================================= */
+
+.healer-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.healer-summary > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #4b3517;
+    background: #111111;
+}
+
+.healer-summary span {
+    color: #bfae8f;
+    font-size: 12px;
+}
+
+.healer-summary strong {
+    color: gold;
+}
+
+
+/* =========================================================
+   05. PATIENT GRID
+========================================================= */
+
+.hospital-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.patient-sort-note {
+    margin: 0 0 10px;
+    color: #a99778;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   06. PATIENT CARDS
+========================================================= */
+
+.patient-card {
+    padding: 11px;
+    border: 1px solid #4b3517;
+    background: #111111;
+}
+
+.patient-card[data-self="true"] {
+    border-color: #b8872f;
+    box-shadow: inset 0 0 0 1px rgba(255,215,0,.08);
+}
+
+.patient-card header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #30230f;
+}
+
+.patient-card h3 {
+    margin: 0;
+    color: #f4e4c3;
+    font-size: 17px;
+}
+
+.patient-card h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.patient-card h3 a:hover {
+    color: gold;
+    text-decoration: underline;
+}
+
+.patient-card header p {
+    margin: 3px 0 0;
+    color: #a99778;
+    font-size: 11px;
+}
+
+.patient-card header span {
+    color: #d1a74b;
+}
+
+.patient-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    overflow: hidden;
+    border: 1px solid #6d4b20;
+    border-radius: 50%;
+    background: #1a130d;
+    text-decoration: none;
+}
+
+.patient-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.injury {
+    min-height: 38px;
+    color: #cccccc;
+    font-size: 12px;
+}
+
+.patient-card button {
+    width: 100%;
+}
+
+.patient-card button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   07. HEALTH BAR
+========================================================= */
+
+.health-row {
+    margin: 8px 0;
+    font-size: 12px;
+}
+
+.health-track {
+    height: 10px;
+    margin-bottom: 9px;
+    border: 1px solid #512626;
+    background: #2c1515;
+}
+
+.health-track div {
+    width: 1%;
+    height: 100%;
+    background: #8f2f2f;
+    transition: width .3s;
+}
+
+
+/* =========================================================
+   08. PAGINATION
+========================================================= */
+
+.hospital-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 4px;
+}
+
+.hospital-pagination span {
+    color: #e8d6a8;
+    font-weight: bold;
+}
+
+.hospital-pagination button {
+    min-width: 110px;
+}
+
+.hospital-pagination button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   09. RESPONSIVE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .hospital-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .healer-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-card .injury {
+        min-height: auto;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .hospital-pagination {
+        flex-wrap: wrap;
+    }
+
+    .hospital-pagination span {
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
+
+}
+
+/* ==========================================
+   NEW HEALER PAGE LAYOUT
+========================================== */
+
+.healer-page {
+    min-width: 0;
+}
+
+.healer-message {
+    display: none;
+
+    margin-bottom: 16px;
+    padding: 12px 14px;
+
+    color: var(--panel-text);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.12),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--panel-accent);
+    border-radius: 8px;
+}
+
+.healer-message:not(:empty) {
+    display: block;
+}
+
+
+/* ==========================================
+   PLAYER HOSPITAL CARD
+========================================== */
+
+.my-hospital-card {
+    margin-bottom: 18px;
+    padding: 17px;
+}
+
+.my-hospital-card[hidden] {
+    display: none;
+}
+
+
+/* ==========================================
+   HEALER SUMMARY
+========================================== */
+
+.healer-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+.healer-summary .stat-card {
+    min-height: 110px;
+}
+
+
+/* ==========================================
+   HEALER WARD
+========================================== */
+
+.healer-ward-panel {
+    width: 100%;
+}
+
+.patient-sort-note {
+    margin: 0 0 15px !important;
+
+    color: var(--panel-muted);
+
+    font-size: 0.82rem !important;
+}
+
+
+/* ==========================================
+   PATIENT GRID
+========================================== */
+
+.hospital-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                min(100%, 260px),
+                1fr
+            )
+        );
+
+    gap: 15px;
+}
+
+.hospital-grid > p {
+    grid-column: 1 / -1;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+}
+
+
+/* These support patient cards generated by JS */
+
+.patient-card,
+.hospital-card {
+    position: relative;
+
+    overflow: hidden;
+    padding: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+
+    box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.26);
+}
+
+.patient-card h3,
+.hospital-card h3 {
+    margin: 0 0 9px;
+
+    color: var(--panel-text);
+
+    font-size: 1rem;
+}
+
+.patient-card p,
+.hospital-card p {
+    margin: 0 0 7px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+.patient-card p:last-child,
+.hospital-card p:last-child {
+    margin-bottom: 0;
+}
+
+.patient-card button,
+.hospital-card button {
+    width: 100%;
+
+    margin-top: 12px;
+}
+
+
+/* ==========================================
+   RECOVERY PROGRESS
+========================================== */
+
+.recovery-bar,
+.healing-progress {
+    width: 100%;
+    height: 9px;
+
+    margin-top: 10px;
+
+    overflow: hidden;
+
+    background: #100d0b;
+
+    border: 1px solid #4e4031;
+    border-radius: 999px;
+}
+
+.recovery-bar-fill,
+.healing-progress-fill {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #496f48,
+            #70bc73,
+            #a3d49e
+        );
+
+    border-radius: inherit;
+
+    transition: width 0.35s ease;
+}
+
+
+/* ==========================================
+   PAGINATION
+========================================== */
+
+.hospital-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 14px;
+
+    margin-top: 18px;
+    padding-top: 16px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.07);
+}
+
+.hospital-pagination[hidden] {
+    display: none;
+}
+
+#patient-page-label {
+    min-width: 95px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.84rem;
+    text-align: center;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 850px) {
+
+    .healer-summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .healer-summary .stat-card:last-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .healer-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .healer-summary .stat-card:last-child {
+        grid-column: auto;
+    }
+
+    .hospital-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hospital-pagination {
+        display: grid;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    #patient-page-label {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+}

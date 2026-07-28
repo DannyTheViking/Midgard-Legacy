@@ -26,10 +26,129 @@ function requirementRows(requirements, inventoryMap) {
 }
 
 async function getInventoryMap(playerId) {
-  const { data, error } = await supabaseClient.from("inventory")
-    .select("quantity, items(name)").eq("player_id", playerId);
-  if (error) throw error;
-  return new Map((data || []).map(row => [String(row.items?.name || "").toLowerCase(), Number(row.quantity || 0)]));
+
+  const inventoryMap = new Map();
+
+
+  /* =====================================
+     ADD ITEMS INTO THE TOTAL
+  ===================================== */
+
+  function addItems(rows) {
+
+    for (const row of rows || []) {
+
+      const itemName =
+        String(row.items?.name || "")
+          .trim()
+          .toLowerCase();
+
+      if (!itemName) {
+        continue;
+      }
+
+      const currentQuantity =
+        Number(inventoryMap.get(itemName) || 0);
+
+      const addedQuantity =
+        Number(row.quantity || 0);
+
+      inventoryMap.set(
+        itemName,
+        currentQuantity + addedQuantity
+      );
+
+    }
+
+  }
+
+
+  /* =====================================
+     LOAD BACKPACK AND ACTIVE CART
+  ===================================== */
+
+  const [
+    backpackResult,
+    activeCartResult
+  ] = await Promise.all([
+
+    supabaseClient
+      .from("inventory")
+      .select(`
+        quantity,
+        items (
+          name
+        )
+      `)
+      .eq("player_id", playerId),
+
+    supabaseClient
+      .from("player_carts")
+      .select(`
+        id,
+        name,
+        transport_type
+      `)
+      .eq("player_id", playerId)
+      .eq("is_active", true)
+      .maybeSingle()
+
+  ]);
+
+
+  if (backpackResult.error) {
+    throw backpackResult.error;
+  }
+
+  if (activeCartResult.error) {
+    throw activeCartResult.error;
+  }
+
+
+  /* =====================================
+     ADD BACKPACK ITEMS
+  ===================================== */
+
+  addItems(
+    backpackResult.data
+  );
+
+
+  /* =====================================
+     ADD ACTIVE CART ITEMS
+  ===================================== */
+
+  const activeCartId =
+    activeCartResult.data?.id;
+
+  if (activeCartId) {
+
+    const {
+      data: cartItems,
+      error: cartItemsError
+    } = await supabaseClient
+      .from("cart_items")
+      .select(`
+        quantity,
+        items (
+          name
+        )
+      `)
+      .eq("cart_id", activeCartId);
+
+    if (cartItemsError) {
+      throw cartItemsError;
+    }
+
+    addItems(
+      cartItems
+    );
+
+  }
+
+
+  return inventoryMap;
+
 }
 
 function npcPortrait(npc) {

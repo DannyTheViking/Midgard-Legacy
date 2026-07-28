@@ -2,88 +2,316 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Midgard Legacy - Blacksmith</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <!-- =========================
-             BLACKSMITH HEADER
-        ========================= -->
-        <section class="page-header">
-            <div class="page-title">
-                <h1>⚒️ Blacksmith</h1>
-                <p>Repair your tools and prepare for the work ahead.</p>
+
+            <!-- =========================
+                 BLACKSMITH PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            ⚒️ Bjørn the Blacksmith
+                        </h1>
+
+                        <p>
+                            Repair damaged tools and assemble
+                            equipment for the work ahead.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🔥 Blacksmith
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     BLACKSMITH CARDS
+                ========================= -->
+
+                <section class="blacksmith-grid">
+
+
+                    <!-- =========================
+                         REPAIR AXE
+                    ========================= -->
+
+                    <article class="blacksmith-card">
+
+                        <div class="blacksmith-card-image repair-area">
+                            🪓
+                        </div>
+
+                        <header class="blacksmith-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Repair Axe
+                                </h2>
+
+                                <p>
+                                    Restore the durability of your
+                                    currently equipped axe.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="repair-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="blacksmith-card-body">
+
+                            <h3 id="repair-axe-name">
+                                Loading...
+                            </h3>
+
+
+                            <!-- Durability -->
+
+                            <div class="blacksmith-stat-row">
+
+                                <span>
+                                    🛡️ Durability
+                                </span>
+
+                            </div>
+
+                            <div
+                                class="durability-bar"
+                                aria-label="Axe durability"
+                            >
+
+                                <div
+                                    id="repair-axe-durability-fill"
+                                    class="durability-fill"
+                                ></div>
+
+                            </div>
+
+
+                            <!-- Cost -->
+
+                            <div class="blacksmith-requirements">
+
+                                <p>
+
+                                    <span>
+                                        🪙 Repair Cost
+                                    </span>
+
+                                    <span class="green">
+                                        25 Silver
+                                    </span>
+
+                                </p>
+
+                            </div>
+
+                            <button
+                                id="repair-axe-button"
+                                type="button"
+                                class="blacksmith-button"
+                            >
+                                ⚒️ Repair Axe
+                            </button>
+
+                            <div class="blacksmith-message">
+
+                                <h4>
+                                    Latest Action
+                                </h4>
+
+                                <p id="blacksmith-message">
+                                    Ready for repairs.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- =========================
+                         CRAFT IRON AXE
+                    ========================= -->
+
+                    <article class="blacksmith-card">
+
+                        <div class="blacksmith-card-image iron-axe-area">
+                            ⚒️
+                        </div>
+
+                        <header class="blacksmith-card-header">
+
+                            <div>
+
+                                <h2>
+                                    Iron Axe
+                                </h2>
+
+                                <p>
+                                    Assemble a strong axe from an
+                                    iron head and wooden shaft.
+                                </p>
+
+                            </div>
+
+                            <div
+                                class="craft-stock"
+                                id="iron-axe-stock"
+                            >
+                                Loading...
+                            </div>
+
+                        </header>
+
+                        <div class="blacksmith-card-body">
+
+                            <div class="blacksmith-requirements">
+
+                                <p>
+
+                                    <span>
+                                        🪵 Wooden Shaft
+                                    </span>
+
+                                    <span class="green">
+                                        1
+                                    </span>
+
+                                </p>
+
+                                <p>
+
+                                    <span>
+                                        ⚒️ Iron Axe Head
+                                    </span>
+
+                                    <span class="green">
+                                        1
+                                    </span>
+
+                                </p>
+
+                                <p>
+
+                                    <span>
+                                        🎁 Produces
+                                    </span>
+
+                                    <span class="green">
+                                        1 Iron Axe
+                                    </span>
+
+                                </p>
+
+                            </div>
+
+                            <button
+                                id="craft-iron-axe-button"
+                                type="button"
+                                class="blacksmith-button"
+                            >
+                                ⚒️ Craft Iron Axe
+                            </button>
+
+                            <div class="blacksmith-message">
+
+                                <h4>
+                                    Latest Action
+                                </h4>
+
+                                <p id="craft-axe-message">
+                                    Ready to craft.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
             </div>
-        </section>
 
-      <!--repair axe-->
-<section class="crafting-grid">
+        </main>
 
-    <div class="crafting-card">
-        <div class="craft-card-heading">
-            <h3>🪓 Repair Axe</h3>
-            <div class="craft-stock" id="repair-stock">Loading...</div>
-        </div>
-
-        <h4 id="repair-axe-name">Loading...</h4>
-
-        <p>Durability</p>
-
-        <div class="durability-bar">
-            <div id="repair-axe-durability-fill" class="durability-fill"></div>
-        </div>
-
-        <p>Cost: <span class="green">25 Silver</span></p>
-
-        <button id="repair-axe-button">⚒️ Repair</button>
-
-        <p id="blacksmith-message">Ready for repairs.</p>
     </div>
 
-<!--iron axe-->
-    <div class="crafting-card">
-        <div class="craft-card-heading">
-            <h3>🪓 Iron Axe</h3>
-            <div class="craft-stock" id="iron-axe-stock">Loading...</div>
-        </div>
 
-        <p>Requires: <span class="green">1 Wooden Shaft</span></p>
-        <p>Requires: <span class="green">1 Iron Axe Head</span></p>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
-        <p>Produces: <span class="green">1 Iron Axe</span></p>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <button id="craft-iron-axe-button">⚒️ Craft</button>
-
-        <p id="craft-axe-message">Ready to craft.</p>
-    </div>
-
-</section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script>
-<script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/skills.js"></script>
-<script src="../js/blacksmith.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/skills.js"></script>
+    <script src="../js/blacksmith.js"></script>
 
 </body>
+
 </html>

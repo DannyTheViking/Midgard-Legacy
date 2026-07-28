@@ -1,39 +1,228 @@
 <!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Midgard Legacy - Storage</title>
-        <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-        <link rel="stylesheet" href="../css/style.css?v=4">
-    </head>
-    <body>
-        <div class="game-layout">
-            <div id="sidebar"></div>
-            <main class="main-area">
-                <div id="topbar"></div>
-                <section class="page-header">
-                    <div class="page-title">
-                        <h1>📦 Storage Yard</h1>
-                        <p>Your permanent storage is unlimited. Load resources into your Backpack or active transport before travelling.</p>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - Storage Yard
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/storage-yard.css?v=2"
+    >
+
+</head>
+
+<body>
+
+    <div class="game-layout">
+
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+
+            <!-- =========================
+                 STORAGE PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            📦 Storage Yard
+                        </h1>
+
+                        <p>
+                            Permanent storage is unlimited. Load resources
+                            into your backpack or active transport before
+                            travelling.
+                        </p>
+
                     </div>
+
+                    <div class="game-badge">
+                        📦 Storage
+                    </div>
+
                 </section>
-                <section class="cards" id="storage-cards"></section>
-                <section class="card">
-                    <h3>🎒 Backpack &amp; Active Transport</h3>
-                    <div id="storage-cart"></div>
-                    <button id="unload-cart-button">Unload Transport</button>
-                    <button id="unload-backpack-button">Unload Backpack</button>
-                    <p id="storage-message"></p>
+
+
+                <!-- =========================
+                     STORAGE LAYOUT
+                ========================= -->
+
+                <section class="storage-layout">
+
+
+                    <!-- =========================
+                         STORAGE CONTENT
+                    ========================= -->
+
+                    <div class="storage-main">
+
+
+                        <!-- Category Tabs -->
+
+                        <section
+                            class="storage-tabs"
+                            id="storage-tabs"
+                        ></section>
+
+
+                        <!-- Category Panel -->
+
+                        <section class="storage-category-panel">
+
+                            <div class="storage-category-heading">
+
+                                <div>
+
+                                    <h2 id="storage-category-title">
+                                        Wood
+                                    </h2>
+
+                                    <p id="storage-category-description">
+                                        Timber, planks and wooden materials.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    id="storage-category-count"
+                                    class="storage-item-count"
+                                >
+                                    0 items
+                                </span>
+
+                            </div>
+
+                            <div id="storage-items"></div>
+
+                        </section>
+
+                    </div>
+
+
+                    <!-- =========================
+                         CARRYING SIDEBAR
+                    ========================= -->
+
+                    <aside class="storage-side">
+
+
+                        <!-- Backpack -->
+
+                        <section class="storage-carry-card">
+
+                            <h3>
+                                🎒 Backpack
+                            </h3>
+
+                            <div id="backpack-capacity"></div>
+
+                            <div id="backpack-items"></div>
+
+                            <button
+                                id="unload-backpack-button"
+                                class="storage-unload-button"
+                                type="button"
+                            >
+                                Unload Backpack
+                            </button>
+
+                        </section>
+
+
+                        <!-- Active Transport -->
+
+                        <section class="storage-carry-card">
+
+                            <h3>
+                                🛒 Active Transport
+                            </h3>
+
+                            <div id="transport-capacity"></div>
+
+                            <div id="transport-items"></div>
+
+                            <button
+                                id="unload-cart-button"
+                                class="storage-unload-button"
+                                type="button"
+                            >
+                                Unload Transport
+                            </button>
+
+                        </section>
+
+
+                        <!-- Message -->
+
+                        <p
+                            id="storage-message"
+                            class="storage-message"
+                            aria-live="polite"
+                        ></p>
+
+                    </aside>
+
                 </section>
-            </main>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="../js/auth.js"></script>
-        <script src="../js/game-utils.js"></script>
-        <script src="../js/components.js?v=4"></script>
-        <script src="../js/config.js"></script>
-        <script src="../js/constants.js"></script>
-        <script src="../js/storage.js"></script>
-    </body>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/storage.js?v=5"></script>
+
+</body>
+
 </html>

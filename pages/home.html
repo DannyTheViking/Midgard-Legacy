@@ -5,19 +5,28 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <title>Midgard Legacy - Home</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
 
     <link
         rel="stylesheet"
         href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
     >
 
 </head>
@@ -32,122 +41,274 @@
 
             <div id="topbar"></div>
 
-            <section class="hero-panel">
 
-                <p class="quote">
-                    May Odin guide your path today.
-                </p>
+            <!-- =========================
+                 HOME PAGE
+            ========================= -->
 
-                <h2>
-                    Welcome back,
-                    <span id="home-username">
-                        Viking
-                    </span>
-                </h2>
+            <div class="game-page">
 
-                <p>
-                    Your saga continues...
-                </p>
+                <div class="home-dashboard">
 
-            </section>
 
-            <section class="cards">
+                    <!-- =========================
+                         WELCOME HEADER
+                    ========================= -->
 
-                <div class="card">
+                    <section class="game-page-header">
 
-                    <h3>Reputation</h3>
+                        <div class="game-page-heading">
 
-                    <p id="reputation">
-                        Loading...
-                    </p>
+                            <p class="home-welcome-message">
+                                May Odin guide your path today.
+                            </p>
+
+                            <h1>
+                                Welcome back,
+                                <span id="home-username">
+                                    Viking
+                                </span>
+                            </h1>
+
+                            <p>
+                                Your saga continues...
+                            </p>
+
+                        </div>
+
+
+                    </section>
+
+
+                    <!-- =========================
+                         PLAYER STATISTICS
+                    ========================= -->
+
+                    <section class="home-stats">
+
+
+                        <!-- Reputation -->
+
+                        <article class="stat-card">
+
+                            <p class="stat-card-label">
+                                Reputation
+                            </p>
+
+                            <p
+                                id="reputation"
+                                class="stat-card-value"
+                            >
+                                Loading...
+                            </p>
+
+                            <p class="stat-card-subtext">
+                                Your standing across Midgard
+                            </p>
+
+                        </article>
+
+
+                        <!-- Total Skill -->
+
+                        <article class="stat-card">
+
+                            <p class="stat-card-label">
+                                Total Skill
+                            </p>
+
+                            <p
+                                id="level"
+                                class="stat-card-value"
+                            >
+                                Loading...
+                            </p>
+
+                            <p class="stat-card-subtext">
+                                Combined profession levels
+                            </p>
+
+                        </article>
+
+
+                        <!-- Legacy Value -->
+
+                        <article class="stat-card">
+
+                            <p class="stat-card-label">
+                                Legacy Value
+                            </p>
+
+                            <p
+                                id="legacy-value"
+                                class="stat-card-value"
+                            >
+                                Loading...
+                            </p>
+
+                            <p class="stat-card-subtext">
+                                Your growing Viking legacy
+                            </p>
+
+                        </article>
+
+
+                        <!-- Silver -->
+
+                        <article class="stat-card">
+
+                            <p class="stat-card-label">
+                                Silver
+                            </p>
+
+                            <p
+                                id="silver-card"
+                                class="stat-card-value"
+                            >
+                                Loading...
+                            </p>
+
+                            <p class="stat-card-subtext">
+                                Available spending silver
+                            </p>
+
+                        </article>
+
+                    </section>
+
+
+                    <!-- =========================
+                         COMMUNITY PANELS
+                    ========================= -->
+
+                    <section class="home-community">
+
+
+                        <!-- Online Players -->
+
+                        <article class="page-panel">
+
+                            <header class="section-header">
+
+                                <h2>
+                                    🟢 Online Players
+                                </h2>
+
+                                <span class="game-badge">
+                                    Live
+                                </span>
+
+                            </header>
+
+                            <div class="panel-body">
+
+                                <div id="online-players-list">
+                                    Loading...
+                                </div>
+
+                            </div>
+
+                        </article>
+
+
+                        <!-- Hall of Fame -->
+
+                        <article class="page-panel">
+
+                            <header class="section-header">
+
+                                <h2>
+                                    🏛 Hall of Fame Preview
+                                </h2>
+
+                            </header>
+
+                            <div class="panel-body">
+
+                                <div id="home-hof-list">
+                                    Loading...
+                                </div>
+
+                                <div
+                                    style="
+                                        margin-top: 16px;
+                                        text-align: center;
+                                    "
+                                >
+
+                                    <a
+                                        href="hall-of-fame.html"
+                                        class="game-button secondary"
+                                    >
+                                        View Full Hall of Fame
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </section>
+
+
+                    <!-- =========================
+                         QUICK ACTIONS
+                    ========================= -->
+
+                    <section class="page-panel">
+
+                        <header class="section-header">
+
+                            <h2>
+                                ⚔️ Quick Actions
+                            </h2>
+
+                        </header>
+
+                        <div class="panel-body">
+
+                            <div class="quick-actions">
+
+                                <a
+                                    href="wildness.html"
+                                    class="quick-action"
+                                >
+                                    🏞️ Wilderness
+                                </a>
+
+                                <a
+                                    href="village.html"
+                                    class="quick-action"
+                                >
+                                    🏘️ Village
+                                </a>
+
+                                <a
+                                    href="profile.html"
+                                    class="quick-action"
+                                >
+                                    👤 Profile
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </section>
 
                 </div>
 
-                <div class="card">
-
-                    <h3>Total Skill</h3>
-
-                    <p id="level">
-                        Loading...
-                    </p>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>Legacy Value</h3>
-
-                    <p id="legacy-value">
-                        Loading...
-                    </p>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>Silver</h3>
-
-                    <p id="silver-card">
-                        Loading...
-                    </p>
-
-                </div>
-
-            </section>
-
-            <section class="home-grid">
-
-                <div class="card">
-
-                    <h3>
-                        Online Players
-                    </h3>
-
-                    <div id="online-players-list">
-                        Loading...
-                    </div>
-
-                </div>
-
-                <div class="card">
-
-                    <h3>
-                        🏛 Hall of Fame Preview
-                    </h3>
-
-                    <div id="home-hof-list">
-                        Loading...
-                    </div>
-
-                    <a href="hall-of-fame.html">
-                        View full Hall of Fame
-                    </a>
-
-                </div>
-
-            </section>
-
-            <section class="quick-actions">
-
-                <h3>Quick Actions</h3>
-
-                <a href="wildness.html">
-                    🏞️ Wilderness
-                </a>
-
-                <a href="village.html">
-                    🏘️ Village
-                </a>
-
-                <a href="profile.html">
-                    👤 Profile
-                </a>
-
-            </section>
+            </div>
 
         </main>
 
     </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 

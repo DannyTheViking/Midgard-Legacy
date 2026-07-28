@@ -1,0 +1,170 @@
+/* =========================================================
+   MIDGARD LEGACY
+   WILDERNESS PAGE
+
+   CONTENTS
+
+   01. Wilderness Grid
+   02. Wilderness Cards
+   03. Card Content
+   04. Available Cards
+   05. Locked Cards
+   06. Responsive
+========================================================= */
+
+
+/* =========================================================
+   01. WILDERNESS GRID
+========================================================= */
+
+.building-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+/* =========================================================
+   02. WILDERNESS CARDS
+========================================================= */
+
+.building-card {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 125px;
+    padding: 14px;
+
+    color: #f5e6c8;
+    text-align: left;
+    text-decoration: none;
+
+    border: 1px solid #6d4b20;
+    background:
+        linear-gradient(
+            145deg,
+            #171717,
+            #0d0d0d
+        );
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   03. CARD CONTENT
+========================================================= */
+
+.building-card h2 {
+    margin: 0 0 8px;
+
+    color: gold;
+    font-size: 20px;
+}
+
+.building-card p {
+    margin: 0;
+
+    color: #cdb68a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.building-card p + p {
+    margin-top: 8px;
+}
+
+.building-card small,
+.building-card .coming-soon {
+    display: block;
+    margin-top: auto;
+    padding-top: 12px;
+
+    color: #b9a775;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.building-card > span:first-child {
+    margin-bottom: 9px;
+    font-size: 30px;
+}
+
+
+/* =========================================================
+   04. AVAILABLE CARDS
+========================================================= */
+
+.building-card:not(.locked) {
+    cursor: pointer;
+}
+
+.building-card:not(.locked):hover {
+    transform: translateY(-3px);
+
+    border-color: gold;
+    background: #181309;
+
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.4),
+        0 0 12px rgba(255, 215, 0, 0.2);
+}
+
+.building-card:not(.locked):hover h2 {
+    color: #ffe77a;
+}
+
+
+/* =========================================================
+   05. LOCKED CARDS
+========================================================= */
+
+.building-card.locked {
+    opacity: 0.48;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
+.building-card.locked h2 {
+    color: #b8aa89;
+}
+
+.building-card.locked p {
+    color: #8f8774;
+}
+
+.building-card.locked small,
+.building-card.locked .coming-soon {
+    color: #b99d58;
+}
+
+
+/* =========================================================
+   06. RESPONSIVE
+========================================================= */
+
+@media (max-width: 1050px) {
+
+    .building-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .building-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .building-card {
+        min-height: 110px;
+    }
+
+}

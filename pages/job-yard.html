@@ -1,53 +1,242 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Job Yard | Midgard Legacy</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
-    <link rel="stylesheet" href="../css/job-yard.css?v=2">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Job Yard | Midgard Legacy
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=8"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/job-yard.css?v=3"
+    >
+
 </head>
+
 <body>
-<div class="game-layout">
-    <div id="sidebar"></div>
-    <main class="main-area">
-        <div id="topbar"></div>
-        <section class="page-header">
-            <div class="page-title">
-                <h1>📜 Job Yard</h1>
-                <p>Speak to villagers, complete their work and learn their professions.</p>
-            </div>
-        </section>
 
-        <div id="job-yard-message" class="job-message" aria-live="polite"></div>
+    <div class="game-layout">
 
-        <section id="npc-job-grid" class="npc-job-grid">
-            <p>Loading village jobs...</p>
-        </section>
+        <div id="sidebar"></div>
 
-        <section class="mission-shop">
-            <div class="mission-shop-heading">
-                <div>
-                    <h2>📜 Mission Point Rewards</h2>
-                    <p>Spend Mission Points on permanent equipment, recipes and workshop upgrades.</p>
-                </div>
-                <div class="mission-point-balance">
-                    📜 <strong id="mission-point-balance">0</strong> Mission Points
-                </div>
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            📜 Job Yard
+                        </h1>
+
+                        <p>
+                            Speak to villagers, complete their work
+                            and learn their professions.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        ⚒️ Professions
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     PAGE MESSAGE
+                ========================= -->
+
+                <div
+                    id="job-yard-message"
+                    class="job-message"
+                    aria-live="polite"
+                ></div>
+
+
+                <!-- =========================
+                     VILLAGER JOBS
+                ========================= -->
+
+                <section class="job-yard-panel">
+
+                    <header class="job-yard-section-heading">
+
+                        <div class="job-yard-heading-icon">
+                            🧑‍🌾
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Village Jobs
+                            </h2>
+
+                            <p>
+                                Help villagers with their work to earn
+                                rewards, experience and profession progress.
+                            </p>
+
+                        </div>
+
+                        <span class="job-yard-badge">
+                            Available Work
+                        </span>
+
+                    </header>
+
+                    <div
+                        id="npc-job-grid"
+                        class="npc-job-grid"
+                        aria-live="polite"
+                    >
+
+                        <div class="job-yard-loading">
+
+                            <span>
+                                📜
+                            </span>
+
+                            <p>
+                                Loading village jobs...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     MISSION POINT SHOP
+                ========================= -->
+
+                <section class="mission-shop">
+
+                    <div class="mission-shop-heading">
+
+                        <div class="mission-shop-title">
+
+                            <div class="job-yard-heading-icon">
+                                🏆
+                            </div>
+
+                            <div>
+
+                                <span class="job-yard-eyebrow">
+                                    Mission Rewards
+                                </span>
+
+                                <h2>
+                                    Mission Point Rewards
+                                </h2>
+
+                                <p>
+                                    Spend Mission Points on permanent
+                                    equipment, recipes and workshop upgrades.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mission-point-balance">
+
+                            <span>
+                                Your Balance
+                            </span>
+
+                            <strong>
+                                📜
+                                <span id="mission-point-balance">
+                                    0
+                                </span>
+                            </strong>
+
+                            <small>
+                                Mission Points
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="mission-reward-track"
+                        class="mission-reward-track"
+                        aria-live="polite"
+                    >
+
+                        <div class="job-yard-loading">
+
+                            <span>
+                                🎁
+                            </span>
+
+                            <p>
+                                Loading rewards...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
             </div>
-            <div id="mission-reward-track" class="mission-reward-track">
-                <p>Loading rewards...</p>
-            </div>
-        </section>
-    </main>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/config.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/game-utils.js"></script>
-<script src="../js/constants.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/job-yard.js?v=2"></script>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/job-yard.js?v=2"></script>
+
 </body>
+
 </html>

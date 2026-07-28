@@ -1,65 +1,288 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midgard Legacy - Apiary</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
-    <link rel="stylesheet" href="../css/apiary.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - Apiary
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=5"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link rel="stylesheet" href="../css/apiary.css?v=3">
+
 </head>
 
 <body>
 
-<div class="game-layout">
+    <div class="game-layout">
 
-    <div id="sidebar"></div>
+        <div id="sidebar"></div>
 
-    <main class="main-area">
+        <main class="main-area">
 
-        <div id="topbar"></div>
+            <div id="topbar"></div>
 
-        <section class="page-header">
-            <div class="page-title">
-                <h1>🐝 Apiary</h1>
-                <p>Build your own hives, install captured Queen Bees and harvest honey on your land.</p>
-            </div>
-        </section>
+            <div class="game-page">
 
-        <section id="apiary-locked-message" class="quick-actions" hidden>
-            <h2>🔒 Apiary Locked</h2>
-            <p>Upgrade your Old Shack before building an Apiary.</p>
-            <a href="property.html">Return to Your Homestead</a>
-        </section>
 
-        <section id="apiary-workspace" class="apiary-workspace" hidden>
-            <div>
-                <section class="quick-actions apiary-intro">
-                    <h2>🏡 Your Apiary</h2>
-                    <p>House upgrades unlock more hive plots. Build a hive, then install a captured Queen Bee to begin producing honey.</p>
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🐝 Your Apiary
+                        </h1>
+
+                        <p>
+                            Build your own hives, install captured Queen Bees
+                            and harvest honey on your land.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🍯 Beekeeping
+                    </div>
+
                 </section>
-                <section id="hive-slots" class="crafting-grid apiary-hive-grid"></section>
+
+
+                <!-- =========================
+                     LOCKED MESSAGE
+                ========================= -->
+
+                <section
+                    id="apiary-locked-message"
+                    class="apiary-locked-panel"
+                    hidden
+                >
+
+                    <div class="apiary-locked-icon">
+                        🔒
+                    </div>
+
+                    <div>
+
+                        <span class="apiary-eyebrow">
+                            Property Upgrade Required
+                        </span>
+
+                        <h2>
+                            Apiary Locked
+                        </h2>
+
+                        <p>
+                            Upgrade your Old Shack before building an Apiary.
+                        </p>
+
+                    </div>
+
+                    <a
+                        class="apiary-return-button"
+                        href="property.html"
+                    >
+                        Return to Your Homestead
+                    </a>
+
+                </section>
+
+
+                <!-- =========================
+                     APIARY WORKSPACE
+                ========================= -->
+
+                <section
+                    id="apiary-workspace"
+                    class="apiary-workspace"
+                    hidden
+                >
+
+
+                    <!-- =========================
+                         SUMMARY AND TOOLS
+                    ========================= -->
+
+                    <section class="apiary-summary-panel">
+
+
+                        <!-- Apiary Overview -->
+
+                        <div class="apiary-summary-card">
+
+                            <div class="apiary-summary-icon">
+                                🏡
+                            </div>
+
+                            <div>
+
+                                <span class="apiary-eyebrow">
+                                    Your Land
+                                </span>
+
+                                <h2>
+                                    Your Apiary
+                                </h2>
+
+                                <p>
+                                    Every property level unlocks another group
+                                    of five hive plots. Build all five hives in
+                                    the current group to reveal the next five.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Equipment -->
+
+                        <div class="apiary-tools-card">
+
+                            <div class="apiary-tools-heading">
+
+                                <div class="apiary-summary-icon">
+                                    🛡️
+                                </div>
+
+                                <div>
+
+                                    <span class="apiary-eyebrow">
+                                        Equipment
+                                    </span>
+
+                                    <h2>
+                                        Beekeeping Tools
+                                    </h2>
+
+                                    <p>
+                                        Equipment reduces sting damage when
+                                        catching a wild Queen Bee.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                id="beekeeping-equipment-card"
+                                class="beekeeping-equipment-card"
+                            >
+                                Loading equipment...
+                            </div>
+
+                            <p
+                                id="beekeeping-equipment-message"
+                                class="beekeeping-equipment-message"
+                                aria-live="polite"
+                            ></p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =========================
+                         HIVE PANEL
+                    ========================= -->
+
+                    <section class="apiary-hives-panel">
+
+                        <header class="apiary-hives-heading">
+
+                            <div class="apiary-hives-heading-icon">
+                                🐝
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Hive Plots
+                                </h2>
+
+                                <p>
+                                    Build hives, install Queen Bees
+                                    and harvest honey.
+                                </p>
+
+                            </div>
+
+                            <span class="apiary-hives-badge">
+                                Property Hives
+                            </span>
+
+                        </header>
+
+                        <div
+                            id="hive-slots"
+                            class="apiary-hive-grid"
+                            aria-live="polite"
+                        >
+
+                            <div class="apiary-loading-state">
+
+                                <span>
+                                    🐝
+                                </span>
+
+                                <p>
+                                    Checking your hive plots...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </section>
+
             </div>
 
-            <aside class="quick-actions apiary-tools-card">
-                <h2>🛡️ Beekeeping Tools</h2>
-                <p>Equipment reduces sting damage when catching a wild Queen Bee.</p>
-                <div id="beekeeping-equipment-card">Loading equipment...</div>
-                <p id="beekeeping-equipment-message"></p>
-            </aside>
-        </section>
+        </main>
 
-    </main>
+    </div>
 
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/apiary.js"></script>
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/apiary.js?v=2"></script>
 
 </body>
+
 </html>

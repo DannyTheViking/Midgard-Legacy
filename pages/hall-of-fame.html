@@ -1,31 +1,193 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Midgard Legacy - Hall of Fame</title>
-    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-    <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - Hall of Fame
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=5"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/hall-of-fame.css?v=1"
+    >
+
 </head>
+
 <body>
+
     <div class="game-layout">
+
         <div id="sidebar"></div>
+
         <main class="main-area">
+
             <div id="topbar"></div>
-            <section class="page-header">
-                <div class="page-title">
-                    <h1>🏛 Hall of Fame</h1>
-                    <p>The most renowned names in Midgard.</p>
-                </div>
-            </section>
-            <div id="hof-grids" class="hof-grid"></div>
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🏛 Hall of Fame
+                        </h1>
+
+                        <p>
+                            The most renowned names, greatest warriors
+                            and richest Vikings in Midgard.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🏆 Rankings
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     HALL OF FAME
+                ========================= -->
+
+                <section class="hof-layout">
+
+
+                    <!-- Ranking Categories -->
+
+                    <aside class="hof-menu-panel">
+
+                        <header class="hof-menu-heading">
+
+                            <div class="hof-heading-icon">
+                                🏆
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Leaderboards
+                                </h2>
+
+                                <p>
+                                    Choose a ranking to view.
+                                </p>
+
+                            </div>
+
+                        </header>
+
+                        <nav
+                            id="hof-menu"
+                            class="hof-menu"
+                            aria-label="Hall of Fame categories"
+                        ></nav>
+
+                    </aside>
+
+
+                    <!-- Expanded Leaderboard -->
+
+                    <section class="hof-expanded-board">
+
+                        <header class="hof-board-heading">
+
+                            <div class="hof-heading-icon">
+                                📜
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Midgard Rankings
+                                </h2>
+
+                                <p>
+                                    The greatest achievements across the realm.
+                                </p>
+
+                            </div>
+
+                            <span class="hof-board-badge">
+                                Top Vikings
+                            </span>
+
+                        </header>
+
+                        <div
+                            id="hof-board-content"
+                            class="hof-board-content"
+                            aria-live="polite"
+                        >
+
+                            <div class="hof-loading-state">
+
+                                <span>
+                                    🏛
+                                </span>
+
+                                <p>
+                                    Loading the Hall of Fame...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </section>
+
+            </div>
+
         </main>
+
     </div>
 
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/game-utils.js"></script>
     <script src="../js/components.js?v=4"></script>
-    <script src="../js/hall-of-fame.js"></script>
+    <script src="../js/hall-of-fame.js?v=5"></script>
+
 </body>
+
 </html>

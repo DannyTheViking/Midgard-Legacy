@@ -1,0 +1,608 @@
+/* =========================================================
+   MIDGARD LEGACY
+   WAGON SHED PAGE
+========================================================= */
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+:root {
+    --wagon-accent: #b78a4d;
+    --wagon-accent-light: #e5c18b;
+    --wagon-accent-dark: #6a4728;
+    --wagon-accent-rgb: 183, 138, 77;
+
+    --wagon-panel: #211c17;
+    --wagon-panel-light: #2b241d;
+
+    --wagon-border: #5f4a32;
+
+    --wagon-text: #f3ead8;
+    --wagon-muted: #b9ad9a;
+
+    --wagon-success: #70bc73;
+    --wagon-danger: #d66d65;
+
+    --wagon-radius: 12px;
+    --wagon-small-radius: 8px;
+
+    --wagon-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
+.wagon-shed-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        310px;
+
+    align-items: start;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   MAIN WAGON PANEL
+========================================================= */
+
+.wagon-shed-panel {
+    min-width: 0;
+    min-height: 420px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-panel-light),
+            var(--wagon-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-border);
+
+    border-radius:
+        var(--wagon-radius);
+
+    box-shadow:
+        var(--wagon-shadow);
+}
+
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.wagon-loading-state {
+    display: grid;
+    place-items: center;
+    align-content: center;
+
+    gap: 12px;
+
+    min-height: 420px;
+
+    color:
+        var(--wagon-muted);
+
+    text-align: center;
+}
+
+.wagon-loading-icon {
+    font-size: 3.2rem;
+
+    opacity: 0.75;
+}
+
+.wagon-loading-state p {
+    margin: 0;
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   JAVASCRIPT-GENERATED WAGON CONTENT
+========================================================= */
+
+.wagon-shed-panel h2,
+.wagon-shed-panel h3 {
+    color:
+        var(--wagon-text);
+}
+
+.wagon-shed-panel p {
+    color:
+        var(--wagon-muted);
+}
+
+.wagon-shed-panel button {
+    min-height: 40px;
+
+    padding: 9px 13px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-accent-light),
+            var(--wagon-accent)
+        );
+
+    border:
+        1px solid
+        var(--wagon-accent-dark);
+
+    border-radius:
+        var(--wagon-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--wagon-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.wagon-shed-panel button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform:
+        translateY(-1px);
+}
+
+.wagon-shed-panel button:active:not(:disabled) {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--wagon-accent-dark);
+}
+
+.wagon-shed-panel button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.48;
+}
+
+
+/* =========================================================
+   COMMON GENERATED CARD CLASSES
+========================================================= */
+
+.wagon-card,
+.transport-card,
+.wagon-status-card {
+    padding: 16px;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius:
+        var(--wagon-small-radius);
+}
+
+.wagon-card + .wagon-card,
+.transport-card + .transport-card,
+.wagon-status-card + .wagon-status-card {
+    margin-top: 12px;
+}
+
+.wagon-card-header,
+.transport-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+}
+
+.wagon-card-header h2,
+.transport-card-header h2 {
+    margin: 0;
+
+    color:
+        var(--wagon-accent-light);
+
+    font-size: 1.1rem;
+}
+
+.wagon-status {
+    padding: 4px 8px;
+
+    color:
+        var(--wagon-accent-light);
+
+    font-size: 0.66rem;
+    font-weight: 850;
+
+    background:
+        rgba(var(--wagon-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--wagon-accent-rgb), 0.30);
+
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   WAGON STAT ROWS
+========================================================= */
+
+.wagon-stats,
+.transport-stats,
+.wagon-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin: 12px 0;
+}
+
+.wagon-stat-row,
+.transport-stat-row,
+.wagon-requirement-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 10px 11px;
+
+    color:
+        var(--wagon-muted);
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius:
+        var(--wagon-small-radius);
+}
+
+.wagon-stat-row strong,
+.transport-stat-row strong,
+.wagon-requirement-row strong {
+    color:
+        var(--wagon-accent-light);
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   DURABILITY / REPAIR BAR
+========================================================= */
+
+.wagon-durability-bar,
+.wagon-repair-bar,
+.transport-capacity-bar {
+    width: 100%;
+    height: 10px;
+
+    margin: 10px 0 15px;
+
+    overflow: hidden;
+
+    background:
+        #100d0b;
+
+    border:
+        1px solid
+        #4e4031;
+
+    border-radius: 999px;
+}
+
+.wagon-durability-fill,
+.wagon-repair-fill,
+.transport-capacity-fill {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8c3f36,
+            #d39b3f,
+            #70bc73
+        );
+
+    border-radius: inherit;
+
+    transition:
+        width 0.35s ease;
+}
+
+
+/* =========================================================
+   WAGON ACTIONS
+========================================================= */
+
+.wagon-actions,
+.transport-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    margin-top: 14px;
+}
+
+.wagon-actions button,
+.transport-actions button {
+    flex:
+        1 1 150px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.wagon-shed-side {
+    position: sticky;
+
+    top: 18px;
+
+    display: grid;
+
+    gap: 15px;
+}
+
+
+/* =========================================================
+   WAGON BUILDER CARD
+========================================================= */
+
+.wagon-builder-card {
+    display: grid;
+
+    grid-template-columns:
+        50px
+        minmax(0, 1fr);
+
+    gap: 13px;
+
+    padding: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-panel-light),
+            var(--wagon-panel)
+        );
+
+    border:
+        1px solid
+        var(--wagon-border);
+
+    border-radius:
+        var(--wagon-radius);
+
+    box-shadow:
+        var(--wagon-shadow);
+}
+
+.wagon-builder-icon {
+    display: grid;
+    place-items: center;
+
+    width: 50px;
+    height: 50px;
+
+    font-size: 1.7rem;
+
+    background:
+        rgba(var(--wagon-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--wagon-accent-rgb), 0.30);
+
+    border-radius: 10px;
+}
+
+.wagon-builder-card h2 {
+    margin: 0 0 7px;
+
+    color:
+        var(--wagon-text);
+
+    font-size: 1rem;
+}
+
+.wagon-builder-card p {
+    margin: 0 0 13px;
+
+    color:
+        var(--wagon-muted);
+
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.wagon-builder-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 39px;
+    padding: 8px 11px;
+
+    color:
+        #17120d;
+
+    font-size: 0.78rem;
+    font-weight: 850;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--wagon-accent-light),
+            var(--wagon-accent)
+        );
+
+    border:
+        1px solid
+        var(--wagon-accent-dark);
+
+    border-radius:
+        var(--wagon-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--wagon-accent-dark);
+}
+
+
+/* =========================================================
+   PAGE MESSAGE
+========================================================= */
+
+.wagon-shed-message {
+    display: none;
+
+    margin: 0;
+    padding: 11px 12px;
+
+    color:
+        var(--wagon-muted);
+
+    font-size: 0.78rem;
+    line-height: 1.4;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--wagon-accent-rgb), 0.08),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(var(--wagon-accent-rgb), 0.28);
+
+    border-left:
+        4px solid
+        var(--wagon-accent);
+
+    border-radius:
+        var(--wagon-small-radius);
+}
+
+.wagon-shed-message:not(:empty) {
+    display: block;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .wagon-shed-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .wagon-shed-side {
+        position: static;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .wagon-shed-message {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .wagon-shed-side {
+        grid-template-columns: 1fr;
+    }
+
+    .wagon-shed-message {
+        grid-column: auto;
+    }
+
+    .wagon-builder-card {
+        grid-template-columns:
+            44px
+            minmax(0, 1fr);
+    }
+
+    .wagon-builder-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .wagon-actions,
+    .transport-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .wagon-shed-panel button {
+        transition: none;
+    }
+
+}

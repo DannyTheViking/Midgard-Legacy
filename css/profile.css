@@ -1,0 +1,1089 @@
+/* =====================================
+   MIDGARD LEGACY
+   PROFILE PAGE
+===================================== */
+
+
+/* =====================================
+   PROFILE CARD
+===================================== */
+
+.profile-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    overflow: hidden;
+    margin-top: 10px;
+    padding: 24px;
+    border: 1px solid #715016;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(113, 80, 22, 0.14),
+            transparent 45%
+        ),
+        #111111;
+}
+
+.profile-banner-decoration {
+    position: absolute;
+    top: -52px;
+    right: 20px;
+    color: rgba(255, 215, 0, 0.035);
+    font-size: 220px;
+    font-weight: bold;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
+
+.profile-avatar-column {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.profile-avatar-editor {
+    width: 100%;
+    text-align: center;
+}
+
+.profile-avatar-button {
+    position: relative;
+    display: block;
+    width: 128px;
+    height: 128px;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid #d5b400;
+    border-radius: 14px;
+    background: #080808;
+    cursor: pointer;
+}
+
+.profile-avatar-button:hover,
+.profile-avatar-button:focus-visible {
+    border-color: #ffe43b;
+    box-shadow:
+        0 0 0 3px rgba(255, 228, 59, 0.13),
+        0 8px 25px rgba(0, 0, 0, 0.45);
+}
+
+
+
+.profile-avatar-button .profile-avatar-frame {
+    border: 0;
+    border-radius: 11px;
+}
+
+.profile-avatar-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-default-avatar {
+    font-size: 62px;
+    line-height: 1;
+}
+
+.profile-avatar-edit-icon {
+    position: absolute;
+    right: 7px;
+    bottom: 7px;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e8c21d;
+    border-radius: 50%;
+    background: rgba(20, 14, 3, 0.94);
+    font-size: 17px;
+}
+
+.profile-avatar-hover-text {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 8px 5px;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffe43b;
+    font-size: 13px;
+    transition: opacity 0.15s ease;
+}
+
+.profile-avatar-button:hover
+.profile-avatar-hover-text {
+    opacity: 1;
+}
+
+.profile-avatar-input {
+    display: none;
+}
+
+.avatar-upload-message {
+    display: block;
+    min-height: 18px;
+    margin-top: 8px;
+    color: #b8ae9d;
+    font-size: 12px;
+}
+
+
+/* =====================================
+   PROFILE INFORMATION
+===================================== */
+
+.profile-information {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+}
+
+.profile-name-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.profile-information h1 {
+    margin: 0 0 8px;
+    color: #f4ead5;
+    font-size: clamp(28px, 3vw, 38px);
+    line-height: 1.1;
+}
+
+.profile-online-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    color: #c8c0b1;
+    font-size: 14px;
+}
+
+.profile-status-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+}
+
+.profile-online-status.is-online
+.profile-status-dot {
+    background: #4fe082;
+    box-shadow: 0 0 9px rgba(79, 224, 130, 0.75);
+}
+
+.profile-online-status.is-offline
+.profile-status-dot {
+    background: #737373;
+}
+
+.profile-status-divider {
+    color: #75581f;
+}
+
+.profile-player-number {
+    flex: 0 0 auto;
+    min-width: 92px;
+    padding: 8px 12px;
+    border: 1px solid #493512;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.3);
+    text-align: right;
+}
+
+.profile-player-number small {
+    display: block;
+    margin-bottom: 2px;
+    color: #9d9485;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.profile-player-number strong {
+    color: #e4bf2d;
+}
+
+.profile-account-date {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    margin-top: 16px;
+    color: #b9b09f;
+    font-size: 13px;
+}
+
+
+/* =====================================
+   RANK BADGES
+===================================== */
+
+.profile-ranks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.profile-rank-badge {
+    display: inline-flex;
+    min-height: 34px;
+    padding: 7px 11px;
+    align-items: center;
+    border: 1px solid #654817;
+    border-radius: 8px;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(118, 78, 17, 0.16),
+            rgba(0, 0, 0, 0.15)
+        );
+    color: #ded5c5;
+    font-size: 13px;
+    cursor: help;
+}
+
+.profile-rank-badge:hover {
+    border-color: #c69820;
+    background: rgba(126, 84, 18, 0.24);
+}
+
+.profile-rank-icon {
+    margin-right: 6px;
+}
+
+
+/* =====================================
+   WORLD DETAILS
+===================================== */
+
+.profile-world-details {
+    display: grid;
+    grid-template-columns: repeat(
+        3,
+        minmax(130px, 1fr)
+    );
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.profile-detail {
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+    padding: 11px;
+    align-items: center;
+    border: 1px solid #3e2d11;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.profile-detail-icon {
+    display: flex;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(112, 77, 17, 0.25);
+}
+
+.profile-detail div {
+    min-width: 0;
+}
+
+.profile-detail small {
+    display: block;
+    margin-bottom: 3px;
+    color: #8e8576;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.profile-detail strong {
+    display: block;
+    overflow: hidden;
+    color: #ded5c5;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =====================================
+   PROFILE ACTIONS
+===================================== */
+
+.profile-actions {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+    padding: 12px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #4d3713;
+    background: #111111;
+}
+
+.profile-action-information {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.profile-action-information > span {
+    display: flex;
+    width: 38px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #5f4316;
+    border-radius: 8px;
+    background: rgba(98, 65, 14, 0.22);
+}
+
+.profile-action-information strong,
+.profile-action-information small {
+    display: block;
+}
+
+.profile-action-information strong {
+    color: #e6d8bd;
+}
+
+.profile-action-information small {
+    margin-top: 3px;
+    color: #918878;
+}
+
+.profile-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.profile-action-button {
+    display: inline-flex;
+    min-height: 42px;
+    padding: 9px 14px;
+    gap: 7px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #8b6018;
+    border-radius: 7px;
+    background:
+        linear-gradient(
+            180deg,
+            #704413,
+            #4e2c0b
+        );
+    color: #fff4de;
+    cursor: pointer;
+}
+
+.profile-action-button:hover:not(:disabled) {
+    border-color: #d7aa2d;
+    background:
+        linear-gradient(
+            180deg,
+            #89551a,
+            #62380d
+        );
+}
+
+.profile-action-button small {
+    color: #c9bda8;
+    font-size: 10px;
+}
+
+.profile-action-button:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+.profile-logout-button,
+.profile-enemy-button {
+    border-color: #7b331e;
+    background:
+        linear-gradient(
+            180deg,
+            #652d18,
+            #421b0e
+        );
+}
+
+
+/* =====================================
+   SAGA HALL
+===================================== */
+
+.saga-hall-card {
+    min-height: 150px;
+}
+
+.profile-section-heading {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.profile-section-heading h3 {
+    margin: 0;
+    color: #f3d92e;
+}
+
+.profile-section-heading p {
+    margin: 3px 0 0;
+    color: #8f8779;
+    font-size: 12px;
+}
+
+.profile-section-icon {
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #624617;
+    border-radius: 8px;
+    background: rgba(95, 65, 14, 0.24);
+    font-size: 20px;
+}
+
+.empty-saga-message {
+    display: flex;
+    min-height: 90px;
+    padding: 18px;
+    gap: 5px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #493614;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.18);
+    text-align: center;
+}
+
+.empty-saga-message > span {
+    margin-bottom: 3px;
+    font-size: 26px;
+}
+
+.empty-saga-message strong {
+    color: #d1c6b4;
+}
+
+.empty-saga-message small {
+    color: #847b6d;
+}
+
+
+/* =====================================
+   ERROR
+===================================== */
+
+.profile-error {
+    display: flex;
+    min-height: 120px;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: #d5c9b7;
+}
+
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 900px) {
+
+    .profile-card {
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 18px;
+        padding: 18px;
+    }
+
+    .profile-avatar-frame,
+    .profile-avatar-button {
+        width: 110px;
+        height: 110px;
+    }
+
+    .profile-world-details {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .profile-action-buttons {
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 600px) {
+
+    .profile-card {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        text-align: center;
+    }
+
+    .profile-avatar-frame,
+    .profile-avatar-button {
+        width: 118px;
+        height: 118px;
+    }
+
+    .profile-name-row {
+        display: block;
+    }
+
+    .profile-player-number {
+        width: fit-content;
+        margin: 12px auto 0;
+        text-align: center;
+    }
+
+    .profile-online-status,
+    .profile-account-date,
+    .profile-ranks {
+        justify-content: center;
+    }
+
+    .profile-world-details {
+        text-align: left;
+    }
+
+    .profile-action-information {
+        justify-content: center;
+        text-align: left;
+    }
+
+    .profile-action-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .profile-action-button {
+        width: 100%;
+    }
+
+}
+
+/* =====================================
+   SAGA HALL PANEL FIX
+===================================== */
+
+.saga-hall-card {
+    min-height: 150px;
+    padding: 0;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #2b241d,
+            #211c17
+        );
+
+    border: 1px solid #5f4a32;
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+.profile-section-heading {
+    display: grid;
+
+    grid-template-columns:
+        42px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 0;
+    padding: 14px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(183, 138, 77, 0.10),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom: 1px solid #5f4a32;
+}
+
+.profile-section-heading h2 {
+    margin: 0;
+
+    color: #f3ead8;
+
+    font-size: 1.1rem;
+}
+
+.profile-section-heading p {
+    margin: 3px 0 0;
+
+    color: #b9ad9a;
+
+    font-size: 0.76rem;
+}
+
+.profile-section-icon {
+    display: grid;
+    place-items: center;
+
+    width: 42px;
+    height: 42px;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+
+    border-radius: 8px;
+
+    font-size: 1.2rem;
+}
+
+.profile-section-badge {
+    padding: 5px 9px;
+
+    color: #e5c18b;
+
+    font-size: 0.65rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.35);
+
+    border-radius: 999px;
+}
+
+.saga-grid {
+    padding: 14px;
+}
+
+.empty-saga-message {
+    min-height: 110px;
+    margin: 0;
+
+    border:
+        1px dashed
+        rgba(183, 138, 77, 0.30);
+
+    background:
+        rgba(0, 0, 0, 0.14);
+}
+
+@media (max-width: 600px) {
+
+    .profile-section-heading {
+        grid-template-columns:
+            42px
+            minmax(0, 1fr);
+    }
+
+    .profile-section-badge {
+        grid-column: 1 / -1;
+
+        justify-self: start;
+    }
+
+}
+
+/* =====================================
+   PROFILE PANEL STYLE MATCH
+===================================== */
+
+.profile-card,
+.profile-actions,
+.saga-hall-card {
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #2b241d,
+            #211c17
+        );
+
+    border:
+        1px solid #5f4a32;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.30);
+}
+
+
+/* =====================================
+   MAIN PROFILE CARD
+===================================== */
+
+.profile-card {
+    margin-top: 0;
+    padding: 22px;
+
+    border-color:
+        #5f4a32;
+
+    background:
+        linear-gradient(
+            180deg,
+            #2b241d,
+            #211c17
+        );
+}
+
+
+/* Remove the old flat black look */
+
+.profile-card::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(183, 138, 77, 0.12),
+            transparent 38%
+        );
+}
+
+
+/* =====================================
+   PROFILE DETAILS
+===================================== */
+
+.profile-detail {
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+.profile-detail:hover {
+    border-color:
+        rgba(183, 138, 77, 0.34);
+}
+
+
+/* =====================================
+   PROFILE RANK BADGES
+===================================== */
+
+.profile-rank-badge {
+    color:
+        #f3ead8;
+
+    background:
+        rgba(183, 138, 77, 0.08);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+
+    border-radius: 999px;
+}
+
+.profile-rank-badge:hover {
+    background:
+        rgba(183, 138, 77, 0.15);
+
+    border-color:
+        #b78a4d;
+}
+
+
+/* =====================================
+   PROFILE CONTROLS
+===================================== */
+
+.profile-actions {
+    margin: 14px 0;
+    padding: 14px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #2b241d,
+            #211c17
+        );
+}
+
+.profile-action-information > span {
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+}
+
+
+/* =====================================
+   PROFILE BUTTONS
+===================================== */
+
+.profile-action-button {
+    color:
+        #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            #e5c18b,
+            #b78a4d
+        );
+
+    border:
+        1px solid
+        #6a4728;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        #6a4728;
+}
+
+.profile-action-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    background:
+        linear-gradient(
+            180deg,
+            #efd09e,
+            #c69657
+        );
+}
+
+.profile-action-button:active:not(:disabled) {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        #6a4728;
+}
+
+
+/* Keep logout red */
+
+.profile-logout-button,
+.profile-enemy-button {
+    color:
+        #f7e8df;
+
+    background:
+        linear-gradient(
+            180deg,
+            #8a4329,
+            #5d2818
+        );
+
+    border-color:
+        #3e170d;
+
+    box-shadow:
+        0 4px 0
+        #3e170d;
+}
+
+
+/* =====================================
+   SAGA HALL
+===================================== */
+
+.saga-hall-card {
+    min-height: 150px;
+    padding: 0;
+}
+
+.profile-section-heading {
+    display: grid;
+
+    grid-template-columns:
+        42px
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 0;
+    padding: 14px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(183, 138, 77, 0.12),
+            rgba(0, 0, 0, 0.04)
+        );
+
+    border-bottom:
+        1px solid
+        #5f4a32;
+}
+
+.profile-section-heading h2,
+.profile-section-heading h3 {
+    margin: 0;
+
+    color:
+        #f3ead8;
+}
+
+.profile-section-heading p {
+    margin: 3px 0 0;
+
+    color:
+        #b9ad9a;
+}
+
+.profile-section-icon {
+    display: grid;
+    place-items: center;
+
+    width: 42px;
+    height: 42px;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.30);
+
+    border-radius: 9px;
+}
+
+.profile-section-badge {
+    padding: 5px 9px;
+
+    color:
+        #e5c18b;
+
+    font-size: 0.65rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(183, 138, 77, 0.10);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.35);
+
+    border-radius: 999px;
+}
+
+.saga-grid {
+    padding: 14px;
+}
+
+.empty-saga-message {
+    min-height: 110px;
+    margin: 0;
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    border:
+        1px dashed
+        rgba(183, 138, 77, 0.30);
+}
+
+
+/* =====================================
+   PLAYER NUMBER
+===================================== */
+
+.profile-player-number {
+    background:
+        rgba(0, 0, 0, 0.18);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.35);
+
+    border-radius: 8px;
+}
+
+.profile-player-number strong {
+    color:
+        #e5c18b;
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 600px) {
+
+    .profile-section-heading {
+        grid-template-columns:
+            42px
+            minmax(0, 1fr);
+    }
+
+    .profile-section-badge {
+        grid-column: 1 / -1;
+
+        justify-self: start;
+    }
+
+}
+

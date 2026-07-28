@@ -27,3 +27,35 @@ function getGameTimerSeconds(timerKey, fallbackSeconds = 0) {
         ? value
         : Math.max(0, Number(fallbackSeconds || 0));
 }
+
+
+function updateSidebarClock() {
+    const dateElement = document.getElementById("sidebar-date");
+    const timeElement = document.getElementById("sidebar-time");
+
+    if (!dateElement || !timeElement) {
+        return;
+    }
+
+    const now = new Date();
+
+    dateElement.textContent = now.toLocaleDateString("en-GB", {
+        timeZone: "Europe/London",
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    timeElement.textContent = now.toLocaleTimeString("en-GB", {
+        timeZone: "Europe/London",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    });
+}
+
+updateSidebarClock();
+setInterval(updateSidebarClock, 1000);
+

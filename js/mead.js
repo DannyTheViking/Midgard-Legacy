@@ -127,27 +127,74 @@ function renderMeadShelves() {
 function buildEmptyShelfCard(slot) {
 
     return `
-        <div class="crafting-card">
+        <article class="mead-card empty">
 
-            <h3>🪵 Mead Shelf #${slot}</h3>
+            <div class="mead-card-image mead-empty-area">
+                🪵
+            </div>
 
-            <p>
-                Status:
-                <span class="green">Empty</span>
-            </p>
+            <header class="mead-card-header">
 
-            <p>
-                Requires:
-                <span class="green">1 Empty Barrel</span>
-            </p>
+                <div>
 
-            <button onclick="addBarrel(${slot})">
-                🛢️ Add Barrel
-            </button>
+                    <h2>
+                        Mead Shelf #${slot}
+                    </h2>
 
-            <p id="mead-message-${slot}"></p>
+                    <p>
+                        Place an empty barrel onto this shelf
+                        to begin brewing.
+                    </p>
 
-        </div>
+                </div>
+
+                <span class="mead-status-badge empty">
+                    Empty
+                </span>
+
+            </header>
+
+            <div class="mead-card-body">
+
+                <div class="mead-requirements">
+
+                    <p>
+
+                        <span>
+                            🛢️ Empty Barrel
+                        </span>
+
+                        <span class="green">
+                            1
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="mead-button"
+                    onclick="addBarrel(${slot})"
+                >
+                    🛢️ Add Barrel
+                </button>
+
+                <div class="mead-action">
+
+                    <h4>
+                        Latest Action
+                    </h4>
+
+                    <p id="mead-message-${slot}">
+                        Shelf ready for a barrel.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
     `;
 
 }
@@ -160,39 +207,75 @@ function buildEmptyShelfCard(slot) {
 function buildLockedShelfCard(slot) {
 
     return `
-        <div class="crafting-card locked">
+        <article class="mead-card locked">
 
-            <h3>🔒 Mead Shelf #${slot}</h3>
+            <div class="mead-card-image mead-locked-area">
+                🔒
+            </div>
 
-            <p>Status: Locked</p>
+            <header class="mead-card-header">
 
-            <p>Add a barrel to the previous shelf first.</p>
+                <div>
 
-        </div>
+                    <h2>
+                        Mead Shelf #${slot}
+                    </h2>
+
+                    <p>
+                        This brewing shelf has not yet
+                        been unlocked.
+                    </p>
+
+                </div>
+
+                <span class="mead-status-badge locked">
+                    Locked
+                </span>
+
+            </header>
+
+            <div class="mead-card-body">
+
+                <div class="mead-requirements">
+
+                    <p>
+
+                        <span>
+                            🔓 Unlock Requirement
+                        </span>
+
+                        <span>
+                            Fill the previous shelf
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="mead-button"
+                    disabled
+                >
+                    🔒 Shelf Locked
+                </button>
+
+                <div class="mead-action">
+
+                    <h4>
+                        How to Unlock
+                    </h4>
+
+                    <p>
+                        Add a barrel to the previous shelf first.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
     `;
-
-}
-
-
-/* =====================================
-   BARREL CARD
-===================================== */
-
-function buildBarrelCard(barrel) {
-
-    if (barrel.stage === "barrel_added") {
-        return buildReadyBarrelCard(barrel);
-    }
-
-    if (barrel.stage === "brewing") {
-        return buildBrewingCard(barrel);
-    }
-
-    if (barrel.stage === "ready") {
-        return buildFinishedCard(barrel);
-    }
-
-    return buildReadyBarrelCard(barrel);
 
 }
 
@@ -204,32 +287,98 @@ function buildBarrelCard(barrel) {
 function buildReadyBarrelCard(barrel) {
 
     return `
-        <div class="crafting-card">
+        <article class="mead-card">
 
-            <h3>🛢️ Mead Barrel #${barrel.slot}</h3>
+            <div class="mead-card-image mead-barrel-area">
+                🛢️
+            </div>
 
-            <p>
-                Status:
-                <span class="green">Empty Barrel</span>
-            </p>
+            <header class="mead-card-header">
 
-            <p>
-                Requires:
-                <span class="green">1 Honey Bucket</span>
-            </p>
+                <div>
 
-            <p>
-                Requires:
-                <span class="green">1 Water Bucket</span>
-            </p>
+                    <h2>
+                        Mead Barrel #${barrel.slot}
+                    </h2>
 
-            <button onclick="startBrewing(${barrel.id})">
-                🍯 Add Honey and Water
-            </button>
+                    <p>
+                        The barrel is installed and ready
+                        to be filled.
+                    </p>
 
-            <p id="mead-message-${barrel.slot}"></p>
+                </div>
 
-        </div>
+                <span class="mead-status-badge empty">
+                    Empty Barrel
+                </span>
+
+            </header>
+
+            <div class="mead-card-body">
+
+                <div class="mead-requirements">
+
+                    <p>
+
+                        <span>
+                            🍯 Honey Bucket
+                        </span>
+
+                        <span class="green">
+                            ${HONEY_BUCKET_COST}
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <span>
+                            💧 Water Bucket
+                        </span>
+
+                        <span class="green">
+                            ${WATER_BUCKET_COST}
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <span>
+                            🍺 Produces
+                        </span>
+
+                        <span class="green">
+                            1 Young Mead
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="mead-button"
+                    onclick="startBrewing(${barrel.id})"
+                >
+                    🍯 Add Honey and Water
+                </button>
+
+                <div class="mead-action">
+
+                    <h4>
+                        Latest Action
+                    </h4>
+
+                    <p id="mead-message-${barrel.slot}">
+                        Ready to begin brewing.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
     `;
 
 }
@@ -245,36 +394,95 @@ function buildBrewingCard(barrel) {
         isBrewReady(barrel.started_at);
 
     if (ready) {
+
         setTimeout(function () {
+
             markMeadReady(barrel.id);
+
         }, 0);
+
     }
 
     return `
-        <div class="crafting-card">
+        <article class="mead-card brewing">
 
-            <h3>🍺 Young Mead #${barrel.slot}</h3>
+            <div class="mead-card-image mead-brewing-area">
+                🍺
+            </div>
 
-            <p>
-                Status:
+            <header class="mead-card-header">
+
+                <div>
+
+                    <h2>
+                        Young Mead #${barrel.slot}
+                    </h2>
+
+                    <p>
+                        Honey and water slowly ferment
+                        inside the barrel.
+                    </p>
+
+                </div>
+
                 <span
-                    class="green"
-                    id="mead-status-${barrel.id}">
+                    class="mead-status-badge brewing"
+                    id="mead-status-${barrel.id}"
+                >
                     ${ready ? "Ready" : "Brewing"}
                 </span>
-            </p>
 
-            <p id="mead-timer-${barrel.id}">
-                ${ready ? "🍺 Mead is ready." : "⏳ Loading timer..."}
-            </p>
+            </header>
 
-            <button disabled>
-                ⏳ Brewing
-            </button>
+            <div class="mead-card-body">
 
-            <p id="mead-message-${barrel.slot}"></p>
+                <div class="mead-brewing-status">
 
-        </div>
+                    <span>
+                        ⏳ Brewing Timer
+                    </span>
+
+                    <strong id="mead-timer-${barrel.id}">
+                        ${
+                            ready
+                                ? "🍺 Mead is ready."
+                                : "Loading timer..."
+                        }
+                    </strong>
+
+                </div>
+
+                <div class="mead-progress">
+
+                    <div
+                        class="mead-progress-fill brewing-animation"
+                    ></div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="mead-button"
+                    disabled
+                >
+                    ⏳ Brewing
+                </button>
+
+                <div class="mead-action">
+
+                    <h4>
+                        Brewing Activity
+                    </h4>
+
+                    <p id="mead-message-${barrel.slot}">
+                        The barrel is fermenting.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
     `;
 
 }
@@ -287,29 +495,89 @@ function buildBrewingCard(barrel) {
 function buildFinishedCard(barrel) {
 
     return `
-        <div class="crafting-card">
+        <article class="mead-card ready">
 
-            <h3>🍺 Young Mead #${barrel.slot}</h3>
+            <div class="mead-card-image mead-ready-area">
+                🍺
+            </div>
 
-            <p>
-                Status:
-                <span class="green">Ready</span>
-            </p>
+            <header class="mead-card-header">
 
-            <p>Your first batch of mead is ready.</p>
+                <div>
 
-            <button onclick="collectYoungMead(${barrel.id})">
-                🍺 Collect Young Mead
-            </button>
+                    <h2>
+                        Young Mead #${barrel.slot}
+                    </h2>
 
-            <p id="mead-message-${barrel.slot}"></p>
+                    <p>
+                        The finished batch is ready
+                        to be collected.
+                    </p>
 
-        </div>
+                </div>
+
+                <span class="mead-status-badge ready">
+                    Ready
+                </span>
+
+            </header>
+
+            <div class="mead-card-body">
+
+                <div class="mead-requirements">
+
+                    <p>
+
+                        <span>
+                            🍺 Finished Batch
+                        </span>
+
+                        <span class="green">
+                            1 Young Mead
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <span>
+                            ⭐ Brewing XP
+                        </span>
+
+                        <span class="green">
+                            25 XP
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="mead-button"
+                    onclick="collectYoungMead(${barrel.id})"
+                >
+                    🍺 Collect Young Mead
+                </button>
+
+                <div class="mead-action">
+
+                    <h4>
+                        Latest Action
+                    </h4>
+
+                    <p id="mead-message-${barrel.slot}">
+                        Your mead is ready to collect.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </article>
     `;
 
 }
-
-
 /* =====================================
    ADD BARREL
 ===================================== */

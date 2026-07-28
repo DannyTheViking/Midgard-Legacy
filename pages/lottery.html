@@ -1,58 +1,319 @@
 <!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Midgard Legacy - King's Raffle</title>
-        <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-        <link rel="stylesheet" href="../css/style.css?v=4">
-    </head>
-    <body>
-        <div class="game-layout">
-            <div id="sidebar"></div>
-            <main class="main-area">
-                <div id="topbar"></div>
-                <section class="page-header">
-                    <div class="page-title">
-                        <h1>🍀 King's Weekly Raffle</h1>
-                        <p>One entry per player each day. Every 1,000 silver of contributed value becomes one entry.</p>
-                    </div>
-                </section>
-                <section class="cards">
-                    <div class="card">
-                        <h3>Your Private Entries</h3>
-                        <p id="my-lottery-entries">0</p>
-                        <p>Only you can see this number.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Current Prize Pool</h3>
-                        <div id="lottery-pool">Loading...</div>
-                    </div>
-                </section>
-                <section class="card">
-                    <h3>Enter Today</h3>
-                    <select id="lottery-item"></select>
-                    <input id="lottery-quantity" type="number" min="1" value="1">
-                    <button id="lottery-enter-button">Enter Raffle</button>
-                    <p id="lottery-message"></p>
-                </section>
-                <section class="home-grid">
-                    <div class="card">
-                        <h3>Last 100 Winners</h3>
-                        <div id="lottery-history"></div>
-                    </div>
-                    <div class="card">
-                        <h3>Top 10 Biggest Jackpots</h3>
-                        <div id="lottery-biggest"></div>
-                    </div>
-                </section>
-            </main>
-        </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="../js/auth.js"></script>
-        <script src="../js/game-utils.js"></script>
-        <script src="../js/components.js?v=4"></script>
-        <script src="../js/lottery.js"></script>
-    </body>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - King's Raffle
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+</head>
+
+<body>
+
+    <div class="game-layout">
+
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+
+            <!-- =========================
+                 RAFFLE PAGE
+            ========================= -->
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🍀 Knut’s Royal Raffle
+                        </h1>
+
+                        <p>
+                            Enter once each day. Every 1,000 silver
+                            of contributed value becomes one raffle entry.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🎟️ Weekly Draw
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     NEXT DRAW
+                ========================= -->
+
+                <section class="raffle-draw-panel">
+
+                    <div class="raffle-draw-icon">
+                        🕒
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Weekly Draw
+                        </h2>
+
+                        <p>
+                            Every Thursday at 3:00 PM UK time
+                        </p>
+
+                    </div>
+
+                    <div class="raffle-draw-time">
+
+                        <span id="raffle-next-draw">
+                            Loading draw date...
+                        </span>
+
+                        <strong id="raffle-countdown">
+                            Loading countdown...
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     RAFFLE SUMMARY
+                ========================= -->
+
+                <section class="raffle-summary">
+
+
+                    <!-- Entries -->
+
+                    <article class="stat-card">
+
+                        <p class="stat-card-label">
+                            Your Private Entries
+                        </p>
+
+                        <p
+                            id="my-lottery-entries"
+                            class="stat-card-value"
+                        >
+                            0
+                        </p>
+
+                        <p class="stat-card-subtext">
+                            Only you can see this number
+                        </p>
+
+                    </article>
+
+
+                    <!-- Prize Pool -->
+
+                    <article class="stat-card">
+
+                        <p class="stat-card-label">
+                            Current Prize Pool
+                        </p>
+
+                        <div
+                            id="lottery-pool"
+                            class="raffle-pool"
+                        >
+                            Loading...
+                        </div>
+
+                        <p class="stat-card-subtext">
+                            Contributed resources and silver
+                        </p>
+
+                    </article>
+
+                </section>
+
+
+                <!-- =========================
+                     ENTER RAFFLE
+                ========================= -->
+
+                <section class="page-panel raffle-entry-panel">
+
+                    <header class="section-header">
+
+                        <h2>
+                            🎟️ Enter Today
+                        </h2>
+
+                        <span class="game-badge">
+                            One Daily Entry
+                        </span>
+
+                    </header>
+
+                    <div class="panel-body">
+
+                        <div class="raffle-entry-layout">
+
+                            <div class="raffle-entry-field">
+
+                                <label for="lottery-item">
+                                    Contribution
+                                </label>
+
+                                <select id="lottery-item">
+                                </select>
+
+                            </div>
+
+                            <div class="raffle-entry-field">
+
+                                <label for="lottery-quantity">
+                                    Quantity
+                                </label>
+
+                                <input
+                                    id="lottery-quantity"
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                >
+
+                            </div>
+
+                            <button
+                                id="lottery-enter-button"
+                                type="button"
+                                class="raffle-enter-button"
+                            >
+                                🍀 Enter Raffle
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="lottery-message"
+                            class="raffle-message"
+                            aria-live="polite"
+                        ></div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     RAFFLE HISTORY
+                ========================= -->
+
+                <section class="raffle-history-grid">
+
+
+                    <!-- Last Winners -->
+
+                    <article class="page-panel">
+
+                        <header class="section-header">
+
+                            <h2>
+                                🏆 Last 100 Winners
+                            </h2>
+
+                        </header>
+
+                        <div class="panel-body">
+
+                            <div
+                                id="lottery-history"
+                                class="raffle-list"
+                            >
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Biggest Jackpots -->
+
+                    <article class="page-panel">
+
+                        <header class="section-header">
+
+                            <h2>
+                                💰 Top 10 Biggest Jackpots
+                            </h2>
+
+                        </header>
+
+                        <div class="panel-body">
+
+                            <div
+                                id="lottery-biggest"
+                                class="raffle-list"
+                            >
+                                Loading...
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/lottery.js"></script>
+
+</body>
+
 </html>

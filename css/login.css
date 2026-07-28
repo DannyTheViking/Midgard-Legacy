@@ -1,0 +1,670 @@
+/* =========================================================
+   MIDGARD LEGACY
+   LOGIN AND SIGNUP PAGES
+========================================================= */
+
+
+/* =========================================================
+   01. VARIABLES
+========================================================= */
+
+:root {
+    --login-accent: #b78a4d;
+    --login-accent-light: #e5c18b;
+    --login-accent-dark: #6a4728;
+
+    --login-panel: #211c17;
+    --login-panel-light: #2b241d;
+
+    --login-border: #5f4a32;
+
+    --login-text: #f3ead8;
+    --login-muted: #b9ad9a;
+
+    --login-success: #70bc73;
+    --login-danger: #d66d65;
+
+    --login-radius: 14px;
+    --login-small-radius: 9px;
+
+    --login-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.38);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   02. PUBLIC PAGE HEADER
+========================================================= */
+
+.login-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    min-height: 86px;
+    margin-bottom: 20px;
+    padding: 10px 22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--login-panel-light),
+            var(--login-panel)
+        );
+
+    border:
+        1px solid
+        var(--login-border);
+
+    border-radius:
+        var(--login-small-radius);
+
+    box-shadow:
+        var(--login-shadow);
+}
+
+
+/* =========================================================
+   03. HEADER LOGO
+========================================================= */
+
+.login-brand,
+.login-brand-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    min-width: 0;
+
+    color:
+        var(--login-text);
+
+    font-size:
+        clamp(1rem, 2vw, 1.3rem);
+
+    font-weight: 850;
+
+    text-decoration: none;
+}
+
+.login-brand-logo {
+    flex: 1;
+}
+
+.login-brand:hover {
+    color:
+        var(--login-accent-light);
+}
+
+.login-brand-logo img {
+    display: block;
+
+    width: auto;
+    height: 78px;
+    max-width: 240px;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   04. MAIN LAYOUT
+========================================================= */
+
+.login-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.15fr)
+        minmax(360px, 0.85fr);
+
+    gap: 18px;
+
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   05. STORY PANEL
+========================================================= */
+
+.login-story-panel {
+    position: relative;
+
+    min-height: 560px;
+    padding: 34px;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(183, 138, 77, 0.18),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            #2a2119,
+            #15110d 60%,
+            #0b0907
+        );
+
+    border:
+        1px solid
+        var(--login-border);
+
+    border-radius:
+        var(--login-radius);
+
+    box-shadow:
+        var(--login-shadow);
+}
+
+.login-story-panel::after {
+    content: "ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ";
+
+    position: absolute;
+
+    right: 20px;
+    bottom: 16px;
+
+    color:
+        rgba(229, 193, 139, 0.07);
+
+    font-size:
+        clamp(2rem, 5vw, 5rem);
+
+    letter-spacing: 0.12em;
+
+    pointer-events: none;
+}
+
+.login-story-panel h1 {
+    max-width: 650px;
+
+    margin: 0;
+
+    color:
+        var(--login-text);
+
+    font-size:
+        clamp(2.3rem, 5vw, 4.4rem);
+
+    line-height: 1.05;
+
+    text-shadow:
+        0 3px 0 #4a311d,
+        0 10px 24px rgba(0, 0, 0, 0.55);
+}
+
+.login-story-panel >
+p:not(.landing-kicker):not(.landing-status) {
+    max-width: 720px;
+
+    margin: 18px 0 0;
+
+    color:
+        var(--login-muted);
+
+    font-size:
+        clamp(0.9rem, 1.4vw, 1.05rem);
+
+    line-height: 1.65;
+}
+
+.login-stats {
+    margin-top: 30px;
+}
+
+
+/* =========================================================
+   06. LOGIN AND SIGNUP BOX
+========================================================= */
+
+.auth-box-modern {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 560px;
+    padding: 28px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--login-panel-light),
+            var(--login-panel)
+        );
+
+    border:
+        1px solid
+        var(--login-border);
+
+    border-radius:
+        var(--login-radius);
+
+    box-shadow:
+        var(--login-shadow);
+}
+
+.auth-box-modern h2 {
+    margin: 0 0 8px;
+
+    color:
+        var(--login-text);
+
+    font-size:
+        clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.auth-box-modern > p:first-of-type {
+    margin: 0 0 24px;
+
+    color:
+        var(--login-muted);
+
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   07. FORM LABELS
+========================================================= */
+
+.auth-label {
+    display: block;
+
+    margin: 0 0 6px;
+
+    color:
+        var(--login-accent-light);
+
+    font-size: 0.72rem;
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   08. INPUTS AND SELECT
+========================================================= */
+
+.auth-box-modern input,
+.auth-box-modern select {
+    width: 100%;
+    min-height: 46px;
+
+    margin-bottom: 16px;
+    padding: 10px 12px;
+
+    color:
+        var(--login-text);
+
+    font: inherit;
+    font-size: 0.86rem;
+
+    background:
+        rgba(0, 0, 0, 0.22);
+
+    border:
+        1px solid
+        var(--login-border);
+
+    border-radius:
+        var(--login-small-radius);
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+.auth-box-modern select {
+    cursor: pointer;
+}
+
+.auth-box-modern input::placeholder {
+    color:
+        #857a6a;
+}
+
+.auth-box-modern input:focus,
+.auth-box-modern select:focus {
+    background:
+        rgba(0, 0, 0, 0.30);
+
+    border-color:
+        var(--login-accent);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(183, 138, 77, 0.12);
+}
+
+.auth-box-modern select option {
+    color:
+        var(--login-text);
+
+    background:
+        var(--login-panel);
+}
+
+
+/* =========================================================
+   09. SUBMIT BUTTON
+========================================================= */
+
+.auth-submit-button {
+    width: 100%;
+    min-height: 46px;
+
+    margin-top: 4px;
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    color:
+        #17120d;
+
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--login-accent-light),
+            var(--login-accent)
+        );
+
+    border:
+        1px solid
+        var(--login-accent-dark);
+
+    border-radius:
+        var(--login-small-radius);
+
+    box-shadow:
+        0 4px 0
+        var(--login-accent-dark);
+
+    transition:
+        transform 0.14s ease,
+        filter 0.16s ease;
+}
+
+.auth-submit-button:hover:not(:disabled) {
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.08);
+}
+
+.auth-submit-button:active:not(:disabled) {
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--login-accent-dark);
+}
+
+.auth-submit-button:disabled {
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.55;
+}
+
+
+/* =========================================================
+   10. FORM MESSAGE
+========================================================= */
+
+.auth-message {
+    display: none;
+
+    min-height: 20px;
+
+    margin: 16px 0 0;
+    padding: 10px 12px;
+
+    color:
+        var(--login-muted);
+
+    font-size: 0.78rem;
+    line-height: 1.4;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.28);
+
+    border-left:
+        4px solid
+        var(--login-accent);
+
+    border-radius:
+        var(--login-small-radius);
+}
+
+.auth-message:not(:empty) {
+    display: block;
+}
+
+.auth-message-success,
+.auth-message.success {
+    color:
+        #aee0ae;
+
+    border-left-color:
+        var(--login-success);
+}
+
+.auth-message-error,
+.auth-message.error {
+    color:
+        #efaaa4;
+
+    border-left-color:
+        var(--login-danger);
+}
+
+
+/* =========================================================
+   11. ACCOUNT SWITCH
+========================================================= */
+
+.auth-switch {
+    margin:
+        auto 0 0 !important;
+
+    padding-top: 22px;
+
+    color:
+        var(--login-muted);
+
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+.auth-switch a {
+    color:
+        var(--login-accent-light);
+
+    font-weight: 850;
+
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   12. SIGNUP PAGE
+========================================================= */
+
+.signup-layout .auth-box-modern {
+    min-height: 0;
+}
+
+.signup-story-panel {
+    background:
+        radial-gradient(
+            circle at 28% 18%,
+            rgba(183, 138, 77, 0.20),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            #2a2119,
+            #15110d 60%,
+            #0b0907
+        );
+}
+
+.signup-story-panel .landing-features {
+    margin-top: 24px;
+}
+
+.signup-story-panel .landing-features span {
+    min-height: 52px;
+
+    background:
+        rgba(0, 0, 0, 0.18);
+
+    border:
+        1px solid
+        rgba(183, 138, 77, 0.24);
+}
+
+
+/* =========================================================
+   13. TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .login-layout {
+        grid-template-columns:
+            1fr;
+    }
+
+    .login-story-panel,
+    .auth-box-modern {
+        min-height:
+            0;
+    }
+
+}
+
+
+/* =========================================================
+   14. MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .login-header {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+        min-height:
+            0;
+
+        padding:
+            14px 16px;
+    }
+
+    .login-brand,
+    .login-brand-logo {
+        justify-content:
+            center;
+    }
+
+    .login-brand-logo img {
+        height:
+            64px;
+
+        max-width:
+            190px;
+    }
+
+    .login-header
+    .landing-secondary-button {
+        width:
+            100%;
+    }
+
+    .login-story-panel {
+        padding:
+            26px 20px;
+    }
+
+    .auth-box-modern {
+        padding:
+            22px 18px;
+    }
+
+    .signup-story-panel
+    .landing-features {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   15. VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .signup-story-panel
+    .landing-features {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+/* =========================================================
+   16. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .auth-submit-button,
+    .auth-box-modern input,
+    .auth-box-modern select {
+        transition:
+            none;
+    }
+
+}

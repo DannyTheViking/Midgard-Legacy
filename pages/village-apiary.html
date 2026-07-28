@@ -1,34 +1,202 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Midgard Legacy - Ragnhild's Village Apiary</title>
-  <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
-  <link rel="stylesheet" href="../css/style.css?v=4">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Midgard Legacy - Ragnhild's Village Apiary
+    </title>
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="../images/Logo/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css?v=4"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/game-panels.css?v=1"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/village-apiary.css?v=1"
+    >
+
 </head>
+
 <body>
-<div class="game-layout">
-  <div id="sidebar"></div>
-  <main class="main-area">
-    <div id="topbar"></div>
-    <section class="page-header"><div class="page-title">
-      <h1>🐝 Ragnhild’s Village Apiary</h1>
-      <p>Five royal hives, tended for generations. During the King’s Challenge, Ragnhild lends you one.</p>
-    </div></section>
-    <section class="quick-actions">
-      <h2>Ragnhild the Beekeeper</h2>
-      <p id="ragnhild-dialogue">“The village hives already have their queens. Bring me an Empty Bucket and collect what the King needs.”</p>
-      <p id="village-apiary-message"></p>
-    </section>
-    <section id="village-hive-slots" class="crafting-grid"></section>
-  </main>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
-<script src="../js/components.js?v=4"></script>
-<script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js"></script>
-<script src="../js/village-apiary.js"></script>
+
+    <div class="game-layout">
+
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+
+            <div id="topbar"></div>
+
+            <div class="game-page">
+
+
+                <!-- =========================
+                     PAGE HEADER
+                ========================= -->
+
+                <section class="game-page-header">
+
+                    <div class="game-page-heading">
+
+                        <h1>
+                            🐝 Ragnhild’s Village Apiary
+                        </h1>
+
+                        <p>
+                            Five royal hives, tended for generations.
+                            During the King’s Challenge, Ragnhild lends
+                            you one.
+                        </p>
+
+                    </div>
+
+                    <div class="game-badge">
+                        🍯 Beekeeping
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     RAGNHILD PANEL
+                ========================= -->
+
+                <section class="apiary-intro-panel">
+
+                    <div class="apiary-intro-icon">
+                        🧑‍🌾
+                    </div>
+
+                    <div class="apiary-intro-content">
+
+                        <span class="apiary-eyebrow">
+                            Village Beekeeper
+                        </span>
+
+                        <h2>
+                            Ragnhild the Beekeeper
+                        </h2>
+
+                        <p id="ragnhild-dialogue">
+                            “The village hives already have their queens.
+                            Bring me an Empty Bucket and collect what the
+                            King needs.”
+                        </p>
+
+                    </div>
+
+                    <div class="apiary-intro-badge">
+                        Royal Hives
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     MESSAGE
+                ========================= -->
+
+                <p
+                    id="village-apiary-message"
+                    class="village-apiary-message"
+                    aria-live="polite"
+                ></p>
+
+
+                <!-- =========================
+                     HIVE SECTION
+                ========================= -->
+
+                <section class="village-hives-panel">
+
+                    <header class="village-hives-heading">
+
+                        <div class="village-hives-heading-icon">
+                            🐝
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Village Hive Yard
+                            </h2>
+
+                            <p>
+                                Inspect the royal hives and collect honey
+                                during the King’s Challenge.
+                            </p>
+
+                        </div>
+
+                        <span class="village-hives-badge">
+                            Five Hives
+                        </span>
+
+                    </header>
+
+                    <div
+                        id="village-hive-slots"
+                        class="village-hive-grid"
+                        aria-live="polite"
+                    >
+
+                        <div class="apiary-loading-state">
+
+                            <span>
+                                🐝
+                            </span>
+
+                            <p>
+                                Checking the royal hives...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         SCRIPTS
+    ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/constants.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/tutorial.js"></script>
+    <script src="../js/village-apiary.js"></script>
+
 </body>
+
 </html>

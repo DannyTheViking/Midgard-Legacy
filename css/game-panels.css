@@ -1,0 +1,4575 @@
+/* ==========================================
+   MIDGARD LEGACY
+   SHARED GAME PAGE DESIGN
+========================================== */
+
+body {
+    --panel-accent: #b78a4d;
+    --panel-accent-light: #e5c18b;
+    --panel-accent-dark: #6a4728;
+    --panel-accent-rgb: 183, 138, 77;
+
+    --panel-bg: #211c17;
+    --panel-bg-light: #2b241d;
+
+    --panel-border: #5f4a32;
+
+    --panel-text: #f3ead8;
+    --panel-muted: #b9ad9a;
+
+    --panel-success: #70bc73;
+    --panel-warning: #d3a84c;
+    --panel-danger: #c85d54;
+
+    --panel-radius: 12px;
+
+    --panel-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+
+/* ==========================================
+   PAGE WRAPPER
+========================================== */
+
+.game-page {
+    width: 100%;
+
+    padding: 18px 0 30px;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.game-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 22px;
+
+    margin-bottom: 20px;
+    padding: 22px 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--panel-accent-rgb), 0.14),
+            rgba(0, 0, 0, 0.08) 55%
+        ),
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--panel-accent);
+    border-radius: var(--panel-radius);
+
+    box-shadow: var(--panel-shadow);
+}
+
+.game-page-heading {
+    min-width: 0;
+}
+
+.game-page-heading h1 {
+    margin: 0 0 7px;
+
+    color: var(--panel-text);
+
+    font-size: clamp(
+        1.55rem,
+        2.5vw,
+        2.25rem
+    );
+
+    line-height: 1.15;
+}
+
+.game-page-heading p {
+    max-width: 760px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   CONTENT GRIDS
+========================================== */
+
+.panel-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                min(100%, 240px),
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+.panel-grid-wide {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                min(100%, 330px),
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+.panel-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        280px;
+
+    align-items: start;
+
+    gap: 20px;
+}
+
+
+/* ==========================================
+   STANDARD PANELS
+========================================== */
+
+.page-panel,
+.content-card,
+.stat-card,
+.action-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+
+    box-shadow: var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.page-panel:hover,
+.content-card:hover,
+.stat-card:hover,
+.action-card:hover {
+    border-color: var(--panel-accent);
+}
+
+
+/* ==========================================
+   PANEL HEADERS
+========================================== */
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin: 0;
+    padding: 15px 17px;
+
+    color: var(--panel-text);
+
+    font-size: 1rem;
+    line-height: 1.3;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.section-header h2,
+.section-header h3 {
+    margin: 0;
+
+    color: inherit;
+
+    font-size: inherit;
+}
+
+
+/* ==========================================
+   PANEL BODY
+========================================== */
+
+.panel-body {
+    padding: 17px;
+}
+
+.panel-body p {
+    margin: 0 0 10px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.panel-body p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ==========================================
+   STAT CARDS
+========================================== */
+
+.stat-card {
+    min-height: 120px;
+
+    padding: 18px;
+
+    text-align: center;
+}
+
+.stat-card-label {
+    margin: 0 0 8px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.stat-card-value {
+    margin: 0;
+
+    color: var(--panel-text);
+
+    font-size: 1.45rem;
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+.stat-card-subtext {
+    margin-top: 7px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.78rem;
+}
+
+
+/* ==========================================
+   GAME LISTS
+========================================== */
+
+.game-list {
+    display: grid;
+
+    gap: 9px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.game-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 10px 11px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.88rem;
+
+    background:
+        rgba(0, 0, 0, 0.14);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.game-list-item strong {
+    color: var(--panel-text);
+}
+
+.game-list-item a {
+    color: var(--panel-accent-light);
+
+    text-decoration: none;
+}
+
+.game-list-item a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.game-button,
+.action-button,
+.quick-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 42px;
+
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 850;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.game-button:hover,
+.action-button:hover,
+.quick-action:hover {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.game-button:active,
+.action-button:active,
+.quick-action:active {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.game-button.secondary,
+.action-button.secondary {
+    color: var(--panel-text);
+
+    background:
+        linear-gradient(
+            180deg,
+            #3a322a,
+            #29231d
+        );
+
+    border-color: var(--panel-border);
+
+    box-shadow:
+        0 4px 0 #17120f;
+}
+
+
+/* ==========================================
+   QUICK ACTIONS
+========================================== */
+
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 11px;
+}
+
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.game-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 8px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.68rem;
+    font-weight: 900;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(var(--panel-accent-rgb), 0.10);
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.35);
+
+    border-radius: 999px;
+}
+
+
+/* ==========================================
+   EMPTY STATES
+========================================== */
+
+.empty-state {
+    display: grid;
+    place-items: center;
+
+    min-height: 150px;
+
+    padding: 24px;
+
+    color: var(--panel-muted);
+
+    text-align: center;
+
+    background:
+        rgba(0, 0, 0, 0.12);
+
+    border:
+        1px dashed
+        rgba(var(--panel-accent-rgb), 0.30);
+
+    border-radius: 8px;
+}
+
+.empty-state-icon {
+    margin-bottom: 8px;
+
+    font-size: 2rem;
+}
+
+.empty-state h3 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+}
+
+.empty-state p {
+    margin: 0;
+}
+
+
+/* ==========================================
+   HOME PAGE
+========================================== */
+
+.home-welcome {
+    margin-bottom: 18px;
+}
+
+.home-welcome-message {
+    margin: 0 0 8px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.9rem;
+}
+
+.home-welcome h1 {
+    margin: 0 0 7px;
+
+    color: var(--panel-text);
+
+    font-size: clamp(
+        1.5rem,
+        2.2vw,
+        2rem
+    );
+}
+
+.home-welcome p {
+    margin: 0;
+
+    color: var(--panel-muted);
+}
+
+.home-dashboard {
+    display: grid;
+
+    gap: 18px;
+}
+
+.home-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+}
+
+.home-community {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+/* ==========================================
+   SIDEBAR PANEL COLUMN
+========================================== */
+
+.panel-sidebar {
+    position: sticky;
+
+    top: 18px;
+
+    display: grid;
+
+    gap: 15px;
+}
+
+
+/* ==========================================
+   STATUS COLOURS
+========================================== */
+
+.text-success {
+    color:
+        var(--panel-success) !important;
+}
+
+.text-warning {
+    color:
+        var(--panel-warning) !important;
+}
+
+.text-danger {
+    color:
+        var(--panel-danger) !important;
+}
+
+.text-muted {
+    color:
+        var(--panel-muted) !important;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1000px) {
+
+    .home-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .panel-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-sidebar {
+        position: static;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+    .game-page {
+        padding-top: 12px;
+    }
+
+    .game-page-header {
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 15px;
+
+        padding: 17px;
+    }
+
+    .game-page-heading {
+        text-align: center;
+    }
+
+    .panel-grid,
+    .panel-grid-wide,
+    .home-stats,
+    .home-community {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        min-height: 105px;
+
+        padding: 16px;
+    }
+
+    .quick-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
+    }
+
+    .game-button,
+    .action-button,
+    .quick-action {
+        width: 100%;
+    }
+
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .page-panel,
+    .content-card,
+    .stat-card,
+    .action-card,
+    .game-button,
+    .action-button,
+    .quick-action {
+        transition: none;
+    }
+
+}
+
+/* ==========================================
+   HOME PAGE POLISH
+========================================== */
+
+.home-stats .stat-card {
+    min-height: 95px;
+    padding: 15px 18px;
+}
+
+.home-stats .stat-card-label {
+    margin-bottom: 6px;
+}
+
+.home-stats .stat-card-value {
+    font-size: 1.3rem;
+}
+
+.home-stats .stat-card-subtext {
+    margin-top: 5px;
+}
+
+
+/* Reduce empty space in community panels */
+
+.home-community .page-panel {
+    min-height: 210px;
+}
+
+.home-community .panel-body {
+    min-height: 155px;
+}
+
+
+/* Online player list */
+
+#online-players-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+
+    color: var(--panel-accent-light);
+    text-align: center;
+}
+
+
+/* Hall of Fame list */
+
+#home-hof-list {
+    display: grid;
+    gap: 8px;
+}
+
+
+/* Remove the extra box around Quick Actions */
+
+.quick-actions {
+    padding: 0;
+}
+
+.quick-actions .quick-action {
+    min-width: 135px;
+}
+
+
+/* Make the Home badge less dominant */
+
+.game-page-header .game-badge {
+    opacity: 0.75;
+}
+
+
+/* Slightly reduce the home header height */
+
+.game-page-header {
+    padding-top: 19px;
+    padding-bottom: 19px;
+}
+
+/* ==========================================
+   HOME PAGE FINAL POLISH
+========================================== */
+
+.home-community .page-panel {
+    min-height: 0;
+}
+
+.home-community .panel-body {
+    min-height: 145px;
+}
+
+#online-players-list {
+    min-height: 90px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    text-align: center;
+}
+
+#home-hof-list {
+    display: grid;
+
+    gap: 7px;
+}
+
+.home-community .game-button {
+    margin-top: 10px;
+}
+
+.quick-actions {
+    gap: 10px;
+}
+
+.quick-actions .quick-action {
+    min-width: 125px;
+}
+
+.home-dashboard > .page-panel:last-child .panel-body {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.home-dashboard > .page-panel:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================
+   WILDNESS PAGE
+========================================== */
+
+.wildness-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                min(100%, 255px),
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+.wildness-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 305px;
+
+    overflow: hidden;
+
+    color: inherit;
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+
+    box-shadow: var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.wildness-card.unlocked:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--panel-accent-light);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.42),
+        0 0 0 1px
+        rgba(var(--panel-accent-rgb), 0.18);
+}
+
+.wildness-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 130px;
+
+    font-size: 3rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.forest-area {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(167, 203, 121, 0.26),
+            transparent 22%
+        ),
+        linear-gradient(
+            145deg,
+            #56683b,
+            #304327 58%,
+            #1b2518
+        );
+}
+
+.mining-area {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(210, 216, 220, 0.18),
+            transparent 22%
+        ),
+        linear-gradient(
+            145deg,
+            #555d62,
+            #343a3e 58%,
+            #22272a
+        );
+}
+
+.fishing-area {
+    background:
+        linear-gradient(
+            145deg,
+            #31566a,
+            #213b4a 58%,
+            #142631
+        );
+}
+
+.hunting-area {
+    background:
+        linear-gradient(
+            145deg,
+            #65482f,
+            #3f2f23 58%,
+            #251c16
+        );
+}
+
+.digging-area {
+    background:
+        linear-gradient(
+            145deg,
+            #6a5940,
+            #443928 58%,
+            #292219
+        );
+}
+
+.exploration-area {
+    background:
+        linear-gradient(
+            145deg,
+            #4c485e,
+            #302d3d 58%,
+            #1c1a25
+        );
+}
+
+.foraging-area {
+    background:
+        linear-gradient(
+            145deg,
+            #596336,
+            #3a4325 58%,
+            #222918
+        );
+}
+
+.wildness-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 17px;
+}
+
+.wildness-card-content h2 {
+    margin: 0 0 9px;
+
+    color: var(--panel-text);
+
+    font-size: 1.12rem;
+    text-align: center;
+}
+
+.wildness-card-content p {
+    margin: 0 0 15px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.87rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.wildness-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: auto;
+    padding: 8px 10px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.72rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(0, 0, 0, 0.17);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+}
+
+.wildness-status.open {
+    color: #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border-color:
+        var(--panel-accent-dark);
+}
+
+
+/* Locked areas */
+
+.wildness-card.locked {
+    filter: saturate(0.45);
+
+    opacity: 0.72;
+}
+
+.wildness-card.locked::before {
+    content: "LOCKED";
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    z-index: 2;
+
+    padding: 4px 8px;
+
+    color: #d8cec4;
+
+    font-size: 0.62rem;
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+
+    background:
+        rgba(17, 14, 12, 0.88);
+
+    border: 1px solid #655a50;
+    border-radius: 999px;
+}
+
+
+/* Tablet */
+
+@media (max-width: 900px) {
+
+    .wildness-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .wildness-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wildness-card {
+        min-height: 270px;
+    }
+
+    .wildness-card-image {
+        min-height: 110px;
+    }
+
+}
+
+/* ==========================================
+   WILDNESS GRID BALANCE
+========================================== */
+
+.wildness-grid {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1350px) {
+
+    .wildness-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 950px) {
+
+    .wildness-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .wildness-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ==========================================
+   VILLAGE PAGE
+========================================== */
+
+.village-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+/* ==========================================
+   VILLAGE CARDS
+========================================== */
+
+.village-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 310px;
+
+    overflow: hidden;
+
+    color: inherit;
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.village-card.unlocked:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        var(--panel-accent-light);
+
+    box-shadow:
+        0 12px 28px
+        rgba(0, 0, 0, 0.42),
+
+        0 0 0 1px
+        rgba(var(--panel-accent-rgb), 0.18);
+}
+
+
+/* ==========================================
+   VILLAGE CARD IMAGES
+========================================== */
+
+.village-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 130px;
+
+    font-size: 3rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+
+/* King */
+
+.king-building {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(243, 204, 91, 0.24),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #695328,
+            #44361d 58%,
+            #261e11
+        );
+}
+
+
+/* Blacksmith */
+
+.blacksmith-building {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(208, 212, 214, 0.18),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #50555a,
+            #32373a 58%,
+            #1d2123
+        );
+}
+
+
+/* Sawmill */
+
+.sawmill-building {
+    background:
+        linear-gradient(
+            145deg,
+            #725334,
+            #4a3524 58%,
+            #291e16
+        );
+}
+
+
+/* Carpenter */
+
+.carpenter-building {
+    background:
+        linear-gradient(
+            145deg,
+            #765d3d,
+            #4b3927 58%,
+            #2b2118
+        );
+}
+
+
+/* Forge */
+
+.forge-building {
+    background:
+        radial-gradient(
+            circle at 50% 65%,
+            rgba(255, 131, 44, 0.34),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            #643426,
+            #40221c 58%,
+            #241411
+        );
+}
+
+
+/* Mead Hall */
+
+.mead-building {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(232, 190, 73, 0.25),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #69552d,
+            #44361d 58%,
+            #271e11
+        );
+}
+
+
+/* Apiary */
+
+.apiary-building {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(246, 207, 78, 0.26),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #6a5a28,
+            #443a1c 58%,
+            #272111
+        );
+}
+
+
+/* Raffle */
+
+.raffle-building {
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(111, 200, 98, 0.22),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #425f31,
+            #2c4022 58%,
+            #192615
+        );
+}
+
+
+/* Marketplace */
+
+.market-building {
+    background:
+        linear-gradient(
+            145deg,
+            #4c4c50,
+            #303034 58%,
+            #1c1c20
+        );
+}
+
+
+/* ==========================================
+   VILLAGE CARD CONTENT
+========================================== */
+
+.village-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 17px;
+}
+
+.village-card-content h2 {
+    margin: 0 0 9px;
+
+    color: var(--panel-text);
+
+    font-size: 1.1rem;
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+.village-card-content p {
+    margin: 0 0 15px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.87rem;
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+/* ==========================================
+   VILLAGE STATUS BUTTON
+========================================== */
+
+.village-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: auto;
+    padding: 8px 10px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.72rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    background:
+        rgba(0, 0, 0, 0.17);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 999px;
+}
+
+.village-status.open {
+    color: #17120d;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border-color:
+        var(--panel-accent-dark);
+}
+
+
+/* ==========================================
+   LOCKED VILLAGE BUILDINGS
+========================================== */
+
+.village-card.locked {
+    filter: saturate(0.45);
+
+    opacity: 0.72;
+}
+
+.village-card.locked::before {
+    content: "LOCKED";
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    z-index: 2;
+
+    padding: 4px 8px;
+
+    color: #d8cec4;
+
+    font-size: 0.62rem;
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+
+    background:
+        rgba(17, 14, 12, 0.88);
+
+    border:
+        1px solid
+        #655a50;
+
+    border-radius: 999px;
+}
+
+
+/* ==========================================
+   RESPONSIVE VILLAGE GRID
+========================================== */
+
+@media (max-width: 1350px) {
+
+    .village-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+@media (max-width: 950px) {
+
+    .village-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .village-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .village-card {
+        min-height: 270px;
+    }
+
+    .village-card-image {
+        min-height: 110px;
+    }
+
+}
+
+/* ==========================================
+   KING PAGE
+========================================== */
+
+.king-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        280px;
+
+    align-items: start;
+
+    gap: 20px;
+}
+
+
+/* ==========================================
+   KING DIALOGUE PANEL
+========================================== */
+
+.king-dialogue-panel {
+    min-height: 420px;
+}
+
+.king-dialogue-panel .panel-body {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 350px;
+}
+
+
+/* ==========================================
+   KING PORTRAIT
+========================================== */
+
+.king-portrait {
+    display: grid;
+    place-items: center;
+
+    width: 90px;
+    height: 90px;
+
+    margin: 4px auto 18px;
+
+    font-size: 3.4rem;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #f0cf72,
+            #a87529 58%,
+            #4f3015
+        );
+
+    border: 3px solid #75501f;
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.35),
+        0 8px 18px rgba(0, 0, 0, 0.32);
+}
+
+
+/* ==========================================
+   KING DIALOGUE
+========================================== */
+
+.king-dialogue {
+    padding: 18px;
+
+    color: var(--panel-text);
+
+    font-size: 0.95rem;
+    line-height: 1.65;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.12)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.30);
+
+    border-left:
+        4px solid
+        var(--panel-accent);
+
+    border-radius: 8px;
+}
+
+.king-dialogue p {
+    margin: 0 0 11px;
+
+    color: inherit;
+}
+
+.king-dialogue p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ==========================================
+   KING ACTIONS
+========================================== */
+
+.king-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 11px;
+
+    margin-top: 18px;
+}
+
+.king-actions button,
+.king-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 850;
+
+    text-decoration: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.king-actions button:hover,
+.king-actions a:hover {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.king-actions button:active,
+.king-actions a:active {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.king-actions button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   KING MESSAGE
+========================================== */
+
+.king-message {
+    display: none;
+
+    margin: 18px 0 0;
+    padding: 12px 14px;
+
+    color: var(--panel-muted);
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+}
+
+.king-message:not(:empty) {
+    display: block;
+}
+
+
+/* ==========================================
+   KING SIDEBAR
+========================================== */
+
+.king-sidebar {
+    position: sticky;
+
+    top: 18px;
+
+    display: grid;
+
+    gap: 15px;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+    .king-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .king-sidebar {
+        position: static;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .king-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .king-dialogue-panel {
+        min-height: 0;
+    }
+
+    .king-dialogue-panel .panel-body {
+        min-height: 0;
+    }
+
+    .king-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
+    }
+
+    .king-actions button,
+    .king-actions a {
+        width: 100%;
+    }
+
+}
+
+/* ==========================================
+   BLACKSMITH PAGE
+========================================== */
+
+.blacksmith-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    max-width: 1050px;
+}
+
+
+/* ==========================================
+   BLACKSMITH CARDS
+========================================== */
+
+.blacksmith-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 470px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.blacksmith-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        var(--panel-accent);
+}
+
+
+/* ==========================================
+   CARD IMAGE
+========================================== */
+
+.blacksmith-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 145px;
+
+    font-size: 3.5rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.repair-area {
+    background:
+        radial-gradient(
+            circle at 50% 60%,
+            rgba(255, 126, 41, 0.28),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            #5b3828,
+            #39231b 58%,
+            #201411
+        );
+}
+
+.iron-axe-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(211, 218, 222, 0.18),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #52595d,
+            #34393c 58%,
+            #1e2224
+        );
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.blacksmith-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 15px 17px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.blacksmith-card-header h2 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+
+    font-size: 1.12rem;
+}
+
+.blacksmith-card-header p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+.craft-stock {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 240px;
+
+    padding: 6px 10px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    text-align: center;
+
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    background:
+        rgba(var(--panel-accent-rgb),0.10);
+
+    border:1px solid
+        rgba(var(--panel-accent-rgb),0.30);
+
+    border-radius:999px;
+}
+/* ==========================================
+   CARD BODY
+========================================== */
+
+.blacksmith-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 17px;
+}
+
+.blacksmith-card-body h3 {
+    margin: 0 0 12px;
+
+    color: var(--panel-text);
+
+    font-size: 1rem;
+}
+
+
+/* ==========================================
+   DURABILITY
+========================================== */
+
+.blacksmith-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.84rem;
+}
+
+.durability-bar {
+    width: 100%;
+    height: 10px;
+
+    margin-bottom: 15px;
+
+    overflow: hidden;
+
+    background: #100d0b;
+
+    border:
+        1px solid
+        #4e4031;
+
+    border-radius: 999px;
+
+    box-shadow:
+        inset 0 2px 4px
+        rgba(0, 0, 0, 0.7);
+}
+
+.durability-fill {
+    width: 0%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8c3f36,
+            #d39b3f,
+            #70bc73
+        );
+
+    border-radius: inherit;
+
+    transition: width 0.35s ease;
+}
+
+
+/* ==========================================
+   REQUIREMENTS
+========================================== */
+
+.blacksmith-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+    padding: 12px 13px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.blacksmith-requirements p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.85rem;
+}
+
+.blacksmith-requirements p span:last-child {
+    text-align: right;
+}
+
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.blacksmith-button {
+    width: 100%;
+    min-height: 42px;
+
+    margin-top: auto;
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.blacksmith-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.blacksmith-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.blacksmith-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   LATEST ACTION MESSAGE
+========================================== */
+
+.blacksmith-message {
+    margin-top: 16px;
+    padding: 11px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.blacksmith-message h4 {
+    margin: 0 0 5px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.blacksmith-message p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 850px) {
+
+    .blacksmith-grid {
+        grid-template-columns: 1fr;
+
+        max-width: none;
+    }
+
+    .blacksmith-card {
+        min-height: 0;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .blacksmith-card-header {
+        flex-direction: column;
+    }
+
+    .craft-stock {
+        align-self: flex-start;
+    }
+
+    .blacksmith-card-image {
+        min-height: 115px;
+
+        font-size: 3rem;
+    }
+
+}
+
+/* ==========================================
+   SAWMILL PAGE
+========================================== */
+
+.sawmill-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    max-width: 1050px;
+}
+
+
+/* ==========================================
+   SAWMILL CARDS
+========================================== */
+
+.sawmill-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 455px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.sawmill-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        var(--panel-accent);
+}
+
+
+/* ==========================================
+   CARD IMAGE
+========================================== */
+
+.sawmill-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 145px;
+
+    font-size: 3.5rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.birch-plank-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(209, 228, 194, 0.22),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #667454,
+            #445137 58%,
+            #273020
+        );
+}
+
+.oak-plank-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(194, 147, 93, 0.20),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #6d4c32,
+            #493321 58%,
+            #2a1e15
+        );
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.sawmill-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 15px 17px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.sawmill-card-header h2 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+
+    font-size: 1.12rem;
+}
+
+.sawmill-card-header p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+
+/* ==========================================
+   CARD BODY
+========================================== */
+
+.sawmill-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 17px;
+}
+
+
+/* ==========================================
+   REQUIREMENTS
+========================================== */
+
+.sawmill-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+    padding: 12px 13px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.sawmill-requirements p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.85rem;
+}
+
+.sawmill-requirements p span:last-child {
+    text-align: right;
+}
+
+
+/* ==========================================
+   AMOUNT AND CRAFT CONTROLS
+========================================== */
+
+.sawmill-controls {
+    display: grid;
+
+    grid-template-columns:
+        95px
+        minmax(0, 1fr);
+
+    gap: 10px;
+
+    margin-top: auto;
+}
+
+.sawmill-controls label {
+    grid-column: 1 / -1;
+
+    color: var(--panel-muted);
+
+    font-size: 0.8rem;
+}
+
+.craft-amount {
+    width: 100%;
+    min-height: 42px;
+
+    padding: 8px 10px;
+
+    color: var(--panel-text);
+
+    font: inherit;
+    font-size: 0.9rem;
+
+    background:
+        rgba(0, 0, 0, 0.23);
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius: 8px;
+
+    outline: none;
+}
+
+.craft-amount:focus {
+    border-color:
+        var(--panel-accent);
+}
+
+.craft-amount:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.45;
+}
+
+
+/* ==========================================
+   CRAFT BUTTON
+========================================== */
+
+.sawmill-button {
+    min-height: 42px;
+
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.sawmill-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.sawmill-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.sawmill-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   LATEST ACTION
+========================================== */
+
+.sawmill-message {
+    margin-top: 16px;
+    padding: 11px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.sawmill-message h4 {
+    margin: 0 0 5px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.sawmill-message p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+
+/* ==========================================
+   LOCKED SAWMILL CARD
+========================================== */
+
+.sawmill-card.locked {
+    filter: saturate(0.45);
+
+    opacity: 0.72;
+}
+
+.sawmill-card.locked::before {
+    content: "LOCKED";
+
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    z-index: 2;
+
+    padding: 4px 8px;
+
+    color: #d8cec4;
+
+    font-size: 0.62rem;
+    font-weight: 900;
+
+    letter-spacing: 0.12em;
+
+    background:
+        rgba(17, 14, 12, 0.88);
+
+    border:
+        1px solid
+        #655a50;
+
+    border-radius: 999px;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 850px) {
+
+    .sawmill-grid {
+        grid-template-columns: 1fr;
+
+        max-width: none;
+    }
+
+    .sawmill-card {
+        min-height: 0;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .sawmill-card-header {
+        flex-direction: column;
+    }
+
+    .sawmill-card-image {
+        min-height: 115px;
+
+        font-size: 3rem;
+    }
+
+    .sawmill-controls {
+        grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+}
+
+/* ==========================================
+   CARPENTER PAGE
+========================================== */
+
+.carpenter-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+/* ==========================================
+   CARPENTER CARDS
+========================================== */
+
+.carpenter-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 465px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.carpenter-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        var(--panel-accent);
+}
+
+
+/* ==========================================
+   CARD IMAGES
+========================================== */
+
+.carpenter-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 125px;
+
+    font-size: 3.2rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.shaft-area {
+    background:
+        linear-gradient(
+            145deg,
+            #6a5237,
+            #443522 58%,
+            #271e15
+        );
+}
+
+.bucket-area {
+    background:
+        linear-gradient(
+            145deg,
+            #69563b,
+            #453725 58%,
+            #292016
+        );
+}
+
+.staves-area,
+.lid-area,
+.barrel-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(204, 154, 91, 0.18),
+            transparent 26%
+        ),
+        linear-gradient(
+            145deg,
+            #65482f,
+            #423021 58%,
+            #271d15
+        );
+}
+
+.birch-beam-area {
+    background:
+        linear-gradient(
+            145deg,
+            #687457,
+            #455038 58%,
+            #283021
+        );
+}
+
+.oak-beam-area {
+    background:
+        linear-gradient(
+            145deg,
+            #725134,
+            #4a3523 58%,
+            #2a1f16
+        );
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.carpenter-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.carpenter-card-header h2 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+
+    font-size: 1.05rem;
+    line-height: 1.3;
+}
+
+.carpenter-card-header p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+
+/* ==========================================
+   CARD BODY
+========================================== */
+
+.carpenter-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 16px;
+}
+
+
+/* ==========================================
+   REQUIREMENTS
+========================================== */
+
+.carpenter-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+    padding: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.carpenter-requirements p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.carpenter-requirements p span:last-child {
+    max-width: 58%;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   CONTROLS
+========================================== */
+
+.carpenter-controls {
+    display: grid;
+
+    grid-template-columns:
+        80px
+        minmax(0, 1fr);
+
+    gap: 10px;
+
+    margin-top: auto;
+}
+
+.carpenter-controls label {
+    grid-column: 1 / -1;
+
+    color: var(--panel-muted);
+
+    font-size: 0.78rem;
+}
+
+.carpenter-button {
+    min-height: 42px;
+
+    padding: 10px 12px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.carpenter-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.carpenter-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.carpenter-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   LATEST ACTION
+========================================== */
+
+.carpenter-message {
+    margin-top: 15px;
+    padding: 10px 11px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.carpenter-message h4 {
+    margin: 0 0 5px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.carpenter-message p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1250px) {
+
+    .carpenter-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .carpenter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .carpenter-card {
+        min-height: 0;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .carpenter-card-header {
+        flex-direction: column;
+    }
+
+    .carpenter-card-image {
+        min-height: 110px;
+
+        font-size: 2.8rem;
+    }
+
+}
+
+/* ==========================================
+   FORGE PAGE
+========================================== */
+
+.forge-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    max-width: 1100px;
+}
+
+
+/* ==========================================
+   FORGE CARDS
+========================================== */
+
+.forge-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 455px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.forge-card:hover {
+    transform: translateY(-3px);
+
+    border-color:
+        var(--panel-accent);
+}
+
+
+/* ==========================================
+   FORGE CARD IMAGES
+========================================== */
+
+.forge-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 135px;
+
+    font-size: 3.4rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.iron-bar-area {
+    background:
+        radial-gradient(
+            circle at 50% 65%,
+            rgba(255, 121, 41, 0.38),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            #67352a,
+            #42221c 58%,
+            #251411
+        );
+}
+
+.nails-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(216, 222, 226, 0.18),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #51595e,
+            #343a3e 58%,
+            #1e2326
+        );
+}
+
+.axe-head-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(214, 221, 225, 0.18),
+            transparent 24%
+        ),
+        linear-gradient(
+            145deg,
+            #5b5f64,
+            #393d42 58%,
+            #22262a
+        );
+}
+
+.hoop-area {
+    background:
+        linear-gradient(
+            145deg,
+            #585d61,
+            #373c40 58%,
+            #202427
+        );
+}
+
+
+/* ==========================================
+   FORGE CARD HEADER
+========================================== */
+
+.forge-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 15px 17px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.forge-card-header h2 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+
+    font-size: 1.12rem;
+}
+
+.forge-card-header p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+
+/* ==========================================
+   FORGE CARD BODY
+========================================== */
+
+.forge-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 17px;
+}
+
+
+/* ==========================================
+   FORGE REQUIREMENTS
+========================================== */
+
+.forge-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+    padding: 12px 13px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.forge-requirements p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.85rem;
+}
+
+.forge-requirements p span:last-child {
+    text-align: right;
+}
+
+
+/* ==========================================
+   FORGE CONTROLS
+========================================== */
+
+.forge-controls {
+    display: grid;
+
+    grid-template-columns:
+        90px
+        minmax(0, 1fr);
+
+    gap: 10px;
+
+    margin-top: auto;
+}
+
+.forge-controls label {
+    grid-column: 1 / -1;
+
+    color: var(--panel-muted);
+
+    font-size: 0.78rem;
+}
+
+.forge-button {
+    min-height: 42px;
+
+    padding: 10px 13px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.forge-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.forge-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.forge-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   FORGE MESSAGE
+========================================== */
+
+.forge-message {
+    margin-top: 16px;
+    padding: 11px 12px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.forge-message h4 {
+    margin: 0 0 5px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.forge-message p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 850px) {
+
+    .forge-grid {
+        grid-template-columns: 1fr;
+
+        max-width: none;
+    }
+
+    .forge-card {
+        min-height: 0;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .forge-card-header {
+        flex-direction: column;
+    }
+
+    .forge-card-image {
+        min-height: 115px;
+
+        font-size: 3rem;
+    }
+
+    .forge-controls {
+        grid-template-columns:
+            80px
+            minmax(0, 1fr);
+    }
+
+}
+
+/* ==========================================
+   MEAD HALL
+========================================== */
+
+.mead-shelves {
+    display: grid;
+
+    grid-template-columns: repeat(5, minmax(250px, 1fr));
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+/* ==========================================
+   MEAD CARDS
+========================================== */
+
+.mead-card {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 445px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+
+    box-shadow: var(--panel-shadow);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mead-card:hover {
+    transform: translateY(-3px);
+
+    border-color: var(--panel-accent);
+}
+
+
+/* ==========================================
+   IMAGE AREAS
+========================================== */
+
+.mead-card-image {
+    display: grid;
+    place-items: center;
+
+    min-height: 130px;
+
+    font-size: 3.3rem;
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.mead-empty-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(204, 159, 89, 0.22),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #675033,
+            #443520 58%,
+            #271f15
+        );
+}
+
+.mead-barrel-area {
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            rgba(223, 174, 87, 0.24),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #70502e,
+            #49341f 58%,
+            #2a1e14
+        );
+}
+
+.mead-brewing-area {
+    background:
+        radial-gradient(
+            circle at 50% 60%,
+            rgba(244, 188, 60, 0.34),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            #70562b,
+            #49381e 58%,
+            #291f12
+        );
+}
+
+.mead-ready-area {
+    background:
+        radial-gradient(
+            circle at 50% 55%,
+            rgba(244, 212, 91, 0.38),
+            transparent 34%
+        ),
+        linear-gradient(
+            145deg,
+            #76602c,
+            #4d3e20 58%,
+            #2c2413
+        );
+}
+
+.mead-locked-area {
+    background:
+        linear-gradient(
+            145deg,
+            #3d3a36,
+            #292724 58%,
+            #191816
+        );
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.mead-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 15px 16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.05)
+        );
+
+    border-bottom:
+        1px solid
+        var(--panel-border);
+}
+
+.mead-card-header h2 {
+    margin: 0 0 6px;
+
+    color: var(--panel-text);
+
+    font-size: 1.08rem;
+    line-height: 1.3;
+}
+
+.mead-card-header p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.81rem;
+    line-height: 1.42;
+}
+
+
+/* ==========================================
+   STATUS BADGES
+========================================== */
+
+.mead-status-badge {
+    flex: 0 0 auto;
+
+    padding: 5px 8px;
+
+    font-size: 0.65rem;
+    font-weight: 900;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    border-radius: 999px;
+}
+
+.mead-status-badge.empty {
+    color: var(--panel-accent-light);
+
+    background:
+        rgba(var(--panel-accent-rgb), 0.11);
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.35);
+}
+
+.mead-status-badge.brewing {
+    color: #f1ca68;
+
+    background:
+        rgba(207, 151, 40, 0.12);
+
+    border:
+        1px solid
+        rgba(207, 151, 40, 0.38);
+}
+
+.mead-status-badge.ready {
+    color: #9cda91;
+
+    background:
+        rgba(112, 188, 115, 0.12);
+
+    border:
+        1px solid
+        rgba(112, 188, 115, 0.38);
+}
+
+.mead-status-badge.locked {
+    color: #aaa19a;
+
+    background:
+        rgba(0, 0, 0, 0.18);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.09);
+}
+
+
+/* ==========================================
+   CARD BODY
+========================================== */
+
+.mead-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    padding: 16px;
+}
+
+
+/* ==========================================
+   REQUIREMENTS
+========================================== */
+
+.mead-requirements {
+    display: grid;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+    padding: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.mead-requirements p {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.4;
+}
+
+.mead-requirements p span:last-child {
+    max-width: 58%;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   BREWING STATUS
+========================================== */
+
+.mead-brewing-status {
+    display: grid;
+
+    gap: 7px;
+
+    margin-bottom: 10px;
+    padding: 12px;
+
+    color: var(--panel-muted);
+
+    background:
+        rgba(0, 0, 0, 0.16);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 8px;
+}
+
+.mead-brewing-status span {
+    font-size: 0.76rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.07em;
+}
+
+.mead-brewing-status strong {
+    color: var(--panel-text);
+
+    font-size: 0.88rem;
+}
+
+
+/* ==========================================
+   BREWING PROGRESS
+========================================== */
+
+.mead-progress {
+    width: 100%;
+    height: 10px;
+
+    margin-bottom: 16px;
+
+    overflow: hidden;
+
+    background: #100d0b;
+
+    border: 1px solid #4e4031;
+    border-radius: 999px;
+}
+
+.mead-progress-fill {
+    width: 55%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7b5122,
+            #d39b3f,
+            #f0ca65
+        );
+
+    border-radius: inherit;
+}
+
+.mead-progress-fill.brewing-animation {
+    animation:
+        mead-brewing-pulse
+        1.8s ease-in-out infinite;
+}
+
+@keyframes mead-brewing-pulse {
+
+    0%,
+    100% {
+        opacity: 0.65;
+        filter: brightness(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        filter: brightness(1.18);
+    }
+
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.mead-button {
+    width: 100%;
+    min-height: 42px;
+
+    margin-top: auto;
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.mead-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.mead-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.mead-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.48;
+}
+
+
+/* ==========================================
+   LATEST ACTION
+========================================== */
+
+.mead-action {
+    margin-top: 15px;
+    padding: 10px 11px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.mead-action h4 {
+    margin: 0 0 5px;
+
+    color: var(--panel-accent-light);
+
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+.mead-action p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.81rem;
+    line-height: 1.42;
+}
+
+
+/* ==========================================
+   LOCKED CARD
+========================================== */
+
+.mead-card.locked {
+    filter: saturate(0.45);
+
+    opacity: 0.72;
+}
+
+
+/* ==========================================
+   PAGE MESSAGE
+========================================== */
+
+.mead-page-message {
+    display: none;
+
+    margin-top: 18px;
+    padding: 12px 14px;
+
+    color: var(--panel-muted);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-left:
+        4px solid
+        var(--panel-accent);
+
+    border-radius: 8px;
+}
+
+.mead-page-message:not(:empty) {
+    display: block;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1250px) {
+
+    .mead-shelves {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .mead-shelves {
+        grid-template-columns: 1fr;
+    }
+
+    .mead-card {
+        min-height: 0;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .mead-progress-fill.brewing-animation {
+        animation: none;
+    }
+
+}
+
+/* ==========================================
+   KING'S RAFFLE PAGE
+========================================== */
+
+
+/* ==========================================
+   NEXT DRAW PANEL
+========================================== */
+
+.raffle-draw-panel {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+    padding: 16px 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(var(--panel-accent-rgb), 0.16),
+            rgba(0, 0, 0, 0.08)
+        ),
+        linear-gradient(
+            180deg,
+            var(--panel-bg-light),
+            var(--panel-bg)
+        );
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-left:
+        4px solid
+        var(--panel-accent);
+
+    border-radius:
+        var(--panel-radius);
+
+    box-shadow:
+        var(--panel-shadow);
+}
+
+.raffle-draw-icon {
+    display: grid;
+    place-items: center;
+
+    width: 55px;
+    height: 55px;
+
+    font-size: 1.8rem;
+
+    background:
+        rgba(var(--panel-accent-rgb), 0.12);
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.35);
+
+    border-radius: 50%;
+}
+
+.raffle-draw-panel h2 {
+    margin: 0 0 5px;
+
+    color: var(--panel-text);
+
+    font-size: 1.05rem;
+}
+
+.raffle-draw-panel p {
+    margin: 0;
+
+    color: var(--panel-muted);
+
+    font-size: 0.84rem;
+}
+
+.raffle-draw-time {
+    display: grid;
+
+    gap: 5px;
+
+    min-width: 210px;
+
+    text-align: right;
+}
+
+#raffle-next-draw {
+    color: var(--panel-muted);
+
+    font-size: 0.78rem;
+}
+
+#raffle-countdown {
+    color: var(--panel-accent-light);
+
+    font-size: 1rem;
+}
+
+
+/* ==========================================
+   RAFFLE SUMMARY
+========================================== */
+
+.raffle-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+.raffle-summary .stat-card {
+    min-height: 125px;
+}
+
+.raffle-pool {
+    color: var(--panel-text);
+
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   ENTRY PANEL
+========================================== */
+
+.raffle-entry-panel {
+    margin-bottom: 18px;
+}
+
+.raffle-entry-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        140px
+        190px;
+
+    align-items: end;
+
+    gap: 12px;
+}
+
+.raffle-entry-field {
+    display: grid;
+
+    gap: 7px;
+}
+
+.raffle-entry-field label {
+    color: var(--panel-muted);
+
+    font-size: 0.8rem;
+}
+
+.raffle-entry-field select,
+.raffle-entry-field input {
+    width: 100%;
+    min-height: 42px;
+
+    padding: 8px 10px;
+
+    color: var(--panel-text);
+
+    font: inherit;
+    font-size: 0.88rem;
+
+    background:
+        rgba(0, 0, 0, 0.23);
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius: 8px;
+
+    outline: none;
+}
+
+.raffle-entry-field select:focus,
+.raffle-entry-field input:focus {
+    border-color:
+        var(--panel-accent);
+}
+
+.raffle-enter-button {
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    cursor: pointer;
+
+    color: #17120d;
+
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 850;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--panel-accent-light),
+            var(--panel-accent)
+        );
+
+    border:
+        1px solid
+        var(--panel-accent-dark);
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 4px 0
+        var(--panel-accent-dark);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.15s ease;
+}
+
+.raffle-enter-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+
+    transform: translateY(-1px);
+}
+
+.raffle-enter-button:active:not(:disabled) {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 1px 0
+        var(--panel-accent-dark);
+}
+
+.raffle-enter-button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   ENTRY MESSAGE
+========================================== */
+
+.raffle-message {
+    display: none;
+
+    margin-top: 15px;
+    padding: 11px 12px;
+
+    color: var(--panel-muted);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(var(--panel-accent-rgb), 0.10),
+            rgba(0, 0, 0, 0.13)
+        );
+
+    border:
+        1px solid
+        rgba(var(--panel-accent-rgb), 0.28);
+
+    border-radius: 8px;
+}
+
+.raffle-message:not(:empty) {
+    display: block;
+}
+
+
+/* ==========================================
+   HISTORY PANELS
+========================================== */
+
+.raffle-history-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    align-items: start;
+
+    gap: 18px;
+}
+
+.raffle-list {
+    display: grid;
+
+    gap: 8px;
+
+    max-height: 420px;
+
+    overflow-y: auto;
+}
+
+.raffle-list > * {
+    padding: 9px 10px;
+
+    color: var(--panel-muted);
+
+    font-size: 0.83rem;
+    line-height: 1.45;
+
+    background:
+        rgba(0, 0, 0, 0.15);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.05);
+
+    border-radius: 7px;
+}
+
+.raffle-list strong,
+.raffle-list a {
+    color: var(--panel-accent-light);
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+    .raffle-entry-layout {
+        grid-template-columns:
+            minmax(0, 1fr)
+            120px;
+    }
+
+    .raffle-enter-button {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+
+    .raffle-draw-panel {
+        grid-template-columns:
+            auto
+            minmax(0, 1fr);
+    }
+
+    .raffle-draw-time {
+        grid-column: 1 / -1;
+
+        min-width: 0;
+
+        text-align: left;
+    }
+
+    .raffle-summary,
+    .raffle-history-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .raffle-entry-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .raffle-enter-button {
+        grid-column: auto;
+    }
+
+}
+
+/* ==========================================
+   RAFFLE SELECT DROPDOWN FIX
+========================================== */
+
+#lottery-item {
+    color: var(--panel-text);
+
+    background:
+        rgba(0, 0, 0, 0.23);
+
+    border:
+        1px solid
+        var(--panel-border);
+
+    border-radius: 8px;
+}
+
+#lottery-item option {
+    color: var(--panel-text);
+
+    background:
+        #211c17;
+}
+
+#lottery-item:focus {
+    border-color:
+        var(--panel-accent);
+
+    outline: none;
+}
