@@ -166,7 +166,7 @@
 
 
                     <!-- =========================
-                         VILLAGE FORGE: ARROWHEADS
+                         VILLAGE FORGE ORDERS
                     ========================= -->
 
                     <article class="blacksmith-card">
@@ -174,19 +174,62 @@
                         <header class="blacksmith-card-header">
                             <div>
                                 <h2>Iron Arrowheads</h2>
-                                <p>Bjørn uses the Village Forge so new players can prepare arrows before unlocking their Property Forge.</p>
+                                <p>Give Bjørn Iron Bars. He adds 25 finished arrowheads to your Storage Yard every 20 seconds.</p>
                             </div>
                             <div class="craft-stock" id="arrowhead-stock">Loading...</div>
                         </header>
                         <div class="blacksmith-card-body">
                             <div class="blacksmith-requirements">
                                 <p><span>⚒️ Iron Bar</span><span class="green">1 per batch</span></p>
-                                <p><span>🎁 Produces</span><span class="green">25 Iron Arrowheads</span></p>
+                                <p><span>🎁 Each batch</span><span class="green">25 Iron Arrowheads</span></p>
+                                <p><span>⏱️ Delivery</span><span class="green">Every 20 seconds</span></p>
                             </div>
                             <label for="arrowhead-batches">Batches</label>
                             <input id="arrowhead-batches" type="number" min="1" max="1000" value="1">
-                            <button id="forge-arrowheads-button" type="button" class="blacksmith-button">Forge Arrowheads</button>
-                            <div class="blacksmith-message"><h4>Latest Action</h4><p id="arrowhead-message">Ready to forge.</p></div>
+                            <button id="forge-arrowheads-button" type="button" class="blacksmith-button">Ask Bjørn to Forge</button>
+                            <div class="blacksmith-message"><h4>Latest Action</h4><p id="arrowhead-message">Ready to place an order.</p></div>
+                        </div>
+                    </article>
+
+                    <article class="blacksmith-card">
+                        <div class="blacksmith-card-image">🗡️</div>
+                        <header class="blacksmith-card-header">
+                            <div>
+                                <h2>Iron Spearheads</h2>
+                                <p>Ask Bjørn to shape spearheads for crafted hunting spears. No player fuel is needed at the Village Forge.</p>
+                            </div>
+                            <div class="craft-stock" id="spearhead-stock">Loading...</div>
+                        </header>
+                        <div class="blacksmith-card-body">
+                            <div class="blacksmith-requirements">
+                                <p><span>⚒️ Iron Bar</span><span class="green">1 per batch</span></p>
+                                <p><span>🎁 Each batch</span><span class="green">25 Spearheads</span></p>
+                                <p><span>⏱️ Delivery</span><span class="green">Every 20 seconds</span></p>
+                            </div>
+                            <label for="spearhead-batches">Batches</label>
+                            <input id="spearhead-batches" type="number" min="1" max="1000" value="1">
+                            <button id="forge-spearheads-button" type="button" class="blacksmith-button">Ask Bjørn to Forge</button>
+                            <div class="blacksmith-message"><h4>Latest Action</h4><p id="spearhead-message">Ready to place an order.</p></div>
+                        </div>
+                    </article>
+
+                    <article class="blacksmith-card village-forge-order-card">
+                        <div class="blacksmith-card-image">⏱️</div>
+                        <header class="blacksmith-card-header">
+                            <div>
+                                <h2>Current Village Forge Order</h2>
+                                <p>Bjørn completes one batch at a time. Finished pieces are sent straight to your Storage Yard.</p>
+                            </div>
+                            <div class="craft-stock" id="village-forge-order-badge">No order</div>
+                        </header>
+                        <div class="blacksmith-card-body">
+                            <div id="village-forge-order" class="blacksmith-requirements">
+                                <p><span>Status</span><span>Loading...</span></p>
+                            </div>
+                            <div class="durability-bar" aria-label="Village Forge order progress">
+                                <div id="village-forge-progress-fill" class="durability-fill"></div>
+                            </div>
+                            <div class="blacksmith-message"><h4>Next Delivery</h4><p id="village-forge-countdown">No active order.</p></div>
                         </div>
                     </article>
 

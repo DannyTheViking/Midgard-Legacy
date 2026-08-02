@@ -86,41 +86,108 @@ function updateRepairMaterialOptions() {
 }
 
 
-async function loadVillageArrowheadStock() {
+let villageForgeTimer = null;
+
+async function loadVillageForgeStock() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return;
+
     const { data, error } = await supabaseClient
         .from("player_storage")
         .select("quantity, items!inner(name)")
         .eq("player_id", user.id)
-        .in("items.name", ["Iron Bar", "Iron Arrowhead"]);
+        .in("items.name", ["Iron Bar", "Iron Arrowhead", "Spearhead"]);
+
     if (error) {
-        const box = document.getElementById("arrowhead-message");
-        if (box) box.textContent = `Could not load stock: ${error.message}`;
+        document.getElementById("arrowhead-message").textContent = `Could not load stock: ${error.message}`;
         return;
     }
-    const totals = { "Iron Bar": 0, "Iron Arrowhead": 0 };
+
+    const totals = { "Iron Bar": 0, "Iron Arrowhead": 0, "Spearhead": 0 };
     for (const row of data || []) totals[row.items?.name] = Number(row.quantity || 0);
-    const stock = document.getElementById("arrowhead-stock");
-    if (stock) stock.innerHTML = `<span>${totals["Iron Bar"].toLocaleString()} Iron Bars</span><span>${totals["Iron Arrowhead"].toLocaleString()} Arrowheads</span>`;
+
+    const arrowStock = document.getElementById("arrowhead-stock");
+    const spearStock = document.getElementById("spearhead-stock");
+    if (arrowStock) arrowStock.innerHTML = `<span>${totals["Iron Bar"].toLocaleString()} Iron Bars</span><span>${totals["Iron Arrowhead"].toLocaleString()} Arrowheads</span>`;
+    if (spearStock) spearStock.innerHTML = `<span>${totals["Iron Bar"].toLocaleString()} Iron Bars</span><span>${totals["Spearhead"].toLocaleString()} Spearheads</span>`;
 }
 
-async function forgeVillageArrowheads() {
-    const input = document.getElementById("arrowhead-batches");
-    const button = document.getElementById("forge-arrowheads-button");
-    const box = document.getElementById("arrowhead-message");
+async function queueVillageForgeOrder(productKey) {
+    const isArrowhead = productKey === "iron_arrowhead";
+    const input = document.getElementById(isArrowhead ? "arrowhead-batches" : "spearhead-batches");
+    const button = document.getElementById(isArrowhead ? "forge-arrowheads-button" : "forge-spearheads-button");
+    const box = document.getElementById(isArrowhead ? "arrowhead-message" : "spearhead-message");
     const batches = Math.max(1, Math.min(1000, Number(input?.value || 1)));
+
     if (button) button.disabled = true;
-    if (box) box.textContent = "Forging arrowheads...";
-    const { data, error } = await supabaseClient.rpc("forge_village_arrowheads", { p_batches: batches });
+    if (box) box.textContent = "Bjørn is accepting your order...";
+
+    const { data, error } = await supabaseClient.rpc("queue_village_forge_order", {
+        p_product_key: productKey,
+        p_batches: batches
+    });
+
     if (error) {
         if (box) box.textContent = `❌ ${error.message}`;
     } else {
-        if (box) box.textContent = `✅ Used ${data.bars_used} Iron Bar and forged ${data.arrowheads_created} Iron Arrowheads.`;
-        await loadVillageArrowheadStock();
+        const product = isArrowhead ? "Iron Arrowheads" : "Spearheads";
+        if (box) box.textContent = `✅ Order placed. ${data.batches} batches of ${product}; 25 arrive every 20 seconds.`;
+        await Promise.all([loadVillageForgeStock(), loadVillageForgeStatus()]);
     }
+
     if (button) button.disabled = false;
 }
+
+function updateVillageForgeCountdown(nextBatchAt, status) {
+    const countdown = document.getElementById("village-forge-countdown");
+    if (!countdown) return;
+    if (status !== "working" || !nextBatchAt) {
+        countdown.textContent = status === "completed" ? "✅ Order completed." : "No active order.";
+        return;
+    }
+    const seconds = Math.max(0, Math.ceil((new Date(nextBatchAt).getTime() - Date.now()) / 1000));
+    countdown.textContent = `Next 25 pieces in ${seconds}s.`;
+}
+
+async function loadVillageForgeStatus() {
+    const { data, error } = await supabaseClient.rpc("get_village_forge_status");
+    const panel = document.getElementById("village-forge-order");
+    const badge = document.getElementById("village-forge-order-badge");
+    const fill = document.getElementById("village-forge-progress-fill");
+
+    if (error) {
+        if (panel) panel.innerHTML = `<p><span>Status</span><span class="red">${escapeBlacksmithText(error.message)}</span></p>`;
+        return;
+    }
+
+    const order = data?.order;
+    if (!order) {
+        if (badge) badge.textContent = "No order";
+        if (panel) panel.innerHTML = `<p><span>Status</span><span>Ready for work</span></p>`;
+        if (fill) fill.style.width = "0%";
+        updateVillageForgeCountdown(null, null);
+        return;
+    }
+
+    const product = order.product_key === "iron_arrowhead" ? "Iron Arrowheads" : "Spearheads";
+    const percent = Math.round((Number(order.batches_completed || 0) / Math.max(1, Number(order.batches_total || 1))) * 100);
+    if (badge) badge.textContent = order.status === "working" ? "Working" : "Completed";
+    if (panel) panel.innerHTML = `
+        <p><span>Order</span><span>${escapeBlacksmithText(product)}</span></p>
+        <p><span>Batches</span><span>${Number(order.batches_completed).toLocaleString()} / ${Number(order.batches_total).toLocaleString()}</span></p>
+        <p><span>Delivered</span><span class="green">${Number(order.items_completed).toLocaleString()} / ${Number(order.items_total).toLocaleString()}</span></p>
+    `;
+    if (fill) fill.style.width = `${Math.min(100, percent)}%`;
+    updateVillageForgeCountdown(order.next_batch_at, order.status);
+
+    if (order.status === "working") {
+        clearTimeout(villageForgeTimer);
+        villageForgeTimer = setTimeout(async () => {
+            await Promise.all([loadVillageForgeStatus(), loadVillageForgeStock()]);
+        }, 1000);
+    }
+}
+
 async function loadProfessionRepairs() {
     const stock = document.getElementById("repair-stock");
     const unlock = document.getElementById("repair-unlock-message");
@@ -473,8 +540,9 @@ repairButton?.addEventListener("click", repairSelectedTool);
 craftIronAxeButton?.addEventListener("click", craftIronAxe);
 
 document.addEventListener("DOMContentLoaded", async () => {
-    document.getElementById("forge-arrowheads-button")?.addEventListener("click", forgeVillageArrowheads);
-    await loadVillageArrowheadStock();
+    document.getElementById("forge-arrowheads-button")?.addEventListener("click", () => queueVillageForgeOrder("iron_arrowhead"));
+    document.getElementById("forge-spearheads-button")?.addEventListener("click", () => queueVillageForgeOrder("spearhead"));
+    await Promise.all([loadVillageForgeStock(), loadVillageForgeStatus()]);
     if (typeof loadGameComponents === "function") await loadGameComponents();
     await Promise.all([loadProfessionRepairs(), loadBlacksmithCardStock()]);
 });

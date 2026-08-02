@@ -264,11 +264,15 @@ function renderGatheringNodeCard(node) {
     const requiredLevel = Number(node.required_skill_level || 1);
     const hasLevel = currentLevel >= requiredLevel;
     const hasItem = node.has_required_item !== false;
-    const unlocked = hasLevel && hasItem;
+    const hasHuntingWeapon = node.has_required_hunting_weapon !== false;
+    const unlocked = hasLevel && hasItem && hasHuntingWeapon;
 
     const requirements = [];
     if (!hasLevel) requirements.push(`${formatProfessionName(node.profession)} Level ${requiredLevel}`);
     if (!hasItem && requiredName) requirements.push(requiredName);
+    if (!hasHuntingWeapon && node.required_hunting_weapon) {
+        requirements.push(`Crafted ${node.required_hunting_weapon === "spear" ? "Spear" : "Bow"}`);
+    }
 
     return `
         <article class="gathering-engine-card ${unlocked ? "unlocked" : "locked"}">
@@ -355,8 +359,8 @@ async function gatherFromNode(nodeKey) {
             ? `<br>🐦 <strong>Woodland finds:</strong> ${findParts.join(", ")}`
             : "";
 
-        const huntingText = data.bow_name
-            ? `<br>🏹 Used ${escapeGatheringText(data.bow_name)} (${Number(data.bow_damage || 0)} damage). Arrows: ${Number(data.arrows_used || 0)} used, ${Number(data.arrows_recovered || 0)} recovered.${data.knife_required_for_bonus ? `<br>🔪 You left the ${escapeGatheringText(data.discarded_bonus)} because you do not own a Hunting Knife.` : ""}`
+        const huntingText = data.hunting_weapon
+            ? `<br>${data.hunting_weapon === "spear" ? "🗡️" : "🏹"} Used ${escapeGatheringText(data.weapon_name || data.hunting_weapon)}.${data.hunting_weapon === "bow" ? ` Arrows: ${Number(data.arrows_used || 0)} used, ${Number(data.arrows_recovered || 0)} recovered.` : ""}${data.knife_required_for_bonus ? `<br>🔪 The ${escapeGatheringText(data.discarded_bonus)} was ruined because you do not own a Hunting Knife.` : ""}`
             : "";
 
         showGatheringMessage(
