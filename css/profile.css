@@ -1090,123 +1090,20 @@
 
 
 /* =====================================
-   SAGA AWARDS
+   SAGA AWARDS — SHIELD ONLY
 ===================================== */
 
+#saga-cards,
 .saga-grid {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 16px;
-}
-
-.saga-award-card {
-    position: relative;
-    width: 150px;
-    height: 150px;
-    padding: 0;
-    border: 0;
-    border-radius: 14px;
-    background: transparent;
-    cursor: help;
-    outline: none;
-}
-
-.saga-award-card:hover,
-.saga-award-card:focus-visible {
-    transform: translateY(-2px);
-}
-
-.saga-award-art {
-    width: 100%;
-    height: 100%;
     display: grid;
-    place-items: center;
-}
-
-.saga-award-art img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
-}
-
-.saga-award-fallback {
-    display: grid;
-    place-items: center;
-    width: 112px;
-    height: 112px;
-    border: 1px solid rgba(198, 151, 72, 0.5);
-    border-radius: 50%;
-    background: rgba(15, 14, 12, 0.8);
-    font-size: 64px;
-}
-
-.saga-award-tooltip {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 12px);
-    z-index: 50;
-    width: max-content;
-    max-width: 280px;
-    padding: 10px 12px;
-    border: 1px solid #8b6732;
-    border-radius: 8px;
-    background: #17120d;
-    color: #f2e6cf;
-    font-size: 0.84rem;
-    line-height: 1.4;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translate(-50%, 6px);
-    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
-}
-
-.saga-award-tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    border: 7px solid transparent;
-    border-top-color: #8b6732;
-    transform: translateX(-50%);
-}
-
-.saga-award-card:hover .saga-award-tooltip,
-.saga-award-card:focus-visible .saga-award-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, 0);
-}
-
-@media (max-width: 620px) {
-    .saga-grid {
-        gap: 10px;
-    }
-
-    .saga-award-card {
-        width: 120px;
-        height: 120px;
-    }
-
-    .saga-award-tooltip {
-        max-width: 220px;
-    }
-}
-
-/* =====================================
-   SAGA SHIELDS — FINAL SIMPLE DISPLAY
-===================================== */
-
-#saga-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 18px;
+    grid-template-columns: repeat(
+        auto-fill,
+        150px
+    );
+    gap: 20px;
+    align-items: start;
+    justify-content: start;
+    padding: 24px;
     overflow: visible;
 }
 
@@ -1215,21 +1112,37 @@
 }
 
 .saga-award-card {
+    position: relative;
     display: block;
-    width: 180px;
+    width: 150px;
+    height: 150px;
+    margin: 0;
     padding: 0;
+    overflow: visible;
     border: 0;
+    border-radius: 0;
+    outline: none;
     background: transparent;
     box-shadow: none;
     cursor: help;
 }
 
+.saga-award-card:hover,
+.saga-award-card:focus-visible {
+    transform: translateY(-3px);
+}
+
+.saga-award-card:focus-visible {
+    outline: 2px solid #c69820;
+    outline-offset: 4px;
+    border-radius: 10px;
+}
+
 .saga-award-art {
-    display: flex;
-    width: 180px;
-    height: 180px;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    width: 150px;
+    height: 150px;
+    place-items: center;
     overflow: visible;
     border: 0;
     background: transparent;
@@ -1239,14 +1152,28 @@
     display: block;
     width: 100%;
     height: 100%;
+    max-width: 150px;
+    max-height: 150px;
     object-fit: contain;
+    filter:
+        drop-shadow(
+            0 8px 14px
+            rgba(0, 0, 0, 0.45)
+        );
 }
 
 .saga-award-fallback {
-    font-size: 90px;
+    display: grid;
+    width: 112px;
+    height: 112px;
+    place-items: center;
+    border: 1px solid rgba(198, 151, 72, 0.5);
+    border-radius: 50%;
+    background: rgba(15, 14, 12, 0.8);
+    font-size: 64px;
 }
 
-/* Remove every old visible label and custom tooltip */
+/* Nothing except the shield is shown on the card. */
 .saga-award-label,
 .saga-award-title,
 .saga-award-details,
@@ -1256,13 +1183,27 @@
 }
 
 @media (max-width: 600px) {
-    #saga-cards {
+
+    #saga-cards,
+    .saga-grid {
+        grid-template-columns: repeat(
+            auto-fill,
+            120px
+        );
+        gap: 14px;
         justify-content: center;
+        padding: 18px;
     }
 
     .saga-award-card,
     .saga-award-art {
-        width: 145px;
-        height: 145px;
+        width: 120px;
+        height: 120px;
     }
+
+    .saga-award-art img {
+        max-width: 120px;
+        max-height: 120px;
+    }
+
 }

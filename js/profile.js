@@ -591,11 +591,43 @@ async function loadSagaAwards(playerId) {
         return;
     }
 
-    const sortedAwards = (awards || []).sort((left, right) => {
-        const leftOrder = Number(left.achievement_definitions?.sort_order || 0);
-        const rightOrder = Number(right.achievement_definitions?.sort_order || 0);
-        return leftOrder - rightOrder;
-    });
+    const awardMap = new Map();
+
+    for (const award of (awards || [])) {
+        const definition = award.achievement_definitions || {};
+        const identity = String(
+            definition.title ||
+            award.achievement_key ||
+            ""
+        )
+            .trim()
+            .toLowerCase();
+
+        const existing = awardMap.get(identity);
+        const hasImage = Boolean(
+            String(definition.image_path || "").trim()
+        );
+        const existingHasImage = Boolean(
+            String(
+                existing?.achievement_definitions?.image_path || ""
+            ).trim()
+        );
+
+        if (!existing || (hasImage && !existingHasImage)) {
+            awardMap.set(identity, award);
+        }
+    }
+
+    const sortedAwards = Array.from(awardMap.values())
+        .sort((left, right) => {
+            const leftOrder =
+                Number(left.achievement_definitions?.sort_order || 0);
+
+            const rightOrder =
+                Number(right.achievement_definitions?.sort_order || 0);
+
+            return leftOrder - rightOrder;
+        });
 
     if (!sortedAwards.length) {
         sagaCards.innerHTML = `
@@ -666,23 +698,25 @@ async function loadSagaAwards(playerId) {
             <article
                 class="saga-award-card"
                 tabindex="0"
-                aria-label="${escapeHTML(title)}. ${escapeHTML(sentence)}"
+                title="${escapeHTML(sentence)}"
+                aria-label="${escapeHTML(sentence)}"
             >
                 <div class="saga-award-art">
                     ${imagePath
                         ? `<img
                             src="${escapeHTML(imagePath)}"
-                            alt=""
+                            alt="${escapeHTML(title)}"
                             loading="lazy"
                             onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
                         >`
                         : ""}
-                    <span class="saga-award-fallback" ${imagePath ? "hidden" : ""}>
+                    <span
+                        class="saga-award-fallback"
+                        ${imagePath ? "hidden" : ""}
+                        aria-hidden="true"
+                    >
                         ${definition.icon || "🛡️"}
                     </span>
-                </div>
-                <div class="saga-award-tooltip" role="tooltip">
-                    ${escapeHTML(sentence)}
                 </div>
             </article>
         `;
