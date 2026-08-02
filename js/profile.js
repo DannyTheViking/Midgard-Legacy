@@ -538,6 +538,101 @@ function createRankBadge(
 }
 
 
+
+
+/* =====================================
+   LOAD SAGA AWARDS
+===================================== */
+
+async function loadSagaAwards(playerId) {
+
+    const sagaCards = document.getElementById("saga-cards");
+
+    if (!sagaCards || !playerId) {
+        return;
+    }
+
+    const { data: awards, error } = await supabaseClient
+        .from("player_achievements")
+        .select(`
+            achievement_key,
+            unlocked_at,
+            achievement_definitions (
+                title,
+                message,
+                icon,
+                image_path,
+                reward_silver,
+                sort_order
+            )
+        `)
+        .eq("player_id", playerId);
+
+    if (error) {
+        console.error("Could not load Saga awards:", error);
+        sagaCards.innerHTML = `
+            <div class="empty-saga-message">
+                <span>⚠️</span>
+                <strong>Saga awards could not be loaded</strong>
+                <small>Refresh the page and try again.</small>
+            </div>
+        `;
+        return;
+    }
+
+    const sortedAwards = (awards || []).sort((left, right) => {
+        const leftOrder = Number(left.achievement_definitions?.sort_order || 0);
+        const rightOrder = Number(right.achievement_definitions?.sort_order || 0);
+        return leftOrder - rightOrder;
+    });
+
+    if (!sortedAwards.length) {
+        sagaCards.innerHTML = `
+            <div class="empty-saga-message">
+                <span>📜</span>
+                <strong>No Saga cards unlocked yet</strong>
+                <small>Complete adventures and achievements to fill your Saga Hall.</small>
+            </div>
+        `;
+        return;
+    }
+
+    sagaCards.innerHTML = sortedAwards.map((award) => {
+        const definition = award.achievement_definitions || {};
+        const rawPath = String(definition.image_path || "").replace(/^\/+/, "");
+        const imagePath = rawPath.startsWith("images/")
+            ? `../${rawPath}`
+            : rawPath;
+        const unlockedDate = award.unlocked_at
+            ? new Date(award.unlocked_at).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            })
+            : "";
+
+        return `
+            <article class="saga-award-card">
+                <div class="saga-award-art">
+                    ${imagePath
+                        ? `<img src="${escapeHTML(imagePath)}" alt="${escapeHTML(definition.title || "Saga award")}">`
+                        : `<span>${definition.icon || "🛡️"}</span>`}
+                </div>
+                <div class="saga-award-details">
+                    <span class="saga-award-label">Saga Award</span>
+                    <h3>${escapeHTML(definition.title || award.achievement_key)}</h3>
+                    <p>${escapeHTML(definition.message || "A legendary moment in your Midgard journey.")}</p>
+                    <div class="saga-award-meta">
+                        <span>🪙 ${formatNumber(Number(definition.reward_silver || 0))} Silver</span>
+                        <span>Unlocked ${escapeHTML(unlockedDate)}</span>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+
 /* =====================================
    LOAD PROFILE
 ===================================== */
@@ -628,6 +723,8 @@ async function loadProfile() {
 
     viewedPlayerId = player.id;
     currentProfilePlayer = player;
+
+    await loadSagaAwards(viewedPlayerId);
 
     const isOwnProfile =
         viewedPlayerId === user.id;
