@@ -1094,71 +1094,71 @@
 ===================================== */
 
 .saga-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 16px;
 }
 
 .saga-award-card {
     position: relative;
-    display: grid;
-    place-items: center;
-    gap: 8px;
-    min-height: 170px;
-    padding: 14px;
-    border: 1px solid rgba(198, 151, 72, 0.35);
+    width: 150px;
+    height: 150px;
+    padding: 0;
+    border: 0;
     border-radius: 14px;
-    background: rgba(15, 14, 12, 0.72);
-    text-align: center;
+    background: transparent;
     cursor: help;
+    outline: none;
 }
 
 .saga-award-card:hover,
 .saga-award-card:focus-visible {
-    border-color: rgba(215, 173, 101, 0.9);
-    box-shadow: 0 0 0 2px rgba(215, 173, 101, 0.12);
-    outline: none;
+    transform: translateY(-2px);
 }
 
 .saga-award-art {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+.saga-award-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.45));
+}
+
+.saga-award-fallback {
     display: grid;
     place-items: center;
     width: 112px;
     height: 112px;
-}
-
-.saga-award-art img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.saga-award-fallback {
+    border: 1px solid rgba(198, 151, 72, 0.5);
+    border-radius: 50%;
+    background: rgba(15, 14, 12, 0.8);
     font-size: 64px;
-}
-
-.saga-award-title {
-    color: #f0dfbd;
-    font-size: 0.95rem;
 }
 
 .saga-award-tooltip {
     position: absolute;
     left: 50%;
-    bottom: calc(100% + 10px);
-    z-index: 20;
+    bottom: calc(100% + 12px);
+    z-index: 50;
     width: max-content;
-    max-width: 270px;
+    max-width: 280px;
     padding: 10px 12px;
     border: 1px solid #8b6732;
     border-radius: 8px;
     background: #17120d;
     color: #f2e6cf;
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     line-height: 1.4;
-    text-align: left;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -1185,7 +1185,12 @@
 
 @media (max-width: 620px) {
     .saga-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .saga-award-card {
+        width: 120px;
+        height: 120px;
     }
 
     .saga-award-tooltip {
