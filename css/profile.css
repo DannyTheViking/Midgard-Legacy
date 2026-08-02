@@ -1207,3 +1207,6 @@
     }
 
 }
+.saga-award-fallback[hidden] {
+    display: none !important;
+}
