@@ -540,39 +540,156 @@ function createRankBadge(
 
 
 
-return `
-    <article
-        class="saga-award-card"
-        tabindex="0"
-        title="${escapeHTML(sentence)}"
-        aria-label="${escapeHTML(sentence)}"
-    >
-        <div class="saga-award-art">
-            ${
-                imagePath
-                    ? `
-                        <img
-                            src="${escapeHTML(imagePath)}"
-                            alt="${escapeHTML(title)}"
-                            loading="lazy"
-                            onerror="
-                                this.hidden = true;
-                                this.nextElementSibling.hidden = false;
-                            "
-                        >
-                    `
-                    : ""
-            }
+/* =====================================
+   LOAD SAGA AWARDS
+===================================== */
 
-            <span
-                class="saga-award-fallback"
-                ${imagePath ? "hidden" : ""}
+async function loadSagaAwards(playerId) {
+
+    const sagaCards = document.getElementById("saga-cards");
+
+    if (!sagaCards || !playerId) {
+        return;
+    }
+
+    const [awardsResult, playerResult] = await Promise.all([
+        supabaseClient
+            .from("player_achievements")
+            .select(`
+                achievement_key,
+                unlocked_at,
+                achievement_definitions (
+                    title,
+                    message,
+                    icon,
+                    image_path,
+                    sort_order,
+                    threshold,
+                    statistic_column
+                )
+            `)
+            .eq("player_id", playerId),
+        supabaseClient
+            .from("players")
+            .select("tutorial_completed_at")
+            .eq("id", playerId)
+            .maybeSingle()
+    ]);
+
+    const awards = awardsResult.data;
+    const error = awardsResult.error;
+
+    if (error) {
+        console.error("Could not load Saga awards:", error);
+        sagaCards.innerHTML = `
+            <div class="empty-saga-message">
+                <span>⚠️</span>
+                <strong>Saga awards could not be loaded</strong>
+                <small>Refresh the page and try again.</small>
+            </div>
+        `;
+        return;
+    }
+
+    const sortedAwards = (awards || []).sort((left, right) => {
+        const leftOrder = Number(left.achievement_definitions?.sort_order || 0);
+        const rightOrder = Number(right.achievement_definitions?.sort_order || 0);
+        return leftOrder - rightOrder;
+    });
+
+    if (!sortedAwards.length) {
+        sagaCards.innerHTML = `
+            <div class="empty-saga-message">
+                <span>📜</span>
+                <strong>No Saga awards unlocked yet</strong>
+                <small>Complete adventures and achievements to fill your Saga Hall.</small>
+            </div>
+        `;
+        return;
+    }
+
+    const tutorialCompletedAt = playerResult.data?.tutorial_completed_at || null;
+
+    const formatSagaDate = (value) => value
+        ? new Date(value).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        })
+        : "";
+
+    const ordinal = (value) => {
+        const number = Number(value || 0);
+        const mod100 = number % 100;
+        if (mod100 >= 11 && mod100 <= 13) return `${formatNumber(number)}th`;
+        switch (number % 10) {
+            case 1: return `${formatNumber(number)}st`;
+            case 2: return `${formatNumber(number)}nd`;
+            case 3: return `${formatNumber(number)}rd`;
+            default: return `${formatNumber(number)}th`;
+        }
+    };
+
+    const createSagaSentence = (award, definition) => {
+        const key = String(award.achievement_key || "");
+        const threshold = Number(definition.threshold || 0);
+        const achievementDate = formatSagaDate(award.unlocked_at);
+
+        if (key === "freeman") {
+            const completionDate = formatSagaDate(tutorialCompletedAt);
+            return completionDate
+                ? `Completed the tutorial on ${completionDate}.`
+                : "Completed the tutorial before Saga records began.";
+        }
+
+        if (definition.statistic_column === "trees_chopped" && threshold > 0) {
+            return achievementDate
+                ? `Chopped their ${ordinal(threshold)} tree on ${achievementDate}.`
+                : `Chopped their ${ordinal(threshold)} tree.`;
+        }
+
+        return achievementDate
+            ? `Unlocked on ${achievementDate}.`
+            : "Saga award unlocked.";
+    };
+
+    sagaCards.innerHTML = sortedAwards.map((award) => {
+        const definition = award.achievement_definitions || {};
+        const rawPath = String(definition.image_path || "")
+            .trim()
+            .replace(/^\/+/, "");
+        const imagePath = rawPath ? `/${rawPath}` : "";
+        const sentence = createSagaSentence(award, definition);
+        const title = definition.title || award.achievement_key;
+
+        return `
+            <article
+                class="saga-award-card"
+                tabindex="0"
+                aria-label="${escapeHTML(title)}. ${escapeHTML(sentence)}"
             >
-                ${definition.icon || "🛡️"}
-            </span>
-        </div>
-    </article>
-`;
+                <div class="saga-award-art">
+                    ${imagePath
+                        ? `<img
+                            src="${escapeHTML(imagePath)}"
+                            alt=""
+                            loading="lazy"
+                            onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
+                        >`
+                        : ""}
+                    <span class="saga-award-fallback" ${imagePath ? "hidden" : ""}>
+                        ${definition.icon || "🛡️"}
+                    </span>
+                </div>
+                <div class="saga-award-tooltip" role="tooltip">
+                    ${escapeHTML(sentence)}
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+
 /* =====================================
    LOAD PROFILE
 ===================================== */
