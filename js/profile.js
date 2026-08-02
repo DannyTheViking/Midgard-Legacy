@@ -619,6 +619,13 @@ async function loadSagaAwards(playerId) {
     }
 
     const sortedAwards = Array.from(awardMap.values())
+        .filter(award => {
+            const imagePath = String(
+                award.achievement_definitions?.image_path || ""
+            ).trim();
+
+            return imagePath.length > 0;
+        })
         .sort((left, right) => {
             const leftOrder =
                 Number(left.achievement_definitions?.sort_order || 0);
