@@ -552,33 +552,21 @@ async function loadSagaAwards(playerId) {
         return;
     }
 
-    const [awardsResult, playerResult] = await Promise.all([
-        supabaseClient
-            .from("player_achievements")
-            .select(`
-                achievement_key,
-                unlocked_at,
-                achievement_definitions (
-                    title,
-                    message,
-                    icon,
-                    image_path,
-                    reward_silver,
-                    sort_order,
-                    threshold,
-                    statistic_column
-                )
-            `)
-            .eq("player_id", playerId),
-        supabaseClient
-            .from("players")
-            .select("tutorial_completed_at")
-            .eq("id", playerId)
-            .maybeSingle()
-    ]);
-
-    const awards = awardsResult.data;
-    const error = awardsResult.error;
+    const { data: awards, error } = await supabaseClient
+        .from("player_achievements")
+        .select(`
+            achievement_key,
+            unlocked_at,
+            achievement_definitions (
+                title,
+                message,
+                icon,
+                image_path,
+                reward_silver,
+                sort_order
+            )
+        `)
+        .eq("player_id", playerId);
 
     if (error) {
         console.error("Could not load Saga awards:", error);
@@ -602,68 +590,42 @@ async function loadSagaAwards(playerId) {
         sagaCards.innerHTML = `
             <div class="empty-saga-message">
                 <span>📜</span>
-                <strong>No Saga awards unlocked yet</strong>
+                <strong>No Saga cards unlocked yet</strong>
                 <small>Complete adventures and achievements to fill your Saga Hall.</small>
             </div>
         `;
         return;
     }
 
-    const tutorialCompletedAt = playerResult.data?.tutorial_completed_at || null;
-
-    const formatSagaDate = (value) => value
-        ? new Date(value).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        })
-        : "";
-
-    const createSagaSentence = (award, definition) => {
-        const key = String(award.achievement_key || "");
-        const threshold = Number(definition.threshold || 0);
-        const achievementDate = formatSagaDate(award.unlocked_at);
-
-        if (key === "freeman") {
-            const completionDate = formatSagaDate(tutorialCompletedAt);
-            return completionDate
-                ? `Completed the tutorial on ${completionDate}.`
-                : "Completed the tutorial before Saga records began.";
-        }
-
-        if (definition.statistic_column === "trees_chopped" && threshold > 0) {
-            return `Chopped their ${formatNumber(threshold)}th tree on ${achievementDate}.`;
-        }
-
-        if (achievementDate) {
-            return `Completed this Saga award on ${achievementDate}.`;
-        }
-
-        return "Completed this Saga award.";
-    };
-
     sagaCards.innerHTML = sortedAwards.map((award) => {
         const definition = award.achievement_definitions || {};
-        const rawPath = String(definition.image_path || "")
-            .trim()
-            .replace(/^\/+/, "");
-        const imagePath = rawPath
-            ? `/${rawPath}`
+        const rawPath = String(definition.image_path || "").replace(/^\/+/, "");
+        const imagePath = rawPath.startsWith("images/")
+            ? `../${rawPath}`
+            : rawPath;
+        const unlockedDate = award.unlocked_at
+            ? new Date(award.unlocked_at).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            })
             : "";
-        const sentence = createSagaSentence(award, definition);
-        const title = definition.title || award.achievement_key;
 
         return `
-            <article class="saga-award-card" tabindex="0" aria-label="${escapeHTML(title)}. ${escapeHTML(sentence)}">
+            <article class="saga-award-card">
                 <div class="saga-award-art">
                     ${imagePath
-                        ? `<img src="${escapeHTML(imagePath)}" alt="${escapeHTML(title)}" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false;">`
-                        : ""}
-                    <span class="saga-award-fallback" ${imagePath ? "hidden" : ""}>${definition.icon || "🛡️"}</span>
+                        ? `<img src="${escapeHTML(imagePath)}" alt="${escapeHTML(definition.title || "Saga award")}">`
+                        : `<span>${definition.icon || "🛡️"}</span>`}
                 </div>
-                <strong class="saga-award-title">${escapeHTML(title)}</strong>
-                <div class="saga-award-tooltip" role="tooltip">
-                    ${escapeHTML(sentence)}
+                <div class="saga-award-details">
+                    <span class="saga-award-label">Saga Award</span>
+                    <h3>${escapeHTML(definition.title || award.achievement_key)}</h3>
+                    <p>${escapeHTML(definition.message || "A legendary moment in your Midgard journey.")}</p>
+                    <div class="saga-award-meta">
+                        <span>🪙 ${formatNumber(Number(definition.reward_silver || 0))} Silver</span>
+                        <span>Unlocked ${escapeHTML(unlockedDate)}</span>
+                    </div>
                 </div>
             </article>
         `;
