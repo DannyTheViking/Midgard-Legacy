@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cooking Fire | Midgard Legacy</title>
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=8">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/workstation.css?v=4">
+    <link rel="stylesheet" href="../css/cooking-fire.css?v=2">
+</head>
+<body>
+<div class="game-layout">
+    <div id="sidebar"></div>
+    <main class="main-area">
+        <div id="topbar"></div>
+        <div class="game-page">
+            <div id="fire-message" class="station-message" aria-live="polite">Loading your Cooking Fire...</div>
+
+            <section class="forge-workspace cooking-workspace">
+                <aside class="forge-recipe-library">
+                    <div class="forge-column-title"><h2>📜 Recipes</h2><span id="recipe-count" class="recipe-count">0</span></div>
+                    <label for="recipe-search">Search recipes</label>
+                    <input id="recipe-search" type="search" placeholder="Search meat, fish, broth...">
+                    <div id="cooking-recipes" class="forge-recipe-list"></div>
+                </aside>
+
+                <section id="selected-cooking-recipe" class="forge-selected-recipe selected-recipe-empty">
+                    Select a cooking recipe.
+                </section>
+
+                <aside class="forge-controls-column">
+                    <section class="forge-control-card">
+                        <h2>🔥 Cooking Fire</h2>
+                        <div class="cooking-fire-status-row">
+                            <span id="fire-icon" class="cooking-fire-main-icon">🪵</span>
+                            <div><strong id="fire-status">Checking...</strong><div id="fire-timer" class="cooking-fire-timer">00:00</div></div>
+                        </div>
+                        <p>Start with 1 Bird Nest for 1 minute. Every log adds 10 minutes to the remaining time.</p>
+                        <button id="start-fire-button" type="button">Use 1 Bird Nest</button>
+                    </section>
+
+                    <section class="forge-control-card">
+                        <h2>🪵 Add Fuel</h2>
+                        <label for="fire-log-select">Choose a log</label>
+                        <select id="fire-log-select">
+                            <option>Birch Log</option><option>Pine Log</option><option>Willow Log</option><option>Oak Log</option>
+                            <option>Ash Log</option><option>Maple Log</option><option>Yew Log</option><option>Ancient Log</option>
+                        </select>
+                        <button id="add-log-button" type="button">Add Log (+10:00)</button>
+                    </section>
+
+                    <section class="forge-control-card">
+                        <h2>🧑‍🍳 Cooking Skill</h2>
+                        <div class="cooking-stat-line"><span>Level</span><strong id="cooking-level">1</strong></div>
+                        <div class="cooking-stat-line"><span>XP</span><strong id="cooking-xp">0</strong></div>
+                        <div class="cooking-stat-line"><span>Burn chance</span><strong id="cooking-burn-chance">40%</strong></div>
+                    </section>
+
+                    <section id="coal-card" class="forge-control-card" hidden>
+                        <h2>⚫ Empty Fire Pit</h2>
+                        <p>Your fire has gone out and the logs have burned into usable coal.</p>
+                        <button id="collect-coal-button" type="button">Collect 5 Coal</button>
+                    </section>
+                </aside>
+            </section>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/game-utils.js"></script>
+<script src="../js/components.js?v=4"></script>
+<script src="../js/cooking-fire.js?v=2"></script>
+</body>
+</html>

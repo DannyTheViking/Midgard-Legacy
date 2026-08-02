@@ -1185,6 +1185,21 @@ function loadOwnProfileActions() {
 
         </div>
 
+        ${!currentProfilePlayer?.date_of_birth ? `
+            <div class="profile-action-information" style="width:100%; margin-top:12px;">
+                <span>📅</span>
+                <div style="flex:1;">
+                    <strong>Date of birth</strong>
+                    <small>Add this once to complete your account details.</small>
+                    <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                        <input id="profile-date-of-birth" type="date" autocomplete="bday" style="min-width:190px;">
+                        <button type="button" id="save-date-of-birth" class="profile-action-button">Save Date</button>
+                    </div>
+                    <small id="date-of-birth-message" style="display:block; margin-top:8px;"></small>
+                </div>
+            </div>
+        ` : ``}
+
         <div class="profile-action-buttons">
 
             <button
@@ -1207,6 +1222,35 @@ function loadOwnProfileActions() {
 
         </div>
     `;
+
+    document
+        .getElementById("save-date-of-birth")
+        ?.addEventListener("click", async function () {
+            const input = document.getElementById("profile-date-of-birth");
+            const message = document.getElementById("date-of-birth-message");
+            const value = input?.value;
+
+            if (!value) {
+                if (message) message.textContent = "Choose your date of birth first.";
+                return;
+            }
+
+            this.disabled = true;
+            if (message) message.textContent = "Saving…";
+
+            const { error } = await supabaseClient.rpc("set_my_date_of_birth", {
+                p_date_of_birth: value
+            });
+
+            if (error) {
+                if (message) message.textContent = `❌ ${error.message}`;
+                this.disabled = false;
+                return;
+            }
+
+            if (message) message.textContent = "✅ Date saved.";
+            await loadProfile();
+        });
 
     document
         .getElementById(

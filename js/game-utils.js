@@ -3,7 +3,7 @@
 ===================================== */
 const MIDGARD_SKILL_NAMES = Object.freeze([
     "woodcutting", "mining", "fishing", "hunting", "farming",
-    "blacksmithing", "carpentry", "cooking", "brewing", "combat"
+    "cooking", "brewing", "combat"
 ]);
 
 const OAK_WOODCUTTING_LEVEL = 5;

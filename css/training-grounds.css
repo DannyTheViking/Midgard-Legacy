@@ -1,0 +1,114 @@
+/* =========================================================
+   MIDGARD LEGACY - TRAINING GROUNDS
+========================================================= */
+
+.training-message {
+    min-height: 48px;
+    margin: 18px 0;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .06);
+}
+
+.training-message.success { border: 1px solid #4f8b58; }
+.training-message.error { border: 1px solid #a44; }
+
+.training-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.training-summary > div,
+.battle-stat-card,
+.training-help {
+    background: rgba(18, 22, 24, .94);
+    border: 1px solid rgba(210, 173, 94, .28);
+    border-radius: 14px;
+}
+
+.training-summary > div { padding: 16px 18px; }
+.training-summary span { display: block; opacity: .75; }
+.training-summary strong { font-size: 1.55rem; }
+
+
+.total-warrior-stats {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 18px;
+    margin: 0 0 18px;
+    padding: 16px 20px;
+    background: rgba(18, 22, 24, .94);
+    border: 1px solid rgba(210, 173, 94, .28);
+    border-radius: 14px;
+}
+.total-warrior-stats .battle-total-icon { font-size: 2.2rem; }
+.total-warrior-stats span { display: block; opacity: .78; }
+.total-warrior-stats strong { display: block; color: #e1bd73; font-size: 1.85rem; }
+.total-warrior-stats p { margin: 0; text-align: right; opacity: .82; }
+
+/* Four battle stats across one row on normal desktop screens. */
+.battle-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.battle-stat-card {
+    display: flex;
+    min-width: 0;
+    min-height: 280px;
+    padding: 18px 16px;
+    text-align: center;
+    flex-direction: column;
+}
+
+.battle-stat-icon { font-size: 2.35rem; }
+.battle-stat-card h2 { margin: 7px 0; font-size: 1.45rem; }
+.battle-stat-card > strong {
+    display: block;
+    font-size: 1.85rem;
+    color: #e1bd73;
+}
+.battle-stat-card p {
+    margin: 12px 0 18px;
+    min-height: 48px;
+    line-height: 1.45;
+}
+
+.battle-stat-gain {
+    margin: 0 0 14px;
+    padding: 9px 8px;
+    border-top: 1px solid rgba(210, 173, 94, .18);
+    border-bottom: 1px solid rgba(210, 173, 94, .18);
+    font-size: .92rem;
+    opacity: .9;
+}
+.battle-stat-gain strong { color: #8fd36b; }
+
+.battle-stat-card button {
+    width: 100%;
+    margin-top: auto;
+    padding: 12px 8px;
+    border: 0;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.battle-stat-card button:disabled { opacity: .45; cursor: not-allowed; }
+.training-help { margin-top: 18px; padding: 18px; }
+
+@media (max-width: 1100px) {
+    .battle-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+    .training-summary,
+    .battle-stat-grid { grid-template-columns: 1fr; }
+    .total-warrior-stats { grid-template-columns: auto 1fr; }
+    .total-warrior-stats p { grid-column: 1 / -1; text-align: left; }
+    .battle-stat-card { min-height: 0; }
+    .battle-stat-card p { min-height: 0; }
+}

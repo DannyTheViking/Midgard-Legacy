@@ -1,0 +1,577 @@
+/* ============================================================
+   MIDGARD LEGACY
+   SHARED FORGE AND WORKBENCH INTERFACE
+
+   The page is arranged like one compact workstation instead of
+   several large empty cards.
+============================================================ */
+
+.station-shell {
+    display: grid;
+    gap: 1rem;
+}
+
+
+/* ============================================================
+   STATUS MESSAGE
+============================================================ */
+
+.station-message {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.station-message.success {
+    border-left: 4px solid #73d47c;
+}
+
+.station-message.error {
+    border-left: 4px solid #ef7d72;
+}
+
+
+/* ============================================================
+   THREE-COLUMN WORKSTATION
+============================================================ */
+
+.forge-workspace,
+.workbench-workspace {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.85fr) minmax(340px, 1.5fr) minmax(230px, 0.9fr);
+    min-height: 560px;
+    overflow: hidden;
+    border: 1px solid rgba(180, 132, 65, 0.38);
+    border-radius: 14px;
+    background: rgba(17, 15, 12, 0.96);
+}
+
+.forge-column {
+    min-width: 0;
+    padding: 1rem;
+}
+
+.forge-column + .forge-column {
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.forge-column-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.forge-column-heading h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.forge-column-heading > span {
+    display: inline-flex;
+    min-width: 30px;
+    min-height: 28px;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    font-size: 0.85rem;
+}
+
+
+/* ============================================================
+   LEFT RECIPE LIBRARY
+============================================================ */
+
+.forge-search-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.forge-search,
+.forge-control-block select,
+.forge-control-block input,
+.selected-recipe-actions input {
+    width: 100%;
+    min-height: 42px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.28);
+    color: inherit;
+}
+
+.forge-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    margin: 0.75rem 0;
+}
+
+.forge-tab {
+    min-height: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+    cursor: pointer;
+}
+
+.forge-tab.active {
+    border-color: rgba(201, 145, 67, 0.7);
+    background: rgba(201, 145, 67, 0.18);
+}
+
+.forge-recipe-list {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 0.2rem;
+}
+
+.forge-recipe-row {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 30px;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.025);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.forge-recipe-row:hover,
+.forge-recipe-row.selected {
+    border-color: rgba(201, 145, 67, 0.65);
+    background: rgba(201, 145, 67, 0.11);
+}
+
+.forge-recipe-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.26);
+    font-size: 1.3rem;
+}
+
+.forge-recipe-text {
+    min-width: 0;
+}
+
+.forge-recipe-text strong,
+.forge-recipe-text small {
+    display: block;
+}
+
+.forge-recipe-text strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.forge-recipe-text small {
+    margin-top: 0.15rem;
+    opacity: 0.7;
+}
+
+.forge-recipe-status {
+    display: grid;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.forge-recipe-status.ready {
+    background: rgba(115, 212, 124, 0.16);
+    color: #73d47c;
+}
+
+.forge-recipe-status.missing {
+    background: rgba(239, 125, 114, 0.16);
+    color: #ef7d72;
+}
+
+
+/* ============================================================
+   CENTRE SELECTED RECIPE
+============================================================ */
+
+.selected-recipe-empty {
+    display: grid;
+    min-height: 430px;
+    place-items: center;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    opacity: 0.7;
+}
+
+.selected-recipe-card {
+    display: grid;
+    gap: 1rem;
+}
+
+.selected-recipe-heading {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.selected-recipe-heading h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.35rem;
+}
+
+.selected-recipe-heading p {
+    margin: 0;
+    opacity: 0.78;
+}
+
+.selected-recipe-icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    place-items: center;
+    border: 1px solid rgba(201, 145, 67, 0.35);
+    border-radius: 12px;
+    background: rgba(201, 145, 67, 0.09);
+    font-size: 2rem;
+}
+
+.selected-recipe-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.selected-recipe-stat-grid > div {
+    padding: 0.7rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.selected-recipe-stat-grid span,
+.selected-recipe-stat-grid strong {
+    display: block;
+}
+
+.selected-recipe-stat-grid span {
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    opacity: 0.72;
+}
+
+.selected-ingredients-section h4 {
+    margin: 0 0 0.55rem;
+}
+
+.selected-ingredient-row,
+.forge-material-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 0.65rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.selected-ingredient-row.ready strong {
+    color: #73d47c;
+}
+
+.selected-ingredient-row.missing strong {
+    color: #ef7d72;
+}
+
+.selected-recipe-actions {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 120px) minmax(150px, 1fr);
+    gap: 0.65rem;
+    align-items: end;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.selected-recipe-actions label {
+    grid-column: 1 / -1;
+    margin-bottom: -0.4rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.selected-recipe-actions button,
+.forge-control-block button,
+.forge-output-card button {
+    min-height: 42px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid rgba(201, 145, 67, 0.62);
+    border-radius: 8px;
+    background: rgba(201, 145, 67, 0.16);
+    color: inherit;
+    cursor: pointer;
+}
+
+.selected-recipe-actions button:hover,
+.forge-control-block button:hover,
+.forge-output-card button:hover {
+    background: rgba(201, 145, 67, 0.26);
+}
+
+
+/* ============================================================
+   RIGHT FORGE CONTROLS
+============================================================ */
+
+.forge-controls-column {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+}
+
+.forge-control-block {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.forge-control-block h3,
+.forge-control-block p {
+    margin: 0;
+}
+
+.forge-control-block label {
+    font-size: 0.82rem;
+    opacity: 0.78;
+}
+
+.forge-control-block small {
+    opacity: 0.67;
+}
+
+.forge-control-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+.forge-tool-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+}
+
+.forge-tool-slot {
+    display: grid;
+    min-height: 70px;
+    place-items: center;
+    padding: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.forge-tool-slot span {
+    font-size: 0.72rem;
+}
+
+.forge-tool-slot.locked {
+    filter: grayscale(1);
+    opacity: 0.48;
+}
+
+.storage-order-list {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+
+/* ============================================================
+   BOTTOM QUEUE AND OUTPUT
+============================================================ */
+
+.station-panel {
+    padding: 1rem;
+    border: 1px solid rgba(180, 132, 65, 0.3);
+    border-radius: 12px;
+    background: rgba(26, 22, 18, 0.96);
+}
+
+.forge-bottom-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.85fr);
+    gap: 1rem;
+}
+
+.station-queue,
+.forge-output-slots {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.station-queue-card,
+.forge-output-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.station-queue-card small,
+.forge-output-card small {
+    display: block;
+    margin-top: 0.2rem;
+    opacity: 0.7;
+}
+
+.queue-status-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    font-size: 0.8rem;
+}
+
+.forge-output-card {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+}
+
+.forge-output-icon,
+.forge-output-empty-slot {
+    display: grid;
+    place-items: center;
+}
+
+.forge-output-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.forge-output-empty-slot {
+    min-height: 58px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    opacity: 0.48;
+}
+
+.forge-empty-message {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    opacity: 0.65;
+}
+
+
+/* ============================================================
+   TABLET AND MOBILE
+============================================================ */
+
+@media (max-width: 1100px) {
+    .forge-workspace,
+    .workbench-workspace {
+        grid-template-columns: minmax(220px, 0.85fr) minmax(320px, 1.4fr);
+    }
+
+    .forge-controls-column {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        border-left: 0 !important;
+    }
+
+    .forge-controls-column > .forge-column-heading {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 760px) {
+    .forge-workspace,
+    .workbench-workspace,
+    .forge-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .forge-column + .forge-column {
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        border-left: 0;
+    }
+
+    .forge-controls-column {
+        grid-template-columns: 1fr;
+    }
+
+    .forge-recipe-list {
+        max-height: 320px;
+    }
+
+    .selected-recipe-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .selected-recipe-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .selected-recipe-actions label {
+        grid-column: auto;
+    }
+}
+
+
+/* ============================================================
+   DARK NATIVE DROPDOWN MENU
+============================================================ */
+/*
+ * Windows/Chrome can render the opened <option> list using a bright
+ * operating-system colour unless the control explicitly opts into a dark
+ * colour scheme. These rules keep both the closed select and its options in
+ * the same dark Forge theme.
+ */
+.forge-control-block select {
+    color-scheme: dark;
+    background-color: #14110e;
+    color: #f3ead5;
+}
+
+.forge-control-block select option {
+    background-color: #14110e;
+    color: #f3ead5;
+}
+
+.forge-control-block select option:checked {
+    background-color: #4b3518;
+    color: #fff4d6;
+}
+
+
+.forge-recipe-row.locked{opacity:.72}.station-level-lock{margin:14px 0;padding:12px;border:1px solid #74551d;background:#241c10;color:#e7c56a;border-radius:8px}.selected-recipe-card.locked .selected-recipe-actions{opacity:.75}

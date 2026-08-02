@@ -61,14 +61,17 @@ async function loadLottery() {
             })
             .join("");
 
-    const weekStart = getWeekStart();
+    updateRaffleRequiredQuantity();
+
+    const currentDrawKey = getNextRaffleDraw()
+        .toLocaleDateString("en-CA", { timeZone: "Europe/London" });
 
     const { data: entries, error: entriesError } =
         await supabaseClient
             .from("lottery_entries")
             .select("entry_count")
             .eq("player_id", user.id)
-            .gte("entry_date", weekStart);
+            .eq("draw_key", currentDrawKey);
 
     if (entriesError) {
         console.error(
@@ -154,6 +157,17 @@ async function loadLottery() {
                     ).toLocaleString("en-GB")} value</p>`
             )
             .join("") || "<p>No jackpots yet.</p>";
+}
+
+
+function updateRaffleRequiredQuantity() {
+    const item = document.getElementById("lottery-item")?.value;
+    const quantityInput = document.getElementById("lottery-quantity");
+    if (!quantityInput || !item) return;
+    if (item === "silver") { quantityInput.value = 1000; return; }
+    const selected = raffleValues.find(row => String(row.item_id) === String(item));
+    const value = Math.max(1, Number(selected?.silver_value || 0));
+    quantityInput.value = Math.ceil(1000 / value);
 }
 
 async function enterLottery() {
@@ -275,6 +289,8 @@ async function enterLottery() {
 
     await loadLottery();
 }
+
+document.getElementById("lottery-item")?.addEventListener("change", updateRaffleRequiredQuantity);
 
 document
     .getElementById("lottery-enter-button")

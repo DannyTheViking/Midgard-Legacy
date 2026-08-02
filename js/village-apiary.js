@@ -16,7 +16,7 @@ async function loadVillageApiary() {
   // Repair old/stuck saves that reached the former build-a-hive step.
   if (player.tutorial_step === TUTORIAL_STEPS.FORGE_IRON_NAILS) {
     await supabaseClient.from("players").update({ tutorial_step: TUTORIAL_STEPS.CRAFT_BUCKET }).eq("id", user.id);
-    window.location.href = "carpenter.html"; return;
+    window.location.href = "workbench.html"; return;
   }
   if (player.tutorial_step < TUTORIAL_STEPS.VISIT_VILLAGE_APIARY) {
     showVillageMessage("📜 Finish the current King’s Challenge objective before using the royal hives.");

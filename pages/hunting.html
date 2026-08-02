@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Midgard Legacy - Hunting</title>
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=4">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/gathering.css?v=7">
+</head>
+<body data-gathering-profession="hunting" class="gathering-theme-hunting">
+    <div class="game-layout">
+        <div id="sidebar"></div>
+        <main class="main-area">
+            <div id="topbar"></div>
+            <div class="game-page">
+                <section class="game-page-header">
+                    <div class="game-page-heading">
+                        <h1>🏹 Hunting</h1>
+                        <p>Track animals for meat, hides, feathers and other useful resources.</p>
+                    </div>
+                    <div class="game-badge">⚡ 5 energy per action</div>
+                </section>
+                <div id="gathering-message" class="gathering-engine-message" aria-live="polite">Loading...</div>
+                <p><a class="gathering-workbench-link" href="gathering.html">← All Gathering Grounds</a></p>
+                <section class="gathering-engine-layout">
+                    <div class="gathering-engine-main">
+                        <div id="gathering-node-grid" class="gathering-engine-grid"></div>
+                    </div>
+                    <aside class="gathering-engine-sidebar">
+                        <section class="side-panel" id="resource-cart-card">
+                            <resource-cart-card></resource-cart-card>
+                        </section>
+                    </aside>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/gathering.js?v=2"></script>
+</body>
+</html>

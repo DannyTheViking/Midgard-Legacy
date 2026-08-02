@@ -33,7 +33,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/village-healer.css?v=3"
+        href="../css/village-healer.css?v=4"
     >
 
 </head>
@@ -94,6 +94,32 @@
 
 
                 <!-- =========================
+                     YRSA - HEALER NPC
+                ========================= -->
+
+                <section class="page-panel healer-npc-card">
+
+                    <div class="healer-npc-portrait" aria-hidden="true">
+                        👩‍⚕️
+                    </div>
+
+                    <div class="healer-npc-details">
+                        <p class="healer-npc-role">Village Healer</p>
+                        <h2>Yrsa</h2>
+                        <p>
+                            “Keep bringing me the supplies I need and I will
+                            teach you how to care for wounded Vikings.”
+                        </p>
+                    </div>
+
+                    <a class="game-button healer-npc-action" href="job-yard.html">
+                        View Yrsa's Jobs
+                    </a>
+
+                </section>
+
+
+                <!-- =========================
                      YOUR HOSPITAL STATUS
                 ========================= -->
 
@@ -102,6 +128,32 @@
                     class="page-panel my-hospital-card"
                     hidden
                 ></section>
+
+                <!-- =========================
+                     MEDICINE FAST RELEASE
+                ========================= -->
+
+                <section
+                    id="hospital-medicine-card"
+                    class="page-panel hospital-medicine-card"
+                    hidden
+                >
+                    <div>
+                        <h2>🩹 Leave early with medicine</h2>
+                        <p>
+                            Use one Herbal Bandage from your Backpack, active
+                            Cart or Storage Yard. You leave with 20% health.
+                        </p>
+                    </div>
+
+                    <div class="hospital-medicine-actions">
+                        <a href="gathering.html?profession=foraging">Gather Herbs</a>
+                        <a href="workbench.html">Open Workbench</a>
+                        <button id="use-hospital-medicine" type="button">
+                            Use Herbal Bandage
+                        </button>
+                    </div>
+                </section>
 
 
                 <!-- =========================
@@ -273,7 +325,7 @@
     <script src="../js/constants.js"></script>
     <script src="../js/components.js?v=4"></script>
 
-    <script src="../js/village-healer.js?v=2"></script>
+    <script src="../js/village-healer.js?v=3?v=3"></script>
 
 </body>
 

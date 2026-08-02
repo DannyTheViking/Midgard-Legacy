@@ -263,139 +263,43 @@ document.getElementById("king-actions").innerHTML = `
 ===================================== */
 
 async function presentMead() {
+    const button = document.getElementById("present-mead-button");
+    const message = document.getElementById("king-message");
 
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
+    if (button) button.disabled = true;
+    if (message) message.textContent = "Presenting your mead to the King...";
 
-    if (!user) return;
+    const { data, error } = await supabaseClient.rpc(
+        "complete_tutorial_with_royal_tools"
+    );
 
-    const { data: meadItem, error: meadError } =
-        await supabaseClient
-            .from("inventory")
-            .select("*")
-            .eq("player_id", user.id)
-            .eq("item_id", YOUNG_MEAD)
-            .maybeSingle();
-
-    if (meadError || !meadItem || meadItem.quantity < 1) {
-
-        document.getElementById("king-message").innerHTML =
-            "❌ You do not have the Mead.";
-
+    if (error) {
+        if (message) message.textContent = `❌ ${error.message}`;
+        if (button) button.disabled = false;
         return;
     }
 
-    const newQuantity =
-        meadItem.quantity - 1;
-
-    if (newQuantity > 0) {
-
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: newQuantity
-            })
-            .eq("id", meadItem.id);
-
-    } else {
-
-        await supabaseClient
-            .from("inventory")
-            .delete()
-            .eq("id", meadItem.id);
-
-    }
-
-    const completed =
-        await completeTutorial();
-
-    if (!completed) return;
-
-    await grantFreedomRewards(user.id);
     if (typeof logGameActivity === "function") {
         await logGameActivity("freeman_unlocked", {});
     }
 
-    if (typeof createPlayerNotification === "function") {
-        await createPlayerNotification({
-            type: "achievement",
-            title: "You Are a Freeman!",
-            message:
-                "Congratulations. The King has released you from thralldom. Your saga truly begins now.",
-            icon: "🏠",
-            link: "home.html",
-            uniqueKey: "freeman"
-        });
-    }
-
     document.getElementById("king-dialogue").innerHTML = `
-        <p>
-            The King drinks from the Birch Mead.
-        </p>
-
-        <p>
-            The hall waits in silence.
-        </p>
-
-        <p>
-            He finally nods.
-        </p>
-
-        <p>
-            <strong>
-                "You have kept your word."
-            </strong>
-        </p>
-
-        <p>
-            <strong>
-                "From this day forward, you are a free man."
-            </strong>
-        </p>
-
-        <p>
-            He taps the side of the Birch Barrel.
-        </p>
-
-        <p>
-            <strong>
-                "The mead is good, but Birch is a beginner's wood."
-            </strong>
-        </p>
-
-        <p>
-            <strong>
-                "From now on, brew only in Oak."
-            </strong>
-        </p>
-
-        <p>
-            The King points beyond the village.
-        </p>
-
-        <p>
-            <strong>
-                "The old shack and the land around it are yours."
-            </strong>
-        </p>
-
-        <p>
-            <strong>
-                "There is an abandoned handcart in the Wagon Shed. Repair it before your Backpack breaks your back."
-            </strong>
-        </p>
-
-        <p>
-            <strong>
-                "Like every free man, you shall return
-                one part in one hundred of your earnings
-                to the Crown."
-            </strong>
-        </p>
-
+        <p>The King drinks from the Birch Mead.</p>
+        <p>The hall waits in silence.</p>
+        <p>He finally nods.</p>
+        <p><strong>"You have kept your word. From this day forward, you are a free man."</strong></p>
+        <p>Two royal guards place an Iron Axe and Iron Pickaxe before you.</p>
+        <p><strong>"These tools are yours for life. Keep them repaired and they will serve you well."</strong></p>
+        <p>The King points beyond the village.</p>
+        <p><strong>"The old shack and the land around it are yours."</strong></p>
         <p class="green">
-            Property Unlocked<br>Oak Wood and Oak Barrels Unlocked<br>Personal Bee Yard Unlocked<br>+100 Village Reputation<br>Iron Axe (30%)<br>Iron Pickaxe (30%)<br>King's Tax: 1%
+            Property Unlocked<br>
+            Oak Wood and Oak Barrels Unlocked<br>
+            Personal Bee Yard Unlocked<br>
+            +100 Village Reputation<br>
+            Iron Axe — 100/100 durability<br>
+            Iron Pickaxe — 100/100 durability<br>
+            King's Tax: 1%
         </p>
     `;
 
@@ -405,7 +309,11 @@ async function presentMead() {
         </button>
     `;
 
-    loadHomePage();
+    clearTutorialHighlights();
+    removeTutorialGuide();
+    if (typeof updateNotificationBell === "function") {
+        await updateNotificationBell();
+    }
 }
 
 

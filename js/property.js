@@ -31,13 +31,26 @@ function displayProperty(stage,isPreview=false){
   document.getElementById("current-property-name").textContent=stage.name;
   document.getElementById("current-property-level").textContent=`Level ${stage.level}${isPreview?" Preview":""}`;
   document.getElementById("current-property-description").textContent=stage.description;
-  document.getElementById("return-current-property").hidden=!isPreview;
+  const returnButton = document.getElementById("return-current-property");
+  if (returnButton) returnButton.hidden = !isPreview;
 }
 
 async function inventoryByName(playerId){
-  const {data,error}=await supabaseClient.from("inventory").select("quantity,items(name)").eq("player_id",playerId);
-  if(error)throw error;
-  return new Map((data||[]).map(row=>[String(row.items?.name||"").toLowerCase(),Number(row.quantity||0)]));
+  const [inventoryResult,storageResult,itemsResult]=await Promise.all([
+    supabaseClient.from("inventory").select("item_id,quantity").eq("player_id",playerId),
+    supabaseClient.from("player_storage").select("item_id,quantity").eq("player_id",playerId),
+    supabaseClient.from("items").select("id,name")
+  ]);
+  if(inventoryResult.error)throw inventoryResult.error;
+  if(storageResult.error && storageResult.error.code!=="42P01")throw storageResult.error;
+  if(itemsResult.error)throw itemsResult.error;
+  const names=new Map((itemsResult.data||[]).map(item=>[Number(item.id),String(item.name||"").toLowerCase()]));
+  const totals=new Map();
+  for(const row of [...(inventoryResult.data||[]),...(storageResult.data||[])]){
+    const name=names.get(Number(row.item_id));
+    if(name)totals.set(name,Number(totals.get(name)||0)+Number(row.quantity||0));
+  }
+  return totals;
 }
 
 async function renderUpgradePanel(){
@@ -80,8 +93,51 @@ async function upgradeProperty(){
     CURRENT_PROPERTY_LEVEL=Number(data.property_level);
     message.textContent="✅ Property upgraded.";
     displayProperty(propertyStage(CURRENT_PROPERTY_LEVEL));
+    renderPropertyStationCards();
     await renderUpgradePanel();
   }catch(error){ message.textContent=`❌ ${error.message}`; }
+}
+
+
+
+function replacePropertyCardWithLink(card, href, statusText) {
+  if (!card || card.tagName === "A") return card;
+  const link = document.createElement("a");
+  link.id = card.id;
+  link.className = "homestead-work-card available";
+  link.href = href;
+  link.innerHTML = card.innerHTML;
+  card.replaceWith(link);
+  const status = link.querySelector(".homestead-work-status");
+  if (status) status.textContent = statusText;
+  return link;
+}
+
+function renderPropertyStationCards() {
+  const workbenchCard = document.getElementById("workbench-building-card");
+  const forgeCard = document.getElementById("forge-building-card");
+
+  if (CURRENT_PROPERTY_LEVEL >= 0) {
+    replacePropertyCardWithLink(
+      workbenchCard,
+      "workbench.html",
+      `Open Workbench · Level ${Math.max(1, CURRENT_PROPERTY_LEVEL)}`
+    );
+  } else if (workbenchCard) {
+    const status = workbenchCard.querySelector(".homestead-work-status");
+    if (status) status.textContent = "🔒 Requires Property Level 1";
+  }
+
+  if (CURRENT_PROPERTY_LEVEL >= 3) {
+    replacePropertyCardWithLink(
+      forgeCard,
+      "forge.html",
+      `Open Forge · Level ${CURRENT_PROPERTY_LEVEL - 2}`
+    );
+  } else if (forgeCard) {
+    const status = forgeCard.querySelector(".homestead-work-status");
+    if (status) status.textContent = "🔒 Requires Property Level 3";
+  }
 }
 
 async function loadSavedPropertyLevel(){
@@ -93,6 +149,7 @@ async function loadSavedPropertyLevel(){
     if(error)throw error;
     CURRENT_PROPERTY_LEVEL=Math.max(0,Number(data.property_level)||0);
     displayProperty(propertyStage(CURRENT_PROPERTY_LEVEL));
+    renderPropertyStationCards();
     await renderUpgradePanel();
     const apiaryCard=document.getElementById("apiary-building-card");
     if(apiaryCard&&CURRENT_PROPERTY_LEVEL>=1&&apiaryCard.tagName!=="A"){

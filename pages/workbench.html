@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Midgard Legacy - Property Workbench</title>
+
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=4">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/workstation.css?v=3">
+</head>
+
+<body data-workstation="workbench">
+    <div class="game-layout">
+        <div id="sidebar"></div>
+
+        <main class="main-area">
+            <div id="topbar"></div>
+
+            <div class="game-page station-shell">
+                <section class="game-page-header">
+                    <div class="game-page-heading">
+                        <h1>🪚 Property Workbench</h1>
+                        <p>
+                            Craft building materials, medicine, containers and ordinary tools
+                            using materials linked to your property.
+                        </p>
+                    </div>
+
+                    <div class="game-badge">
+                        🪚 Level <span id="station-level-value">-</span>
+                    </div>
+                </section>
+
+                <p id="station-message" class="station-message">
+                    Loading your Workbench...
+                </p>
+
+                <section class="workbench-workspace">
+                    <aside class="forge-column forge-recipes-column">
+                        <div class="forge-column-heading">
+                            <h2>📜 Recipes</h2>
+                            <span id="recipe-count">0</span>
+                        </div>
+
+                        <label class="forge-search-label" for="recipe-search">
+                            Search recipes
+                        </label>
+
+                        <input
+                            id="recipe-search"
+                            class="forge-search"
+                            type="search"
+                            placeholder="Search planks, medicine, axes, buckets..."
+                        >
+
+                        <div id="station-recipes" class="forge-recipe-list"></div>
+                    </aside>
+
+                    <section class="forge-column forge-detail-column">
+                        <div class="forge-column-heading">
+                            <h2>🪚 Selected Recipe</h2>
+                            <span id="selected-recipe-level">Level -</span>
+                        </div>
+
+                        <div id="selected-recipe" class="selected-recipe-empty">
+                            Select a recipe from the list.
+                        </div>
+                    </section>
+
+                    <aside class="forge-column forge-controls-column">
+                        <div class="forge-column-heading">
+                            <h2>🏠 Linked Storage</h2>
+                        </div>
+
+                        <div class="forge-control-block">
+                            <p>
+                                Materials are checked automatically in this order:
+                            </p>
+
+                            <ol class="storage-order-list">
+                                <li>Backpack</li>
+                                <li>Active Cart</li>
+                                <li>Storage Yard</li>
+                            </ol>
+
+                            <p>
+                                Finished items are collected into your Storage Yard.
+                            </p>
+                        </div>
+                    </aside>
+                </section>
+
+                <section class="forge-bottom-grid">
+                    <div class="station-panel forge-queue-panel">
+                        <div class="forge-column-heading">
+                            <h2>⏱ Crafting Queue</h2>
+                            <span id="queue-count">0</span>
+                        </div>
+
+                        <div id="station-queue" class="station-queue"></div>
+                    </div>
+
+                    <div class="station-panel forge-output-panel">
+                        <div class="forge-column-heading">
+                            <h2>📦 Output</h2>
+                        </div>
+
+                        <div id="station-output" class="forge-output-slots"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/game-utils.js"></script>
+    <script src="../js/components.js?v=4"></script>
+    <script src="../js/property-stations.js"></script>
+    <script src="../js/workstation.js?v=4"></script>
+
+    <script>
+        requirePropertyStation(
+            PROPERTY_STATIONS.WORKBENCH,
+            1
+        );
+    </script>
+</body>
+</html>

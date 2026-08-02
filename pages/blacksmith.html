@@ -82,13 +82,13 @@
 
 
                     <!-- =========================
-                         REPAIR AXE
+                         REPAIR PROFESSION TOOL
                     ========================= -->
 
                     <article class="blacksmith-card">
 
-                        <div class="blacksmith-card-image repair-area">
-                            🪓
+                        <div class="blacksmith-card-image repair-area" id="repair-tool-icon">
+                            🛠️
                         </div>
 
                         <header class="blacksmith-card-header">
@@ -96,97 +96,99 @@
                             <div>
 
                                 <h2>
-                                    Repair Axe
+                                    Repair Tool
                                 </h2>
 
                                 <p>
-                                    Restore the durability of your
-                                    currently equipped axe.
+                                    Complete your first job for Bjørn, then repair any damaged profession tool using resources instead of Silver.
                                 </p>
 
                             </div>
 
-                            <div
-                                class="craft-stock"
-                                id="repair-stock"
-                            >
-                                Loading...
+                            <div class="craft-stock" id="repair-stock">
+                                Loading tools...
                             </div>
 
                         </header>
 
                         <div class="blacksmith-card-body">
 
-                            <h3 id="repair-axe-name">
-                                Loading...
+                            <div id="repair-unlock-message"></div>
+
+                            <label for="repair-tool-select">
+                                Choose damaged tool
+                            </label>
+
+                            <select id="repair-tool-select" class="blacksmith-select">
+                                <option value="">Loading...</option>
+                            </select>
+
+                            <h3 id="repair-tool-name">
+                                Select a tool
                             </h3>
 
-
-                            <!-- Durability -->
-
                             <div class="blacksmith-stat-row">
-
-                                <span>
-                                    🛡️ Durability
-                                </span>
-
+                                <span>🛡️ Durability</span>
+                                <strong id="repair-tool-durability">0 / 0</strong>
                             </div>
 
-                            <div
-                                class="durability-bar"
-                                aria-label="Axe durability"
-                            >
-
-                                <div
-                                    id="repair-axe-durability-fill"
-                                    class="durability-fill"
-                                ></div>
-
+                            <div class="durability-bar" aria-label="Tool durability">
+                                <div id="repair-tool-durability-fill" class="durability-fill"></div>
                             </div>
 
+                            <label for="repair-material-select">
+                                Choose repair materials
+                            </label>
 
-                            <!-- Cost -->
+                            <select id="repair-material-select" class="blacksmith-select">
+                                <option value="">Choose a tool first</option>
+                            </select>
 
-                            <div class="blacksmith-requirements">
-
+                            <div class="blacksmith-requirements" id="repair-material-details">
                                 <p>
-
-                                    <span>
-                                        🪙 Repair Cost
-                                    </span>
-
-                                    <span class="green">
-                                        25 Silver
-                                    </span>
-
+                                    <span>🧰 Repair Cost</span>
+                                    <span class="green">Resources only</span>
                                 </p>
-
                             </div>
 
-                            <button
-                                id="repair-axe-button"
-                                type="button"
-                                class="blacksmith-button"
-                            >
-                                ⚒️ Repair Axe
+                            <button id="repair-tool-button" type="button" class="blacksmith-button" disabled>
+                                ⚒️ Repair Tool
                             </button>
 
                             <div class="blacksmith-message">
-
-                                <h4>
-                                    Latest Action
-                                </h4>
-
-                                <p id="blacksmith-message">
-                                    Ready for repairs.
-                                </p>
-
+                                <h4>Latest Action</h4>
+                                <p id="blacksmith-message">Complete one Blacksmith job to unlock repairs.</p>
                             </div>
 
                         </div>
 
                     </article>
 
+
+                    <!-- =========================
+                         VILLAGE FORGE: ARROWHEADS
+                    ========================= -->
+
+                    <article class="blacksmith-card">
+                        <div class="blacksmith-card-image">🏹</div>
+                        <header class="blacksmith-card-header">
+                            <div>
+                                <h2>Iron Arrowheads</h2>
+                                <p>Bjørn uses the Village Forge so new players can prepare arrows before unlocking their Property Forge.</p>
+                            </div>
+                            <div class="craft-stock" id="arrowhead-stock">Loading...</div>
+                        </header>
+                        <div class="blacksmith-card-body">
+                            <div class="blacksmith-requirements">
+                                <p><span>⚒️ Iron Bar</span><span class="green">1 per batch</span></p>
+                                <p><span>🎁 Produces</span><span class="green">25 Iron Arrowheads</span></p>
+                            </div>
+                            <label for="arrowhead-batches">Batches</label>
+                            <input id="arrowhead-batches" type="number" min="1" max="1000" value="1">
+                            <button id="forge-arrowheads-button" type="button" class="blacksmith-button">Forge Arrowheads</button>
+                            <div class="blacksmith-message"><h4>Latest Action</h4><p id="arrowhead-message">Ready to forge.</p></div>
+                        </div>
+                    </article>
 
                     <!-- =========================
                          CRAFT IRON AXE
@@ -303,14 +305,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <script src="../js/config.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/game-utils.js"></script>
     <script src="../js/components.js?v=4"></script>
-    <script src="../js/config.js"></script>
     <script src="../js/constants.js"></script>
     <script src="../js/tutorial.js"></script>
     <script src="../js/skills.js"></script>
-    <script src="../js/blacksmith.js"></script>
+    <script src="../js/blacksmith.js?v=31"></script>
 
 </body>
 

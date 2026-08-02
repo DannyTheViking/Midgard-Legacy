@@ -413,6 +413,26 @@ async function updateTopBarPlayer() {
 }
 
 
+
+
+/* =====================================
+   NOTIFICATION BELL
+===================================== */
+async function updateNotificationBell() {
+    const badge = document.getElementById("notification-unread-count");
+    if (!badge) return;
+
+    const { data, error } = await supabaseClient.rpc("get_my_notifications", { p_limit: 1 });
+    if (error) {
+        console.error("Could not load notification count:", error);
+        return;
+    }
+
+    const count = Number(data?.unread_count || 0);
+    badge.textContent = count > 99 ? "99+" : String(count);
+    badge.hidden = count < 1;
+}
+
 /* Mobile navigation */
 function configureMobileNavigation() {
     const toggle = document.getElementById("mobile-nav-toggle");
@@ -449,6 +469,7 @@ async function loadGameLayout() {
         await updatePlayerOnlineStatus();
         await updateNavigation();
         await updateTopBarPlayer();
+        await updateNotificationBell();
 
         if (
             typeof refreshTutorialUI ===

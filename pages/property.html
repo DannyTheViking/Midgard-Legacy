@@ -146,7 +146,7 @@
                                 </span>
 
                                 <h3>
-                                    Craft, cook and prepare materials
+                                    Homestead Buildings
                                 </h3>
 
                             </div>
@@ -158,8 +158,10 @@
                                 <!-- Workbench -->
 
                                 <a
-                                    href=""
+                                    href="workbench.html"
+                                    id="workbench-building-card"
                                     class="homestead-work-card available"
+                                    aria-disabled="false"
                                 >
 
                                     <div class="homestead-work-icon">
@@ -188,7 +190,7 @@
 
                                 <!-- Forge -->
 
-<div class="homestead-work-card locked" aria-disabled="true">
+<div id="forge-building-card" class="homestead-work-card locked" aria-disabled="true">
 
     <div class="homestead-work-icon">
         ⚒️
@@ -206,7 +208,7 @@
         </p>
 
         <span class="homestead-work-status">
-            🔒 Requires Property Level 2
+            🔒 Requires Property Level 3
         </span>
 
     </div>
@@ -214,7 +216,24 @@
 </div>
 
 
-<!-- Meat Smoker -->
+<!-- Bedroom / Equipment -->
+
+                                <a
+                                    href="bedroom.html"
+                                    id="bedroom-building-card"
+                                    class="homestead-work-card available"
+                                    aria-disabled="false"
+                                >
+                                    <div class="homestead-work-icon">🛏️</div>
+                                    <div class="homestead-work-content">
+                                        <h4>Bedroom &amp; Equipment</h4>
+                                        <p>Equip armour, weapons, ranged gear, ammunition and accessories.</p>
+                                        <span class="homestead-work-status">Open Bedroom</span>
+                                    </div>
+                                </a>
+
+
+                                <!-- Meat Smoker -->
 
 <div class="homestead-work-card locked" aria-disabled="true">
 
@@ -242,32 +261,16 @@
 </div>
 
 
-<!-- Campfire -->
+<!-- Cooking Fire -->
 
-<div class="homestead-work-card locked" aria-disabled="true">
-
-    <div class="homestead-work-icon">
-        🔥
-    </div>
-
+<a id="cooking-fire-building-card" class="homestead-work-card available" href="cooking-fire.html">
+    <div class="homestead-work-icon">🔥</div>
     <div class="homestead-work-content">
-
-        <h4>
-            Campfire
-        </h4>
-
-        <p>
-            Cook simple meals and prepare
-            basic survival supplies.
-        </p>
-
-        <span class="homestead-work-status">
-            🔒 Requires Property Level 2
-        </span>
-
+        <h4>Cooking Fire</h4>
+        <p>Light a Bird Nest, add logs, cook food and collect Coal when the fire dies.</p>
+        <span class="homestead-work-status">Open Cooking Fire</span>
     </div>
-
-</div>
+</a>
 
 
 <!-- Tanning Rack -->
@@ -866,7 +869,8 @@
     <script src="../js/game-utils.js"></script>
     <script src="../js/components.js?v=5"></script>
     <script src="../js/tutorial.js"></script>
-    <script src="../js/property.js?v=2"></script>
+    <script src="../js/property-stations.js"></script>
+    <script src="../js/property.js?v=33"></script>
 
 </body>
 

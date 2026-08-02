@@ -1078,3 +1078,189 @@ body.gathering-theme-farming {
     }
 
 }
+
+/* ============================================================
+   SHARED GATHERING ENGINE PAGE
+   ============================================================ */
+
+.gathering-engine-message {
+    margin: 18px 0;
+    padding: 14px 16px;
+    border: 1px solid #4b3b22;
+    border-left: 4px solid #b8893d;
+    border-radius: 10px;
+    background: #151515;
+}
+
+.gathering-engine-message.success {
+    border-left-color: #6fdc85;
+}
+
+.gathering-engine-message.error {
+    border-left-color: #ef6c6c;
+}
+
+.gathering-engine-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 18px;
+}
+
+.gathering-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.gathering-filter-row button {
+    padding: 10px 14px;
+    border: 1px solid #5a4320;
+    border-radius: 8px;
+    background: #1d1914;
+    color: #f2ead7;
+    cursor: pointer;
+}
+
+.gathering-filter-row button.active {
+    border-color: #c18b34;
+    background: #3a2a14;
+}
+
+.gathering-engine-grid {
+    display: grid;
+    gap: 14px;
+}
+
+.gathering-engine-card {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #4b3b22;
+    border-radius: 12px;
+    background: #171411;
+}
+
+.gathering-engine-card-icon {
+    display: grid;
+    place-items: center;
+    min-height: 76px;
+    border: 1px solid #5a4320;
+    border-radius: 10px;
+    background: #221a11;
+    font-size: 34px;
+}
+
+.gathering-engine-card-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.gathering-engine-card-heading h2 {
+    margin: 2px 0 8px;
+}
+
+.gathering-profession-label {
+    margin: 0;
+    color: #c99c52;
+    text-transform: capitalize;
+}
+
+.gathering-reward-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 14px 0;
+    color: #d9ceb9;
+}
+
+.gathering-action-row {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.gathering-action-row label {
+    display: grid;
+    gap: 5px;
+}
+
+.gathering-action-row input {
+    width: 86px;
+    padding: 9px;
+    border: 1px solid #4b3b22;
+    border-radius: 7px;
+    background: #111;
+    color: #fff;
+}
+
+.gathering-action-row button,
+.gathering-workbench-link {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #b67b25;
+    border-radius: 8px;
+    background: #3b2914;
+    color: #f6ead0;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.gathering-action-row button:disabled {
+    opacity: 0.55;
+    cursor: wait;
+}
+
+.gathering-engine-sidebar {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+}
+
+@media (max-width: 980px) {
+    .gathering-engine-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .gathering-engine-card {
+        grid-template-columns: 1fr;
+    }
+
+    .gathering-engine-card-icon {
+        min-height: 58px;
+    }
+
+    .gathering-action-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .gathering-action-row input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+
+/* Update 021: skill card and locked gathering activities */
+.gathering-skill-card[hidden] { display: none; }
+.gathering-skill-eyebrow { margin: 0 0 4px; text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; color: var(--gold, #d4a64a); }
+.gathering-skill-progress { height: 10px; overflow: hidden; border: 1px solid rgba(212,166,74,.35); border-radius: 999px; background: rgba(0,0,0,.35); margin: 12px 0 8px; }
+.gathering-skill-progress span { display: block; height: 100%; background: linear-gradient(90deg, #8d5b22, #d4a64a); }
+.gathering-engine-card { position: relative; }
+.gathering-engine-card.locked { opacity: .78; border-color: rgba(150,130,100,.28); }
+.gathering-engine-card.locked .gathering-engine-card-icon { filter: grayscale(.75); }
+.gathering-lock-ribbon { position: absolute; top: 10px; right: 10px; z-index: 2; padding: 5px 9px; border: 1px solid rgba(220,170,90,.35); border-radius: 999px; background: rgba(35,23,15,.95); color: #e4bd75; font-size: .76rem; font-weight: 700; }
+.gathering-requirement-box { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; padding: 10px 12px; border: 1px solid rgba(190,120,70,.35); border-radius: 8px; background: rgba(78,35,22,.28); color: #e9c49a; }
+.gathering-requirement-box strong { color: #f2d39b; }
+
+
+/* Update 023 profession equipment card */
+.gathering-tool-list{display:grid;gap:10px;margin-top:12px}.gathering-tool-row{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:rgba(0,0,0,.16)}.gathering-tool-row.locked{opacity:.58}.gathering-tool-icon{font-size:24px;text-align:center}.gathering-tool-row strong,.gathering-tool-row small{display:block}.gathering-tool-row small{margin-top:3px;color:#aaa397;font-size:12px}.gathering-tool-health{height:6px;margin-top:7px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}.gathering-tool-health span{display:block;height:100%;background:linear-gradient(90deg,#9f6833,#d0a253);border-radius:inherit}.gathering-tool-row.locked .gathering-tool-health{display:none}
+
+
+.gathering-repair-button{margin-top:8px;padding:6px 10px;font-size:.78rem;width:auto}.gathering-tool-row.locked .gathering-repair-button{display:none}

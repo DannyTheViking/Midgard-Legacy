@@ -5,8 +5,6 @@ const SKILL_NAMES = Object.freeze([
     "fishing",
     "hunting",
     "farming",
-    "blacksmithing",
-    "carpentry",
     "cooking",
     "brewing",
     "combat"
@@ -137,12 +135,9 @@ async function refreshSkillProgress(skillName) {
     return progress;
 }
 
-// Old page code can continue using these familiar helper names.
+// Shared helpers for active player skills.
 const addWoodcuttingXP = amount => addSkillXP("woodcutting", amount);
 const addMiningXP = amount => addSkillXP("mining", amount);
-const addSmithingXP = amount => addSkillXP("blacksmithing", amount);
-const addBlacksmithingXP = amount => addSkillXP("blacksmithing", amount);
-const addCarpentryXP = amount => addSkillXP("carpentry", amount);
 const addBrewingXP = amount => addSkillXP("brewing", amount);
 const addFishingXP = amount => addSkillXP("fishing", amount);
 const addHuntingXP = amount => addSkillXP("hunting", amount);

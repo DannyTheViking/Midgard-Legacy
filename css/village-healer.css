@@ -56,6 +56,60 @@
 }
 
 
+
+
+/* =========================================================
+   YRSA - HEALER NPC
+========================================================= */
+
+.healer-npc-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 18px;
+    border-color: #7a5a2d;
+    background: linear-gradient(135deg, rgba(45, 34, 22, .96), rgba(17, 19, 20, .96));
+}
+
+.healer-npc-portrait {
+    display: grid;
+    place-items: center;
+    width: 82px;
+    height: 82px;
+    border: 2px solid #8d6a34;
+    border-radius: 50%;
+    background: #17110c;
+    font-size: 3rem;
+}
+
+.healer-npc-role {
+    margin: 0 0 3px;
+    color: #bfae8f;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.healer-npc-details h2 {
+    margin: 0 0 6px;
+    color: #f1cf7a;
+    font-size: 24px;
+}
+
+.healer-npc-details p:last-child {
+    margin: 0;
+    color: #d6c7aa;
+    line-height: 1.5;
+}
+
+.healer-npc-action {
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+
 /* =========================================================
    03. MY HOSPITAL
 ========================================================= */
@@ -599,4 +653,50 @@
         grid-row: 1;
     }
 
+}
+
+/* ============================================================
+   MEDICINE FAST RELEASE
+   ============================================================ */
+
+.hospital-medicine-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+}
+
+.hospital-medicine-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.hospital-medicine-actions a,
+.hospital-medicine-actions button {
+    padding: 10px 14px;
+    border: 1px solid #9a6a28;
+    border-radius: 8px;
+    background: #342412;
+    color: #f6ead0;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width: 760px) {
+    .hospital-medicine-card {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 700px) {
+    .healer-npc-card {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    .healer-npc-action {
+        grid-column: 1 / -1;
+        width: 100%;
+        text-align: center;
+    }
 }

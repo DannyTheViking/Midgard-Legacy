@@ -60,7 +60,6 @@ async function loadVillageHealer() {
     healerUser = user;
 
     await supabaseClient.rpc("refresh_my_hospital_status");
-    await supabaseClient.rpc("spawn_random_npc_patient");
 
     healerJobsCompleted = await getHealerProgress(user.id);
     const level = healingPercent();
@@ -93,11 +92,23 @@ async function loadVillageHealer() {
 
 function renderMyHospital(me) {
   const card = document.getElementById("my-hospital-card");
+  const medicineCard = document.getElementById("hospital-medicine-card");
+
   if (!me.hospital_until || new Date(me.hospital_until).getTime() <= Date.now()) {
     card.hidden = true;
+
+    if (medicineCard) {
+      medicineCard.hidden = true;
+    }
+
     return;
   }
+
   card.hidden = false;
+
+  if (medicineCard) {
+    medicineCard.hidden = false;
+  }
   card.dataset.started = me.hospital_started_at;
   card.dataset.until = me.hospital_until;
   card.dataset.startHealth = me.hospital_start_health || 1;
@@ -274,3 +285,61 @@ document.getElementById("patient-page-next")?.addEventListener("click", () => {
 });
 
 loadVillageHealer();
+
+
+/* ============================================================
+   USE MEDICINE TO LEAVE THE HEALER HUT
+   ============================================================ */
+
+async function useHospitalMedicine() {
+  const button = document.getElementById("use-hospital-medicine");
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Using medicine...";
+  }
+
+  try {
+    setHealerMessage(
+      "Preparing your Herbal Bandage...",
+      "info"
+    );
+
+    const {
+      data,
+      error
+    } = await supabaseClient.rpc(
+      "use_hospital_medicine",
+      {
+        p_item_name: "Herbal Bandage"
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    setHealerMessage(
+      `✅ You used an Herbal Bandage and left the Healer Hut with ${data.health} health.`,
+      "success"
+    );
+
+    setTimeout(() => {
+      window.location.href = "property.html";
+    }, 1000);
+  } catch (error) {
+    setHealerMessage(
+      `❌ ${safe(error.message)}`,
+      "error"
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Use Herbal Bandage";
+    }
+  }
+}
+
+document
+  .getElementById("use-hospital-medicine")
+  ?.addEventListener("click", useHospitalMedicine);

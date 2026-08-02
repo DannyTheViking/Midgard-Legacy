@@ -116,13 +116,14 @@ if (signupButton) {
         const email = document.getElementById("signup-email")?.value.trim();
         const password = document.getElementById("signup-password")?.value || "";
         const confirmPassword = document.getElementById("signup-confirm-password")?.value || "";
+        const dateOfBirth = document.getElementById("signup-date-of-birth")?.value || "";
         const genderIdentity = document.getElementById("signup-gender")?.value || "prefer_not_to_say";
         const output = document.getElementById("signup-message");
 
-        if (!username || !email || password.length < 6) {
+        if (!username || !email || !dateOfBirth || password.length < 6) {
             setAuthMessage(
                 output,
-                "Enter a Viking name, a valid email address and a password of at least 6 characters."
+                "Enter a Viking name, a valid email address, your date of birth and a password of at least 6 characters."
             );
             return;
         }
@@ -148,6 +149,7 @@ if (signupButton) {
                     emailRedirectTo: getPageUrl("login.html", "?confirmed=1"),
                     data: {
                         username,
+                        date_of_birth: dateOfBirth,
                         gender_identity: genderIdentity,
                         title_style:
                             genderIdentity === "man"

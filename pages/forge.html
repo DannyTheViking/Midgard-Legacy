@@ -1,472 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Midgard Legacy - Property Forge</title>
 
-    <title>Midgard Legacy - Forge</title>
-
-    <link
-        rel="icon"
-        type="image/png"
-        href="../images/Logo/favicon.png"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/style.css?v=4"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/game-panels.css?v=1"
-    >
-
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=4">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/workstation.css?v=3">
 </head>
 
-<body>
-
+<body data-workstation="forge">
     <div class="game-layout">
-
         <div id="sidebar"></div>
 
         <main class="main-area">
-
             <div id="topbar"></div>
 
-
-            <!-- =========================
-                 FORGE PAGE
-            ========================= -->
-
-            <div class="game-page">
-
-
-                <!-- =========================
-                     PAGE HEADER
-                ========================= -->
-
+            <div class="game-page station-shell">
+                <!-- =====================================================
+                     PAGE HEADING
+                ====================================================== -->
                 <section class="game-page-header">
-
                     <div class="game-page-heading">
-
-                        <h1>
-                            🔥 Ivar’s Forge
-                        </h1>
-
+                        <h1>🔥 Property Forge</h1>
                         <p>
-                            Welcome to my forge,
-                            <span id="home-username"></span>.
-                            Turn raw iron into useful metal parts.
+                            Smelt raw ore, store metal inside the Forge and
+                            create forged equipment.
                         </p>
-
                     </div>
 
                     <div class="game-badge">
-                        🔥 Forge
+                        🔥 Level <span id="station-level-value">-</span>
+                    </div>
+                </section>
+
+                <p id="station-message" class="station-message">
+                    Loading your Forge...
+                </p>
+
+                <!-- =====================================================
+                     MAIN FORGE WORKSTATION
+                     Inspired by the compact workstation layout shown by
+                     the user, while keeping Midgard's own Viking styling.
+                ====================================================== -->
+                <section class="forge-workspace">
+                    <!-- LEFT: RECIPE LIBRARY -->
+                    <aside class="forge-column forge-recipes-column">
+                        <div class="forge-column-heading">
+                            <h2>📜 Recipes</h2>
+                            <span id="recipe-count">0</span>
+                        </div>
+
+                        <label class="forge-search-label" for="recipe-search">
+                            Search recipes
+                        </label>
+
+                        <input
+                            id="recipe-search"
+                            class="forge-search"
+                            type="search"
+                            placeholder="Search iron, nails, axe..."
+                        >
+
+                        <div class="forge-tabs" role="tablist">
+                            <button
+                                class="forge-tab active"
+                                data-recipe-filter="all"
+                                type="button"
+                            >
+                                All
+                            </button>
+
+                            <button
+                                class="forge-tab"
+                                data-recipe-filter="smelt"
+                                type="button"
+                            >
+                                Smelt
+                            </button>
+
+                            <button
+                                class="forge-tab"
+                                data-recipe-filter="craft"
+                                type="button"
+                            >
+                                Forge
+                            </button>
+                        </div>
+
+                        <div id="station-recipes" class="forge-recipe-list"></div>
+                    </aside>
+
+                    <!-- CENTRE: SELECTED RECIPE -->
+                    <section class="forge-column forge-detail-column">
+                        <div class="forge-column-heading">
+                            <h2>⚒️ Selected Recipe</h2>
+                            <span id="selected-recipe-level">Level -</span>
+                        </div>
+
+                        <div id="selected-recipe" class="selected-recipe-empty">
+                            Select a recipe from the list.
+                        </div>
+                    </section>
+
+                    <!-- RIGHT: TOOLS, FUEL AND SMELTED MATERIALS -->
+                    <aside class="forge-column forge-controls-column">
+                        <div class="forge-column-heading">
+                            <h2>🛠 Forge Controls</h2>
+                        </div>
+
+                        <section class="forge-control-block">
+                            <h3>Tools</h3>
+
+                            <div class="forge-tool-slots">
+                                <div class="forge-tool-slot locked" title="Anvil upgrade">
+                                    ⚒️
+                                    <span>Anvil</span>
+                                </div>
+
+                                <div class="forge-tool-slot locked" title="Bellows upgrade">
+                                    💨
+                                    <span>Bellows</span>
+                                </div>
+
+                                <div class="forge-tool-slot locked" title="Tool set upgrade">
+                                    🔧
+                                    <span>Tools</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="forge-fuel-panel" class="forge-control-block" hidden>
+                            <div class="forge-control-title-row">
+                                <h3>🔥 Fuel</h3>
+                                <strong id="forge-fuel-value">0s</strong>
+                            </div>
+
+                            <label for="fuel-item">Fuel type</label>
+                            <select id="fuel-item">
+                                <option>Loading...</option>
+                            </select>
+
+                            <label for="fuel-quantity">Amount</label>
+                            <input
+                                id="fuel-quantity"
+                                type="number"
+                                min="1"
+                                value="1"
+                            >
+
+                            <button id="add-fuel-button" type="button">
+                                Add Fuel
+                            </button>
+
+                            <small>
+                                Coal gives 5 minutes. Logs give 1 minute.
+                            </small>
+                        </section>
+
+                        <section id="forge-materials-panel" class="forge-control-block">
+                            <h3>🔥 Smelting</h3>
+                            <div id="forge-materials" class="forge-materials"></div>
+                        </section>
+                    </aside>
+                </section>
+
+                <!-- =====================================================
+                     BOTTOM AREA: QUEUE AND OUTPUT
+                ====================================================== -->
+                <section class="forge-bottom-grid">
+                    <div class="station-panel forge-queue-panel">
+                        <div class="forge-column-heading">
+                            <h2>⏱ Crafting Queue</h2>
+                            <span id="queue-count">0</span>
+                        </div>
+
+                        <div id="station-queue" class="station-queue"></div>
                     </div>
 
+                    <div class="station-panel forge-output-panel">
+                        <div class="forge-column-heading">
+                            <h2>📦 Output</h2>
+                        </div>
+
+                        <p>
+                            Finished work waits here until you collect it.
+                            Collected items go to the Storage Yard.
+                        </p>
+
+                        <div id="station-output" class="forge-output-slots"></div>
+                    </div>
                 </section>
-
-
-                <!-- =========================
-                     FORGE RECIPES
-                ========================= -->
-
-                <section class="forge-grid">
-
-
-                    <!-- Iron Bar -->
-
-                    <article class="forge-card">
-
-                        <div class="forge-card-image iron-bar-area">
-                            🔥
-                        </div>
-
-                        <header class="forge-card-header">
-
-                            <div>
-
-                                <h2>
-                                    Iron Bar
-                                </h2>
-
-                                <p>
-                                    Smelt bog iron into a cleaner
-                                    and more useful metal bar.
-                                </p>
-
-                            </div>
-
-                            <div
-                                class="craft-stock"
-                                id="iron-bar-stock"
-                            >
-                                Loading...
-                            </div>
-
-                        </header>
-
-                        <div class="forge-card-body">
-
-                            <div class="forge-requirements">
-
-                                <p>
-                                    <span>🪨 Bog Iron</span>
-                                    <span class="green">5</span>
-                                </p>
-
-                                <p>
-                                    <span>🎁 Produces</span>
-                                    <span class="green">
-                                        1 Iron Bar
-                                    </span>
-                                </p>
-
-                            </div>
-
-                            <div class="forge-controls">
-
-                                <label for="iron-bar-amount">
-                                    Amount
-                                </label>
-
-                                <input
-                                    class="craft-amount"
-                                    id="iron-bar-amount"
-                                    type="number"
-                                    min="1"
-                                    max="9999"
-                                    value="1"
-                                    aria-label="Iron Bars to forge"
-                                >
-
-                                <button
-                                    id="forge-iron-bar-button"
-                                    type="button"
-                                    class="forge-button"
-                                >
-                                    🔥 Forge Iron Bar
-                                </button>
-
-                            </div>
-
-                            <div class="forge-message">
-
-                                <h4>Latest Action</h4>
-
-                                <p id="forge-message">
-                                    Ready to forge.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <!-- Iron Nails -->
-
-                    <article class="forge-card">
-
-                        <div class="forge-card-image nails-area">
-                            🔩
-                        </div>
-
-                        <header class="forge-card-header">
-
-                            <div>
-
-                                <h2>
-                                    Iron Nails
-                                </h2>
-
-                                <p>
-                                    Hammer an iron bar into nails
-                                    for construction and crafting.
-                                </p>
-
-                            </div>
-
-                            <div
-                                class="craft-stock"
-                                id="iron-nails-stock"
-                            >
-                                Loading...
-                            </div>
-
-                        </header>
-
-                        <div class="forge-card-body">
-
-                            <div class="forge-requirements">
-
-                                <p>
-                                    <span>⚒️ Iron Bar</span>
-                                    <span class="green">1</span>
-                                </p>
-
-                                <p>
-                                    <span>🎁 Produces</span>
-                                    <span class="green">
-                                        25 Iron Nails
-                                    </span>
-                                </p>
-
-                            </div>
-
-                            <div class="forge-controls">
-
-                                <label for="nails-amount">
-                                    Amount
-                                </label>
-
-                                <input
-                                    class="craft-amount"
-                                    id="nails-amount"
-                                    type="number"
-                                    min="1"
-                                    value="1"
-                                >
-
-                                <button
-                                    id="forge-nails-button"
-                                    type="button"
-                                    class="forge-button"
-                                >
-                                    🔥 Forge Nails
-                                </button>
-
-                            </div>
-
-                            <div class="forge-message">
-
-                                <h4>Latest Action</h4>
-
-                                <p id="nails-message">
-                                    Ready to forge.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <!-- Iron Axe Head -->
-
-                    <article class="forge-card">
-
-                        <div class="forge-card-image axe-head-area">
-                            🪓
-                        </div>
-
-                        <header class="forge-card-header">
-
-                            <div>
-
-                                <h2>
-                                    Iron Axe Head
-                                </h2>
-
-                                <p>
-                                    Shape two iron bars into a
-                                    strong cutting head.
-                                </p>
-
-                            </div>
-
-                            <div
-                                class="craft-stock"
-                                id="axe-head-stock"
-                            >
-                                Loading...
-                            </div>
-
-                        </header>
-
-                        <div class="forge-card-body">
-
-                            <div class="forge-requirements">
-
-                                <p>
-                                    <span>⚒️ Iron Bars</span>
-                                    <span class="green">2</span>
-                                </p>
-
-                                <p>
-                                    <span>🎁 Produces</span>
-                                    <span class="green">
-                                        1 Iron Axe Head
-                                    </span>
-                                </p>
-
-                            </div>
-
-                            <div class="forge-controls">
-
-                                <label for="axe-head-amount">
-                                    Amount
-                                </label>
-
-                                <input
-                                    class="craft-amount"
-                                    id="axe-head-amount"
-                                    type="number"
-                                    min="1"
-                                    max="9999"
-                                    value="1"
-                                    aria-label="Iron Axe Heads to forge"
-                                >
-
-                                <button
-                                    id="forge-axe-head-button"
-                                    type="button"
-                                    class="forge-button"
-                                >
-                                    🔥 Forge Axe Head
-                                </button>
-
-                            </div>
-
-                            <div class="forge-message">
-
-                                <h4>Latest Action</h4>
-
-                                <p id="axe-head-message">
-                                    Ready to forge.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-                    <!-- Iron Hoop -->
-
-                    <article class="forge-card">
-
-                        <div class="forge-card-image hoop-area">
-                            ⭕
-                        </div>
-
-                        <header class="forge-card-header">
-
-                            <div>
-
-                                <h2>
-                                    Iron Hoop
-                                </h2>
-
-                                <p>
-                                    Bend iron into strong hoops for
-                                    buckets, barrels and containers.
-                                </p>
-
-                            </div>
-
-                            <div
-                                class="craft-stock"
-                                id="iron-hoop-stock"
-                            >
-                                Loading...
-                            </div>
-
-                        </header>
-
-                        <div class="forge-card-body">
-
-                            <div class="forge-requirements">
-
-                                <p>
-                                    <span>⚒️ Iron Bar</span>
-                                    <span class="green">1</span>
-                                </p>
-
-                                <p>
-                                    <span>🎁 Produces</span>
-                                    <span class="green">
-                                        2 Iron Hoops
-                                    </span>
-                                </p>
-
-                            </div>
-
-                            <div class="forge-controls">
-
-                                <label for="hoop-amount">
-                                    Amount
-                                </label>
-
-                                <input
-                                    class="craft-amount"
-                                    id="hoop-amount"
-                                    type="number"
-                                    min="1"
-                                    max="9999"
-                                    value="1"
-                                    aria-label="Iron Hoop batches to forge"
-                                >
-
-                                <button
-                                    id="forge-hoop-button"
-                                    type="button"
-                                    class="forge-button"
-                                >
-                                    🔥 Forge Hoops
-                                </button>
-
-                            </div>
-
-                            <div class="forge-message">
-
-                                <h4>Latest Action</h4>
-
-                                <p id="hoop-message">
-                                    Ready to forge.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </section>
-
             </div>
-
         </main>
-
     </div>
 
-
-    <!-- =========================
-         SCRIPTS
-    ========================= -->
-
+    <!-- =============================================================
+         SHARED GAME SCRIPTS
+    ============================================================== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="../js/config.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/game-utils.js"></script>
     <script src="../js/components.js?v=4"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/constants.js"></script>
-    <script src="../js/tutorial.js"></script>
-    <script src="../js/skills.js"></script>
-    <script src="../js/forge.js"></script>
+    <script src="../js/property-stations.js"></script>
+    <script src="../js/workstation.js?v=3"></script>
 
+    <script>
+        requirePropertyStation(
+            PROPERTY_STATIONS.FORGE,
+            1
+        );
+    </script>
 </body>
-
 </html>

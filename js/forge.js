@@ -162,8 +162,6 @@ async function forgeIronBar() {
             TUTORIAL_STEPS.FORGE_IRON_HOOPS,
             TUTORIAL_TARGETS.iron_bars
         );
-
-        await addSmithingXP(12 * amount);
         await addPlayerXP(2 * amount);
 
         if (
@@ -253,9 +251,6 @@ async function forgeIronNails() {
             TUTORIAL_STEPS.CRAFT_BUCKET,
             TUTORIAL_TARGETS.iron_nails
         );
-
-        await addSmithingXP(4 * amount);
-
         if (
             typeof recordCraftingStatistics ===
             "function"
@@ -323,9 +318,6 @@ async function forgeIronAxeHead() {
             IRON_AXE_HEAD,
             amount * AXE_HEAD_CREATED
         );
-
-        await addSmithingXP(10 * amount);
-
         if (
             typeof recordCraftingStatistics ===
             "function"
@@ -403,9 +395,6 @@ async function forgeIronHoops() {
             TUTORIAL_STEPS.CRAFT_BUCKET,
             TUTORIAL_TARGETS.iron_hoops
         );
-
-        await addSmithingXP(6 * amount);
-
         if (
             typeof recordCraftingStatistics ===
             "function"

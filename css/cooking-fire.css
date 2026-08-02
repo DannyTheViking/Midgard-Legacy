@@ -1,0 +1,47 @@
+.fire-message {
+    margin: 1rem 0;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.fire-message.success { border-left: 4px solid #7fbf72; }
+.fire-message.error { border-left: 4px solid #d96b62; }
+
+.fire-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.fire-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: rgba(20, 24, 29, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.fire-icon { font-size: 4rem; }
+.fire-eyebrow { text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.7; }
+.fire-timer { font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; font-variant-numeric: tabular-nums; }
+.fire-card label { display: block; margin: 1rem 0 0.4rem; }
+.fire-card select { width: 100%; padding: 0.75rem; margin-bottom: 0.75rem; }
+.fire-card button { width: 100%; padding: 0.85rem 1rem; }
+.fire-example { margin-top: 1rem; padding: 0.8rem; border-radius: 0.7rem; background: rgba(255,255,255,0.05); }
+.fire-example span { display: block; margin-top: 0.25rem; }
+
+@media (max-width: 760px) {
+    .fire-layout { grid-template-columns: 1fr; }
+}
+
+/* Update 026 revision: Cooking Fire now shares the Forge/Workbench visual language. */
+.cooking-workspace { align-items: stretch; }
+.cooking-fire-status-row { display:flex; align-items:center; gap:14px; margin:12px 0; }
+.cooking-fire-main-icon { font-size:46px; }
+.cooking-fire-timer { font-size:32px; font-weight:800; color:#f3dfb4; margin-top:4px; }
+.cooking-stat-line { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+.cooking-requirement { display:flex; justify-content:space-between; padding:14px; margin:8px 0; border:1px solid rgba(255,255,255,.10); border-radius:8px; background:rgba(255,255,255,.025); }
+.cooking-requirement.ready strong { color:#7ee787; }
+.cooking-requirement.missing strong { color:#ff7b72; }
+.cooking-warning { margin:18px 0; padding:14px; border-radius:8px; background:rgba(196,138,56,.10); border:1px solid rgba(196,138,56,.35); }
+#selected-cooking-recipe button, .forge-control-card button { width:100%; margin-top:12px; }
