@@ -380,6 +380,18 @@ async function handInJob(jobId) {
     setJobMessage("Checking your supplies…", "info");
     const { data, error } = await supabaseClient.rpc("hand_in_village_job", { target_job_id: jobId });
     if (error) throw error;
+    if (data?.completed === false) {
+      const progress = data.progress || {};
+      const requirements = data.requirements || {};
+      const lines = Object.entries(requirements).map(([item, target]) => {
+        const handedIn = Number(progress[item] || 0);
+        return `${escapeJobHTML(item)}: ${handedIn}/${Number(target)}`;
+      });
+      setJobMessage(`📦 Supplies handed in. ${lines.join(" · ")}`, "info");
+      await loadJobYard();
+      return;
+    }
+
     const training = data?.training_message ? `<br><strong>🎓 ${escapeJobHTML(data.training_message)}</strong>` : "";
     setJobMessage(`✅ Job complete! You earned ${data.reward_job_points || 1} Job Point${Number(data.reward_job_points || 1) === 1 ? "" : "s"}, ${data.reward_reputation} reputation and ${data.reward_mission_points || 0} Mission Points.${Number(data.reward_silver || 0) > 0 ? ` You also earned ${data.reward_silver} Silver.` : ""}${training}`, "success");
     await loadJobYard();
