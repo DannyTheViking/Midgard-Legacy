@@ -1067,3 +1067,15 @@
     }
 
 }
+
+/* Consumable actions */
+.storage-destination-buttons .storage-consume-button {
+    color: #f4ead7;
+    background: linear-gradient(180deg, #4f6b38, #304326);
+    border-color: #718d52;
+    box-shadow: 0 3px 0 #1d2b17;
+}
+
+.storage-destination-buttons .storage-consume-button:hover {
+    filter: brightness(1.13);
+}

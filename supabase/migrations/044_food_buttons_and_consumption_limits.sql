@@ -1,0 +1,6 @@
+-- Database changes were applied directly to Supabase.
+-- This migration marker documents Update 049:
+-- 24 consumables per rolling 24 hours for normal players;
+-- 48 for players with an active odin_scroll entitlement;
+-- 50% bird-nest discovery chance per woodcutting action;
+-- food, raw-food, burnt-food and Herbal Bandage effects use consume_food_item().

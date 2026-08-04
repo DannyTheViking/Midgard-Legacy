@@ -299,6 +299,16 @@ function renderStorageItems() {
                         </div>
 
                         <div class="storage-destination-buttons">
+                            ${getConsumableAction(row) ? `
+                                <button
+                                    type="button"
+                                    class="storage-consume-button"
+                                    onclick="consumeStoredItem(${row.item_id}, '${getConsumableAction(row)}')"
+                                >
+                                    ${getConsumableAction(row) === "Eat" ? "🍖 Eat" : "🩹 Use"}
+                                </button>
+                            ` : ""}
+
                             <button
                                 type="button"
                                 onclick="loadSelectedStorageItem(${row.item_id}, 'backpack')"
@@ -320,6 +330,68 @@ function renderStorageItems() {
             `;
         })
         .join("");
+}
+
+
+function getConsumableAction(row) {
+    const name = String(row.items?.name || "").toLowerCase();
+    const type = String(row.items?.type || "").toLowerCase();
+    const category = String(row.items?.category || "").toLowerCase();
+
+    if (
+        name.includes("bandage") ||
+        name.includes("medicine") ||
+        name.includes("salve") ||
+        name.includes("poultice") ||
+        type.includes("medicine") ||
+        category.includes("healing")
+    ) {
+        return "Use";
+    }
+
+    if (
+        name.includes("meat") ||
+        name.includes("egg") ||
+        name.includes("broth") ||
+        type.includes("food") ||
+        category.includes("food")
+    ) {
+        return "Eat";
+    }
+
+    return "";
+}
+
+async function consumeStoredItem(itemId, actionLabel) {
+    try {
+        setStorageMessage(`${actionLabel === "Eat" ? "Eating" : "Using"} item...`, "info");
+
+        const { data, error } = await supabaseClient.rpc(
+            "consume_food_item",
+            { p_item_id: itemId }
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        const energy = Number(data?.energy_change || 0);
+        const health = Number(data?.health_change || 0);
+        const changes = [];
+
+        if (energy) changes.push(`${energy > 0 ? "+" : ""}${energy} Energy`);
+        if (health) changes.push(`${health > 0 ? "+" : ""}${health} HP`);
+
+        setStorageMessage(
+            `${data?.item_name || "Item"} ${actionLabel === "Eat" ? "eaten" : "used"}${changes.length ? ` — ${changes.join(", ")}` : ""}. ` +
+            `${data?.food_used_last_24_hours || 0}/${data?.food_limit_24_hours || 24} consumed in the last 24 hours.`,
+            health < 0 ? "warning" : "success"
+        );
+
+        await loadStorage();
+    } catch (error) {
+        setStorageMessage(error.message || "The item could not be used.", "error");
+    }
 }
 
 function setStorageQuantity(itemId, amount, maximum) {
