@@ -208,15 +208,7 @@ async function loadProfessionRepairs() {
         `;
     }
 
-    if (!data?.repairs_unlocked) {
-        if (unlock) unlock.innerHTML = '<p class="blacksmith-lock-message">🔒 Complete your first job for Bjørn the Blacksmith to unlock all tool repairs.</p>';
-        if (repairToolSelect) repairToolSelect.innerHTML = '<option value="">Repairs locked</option>';
-        if (repairButton) repairButton.disabled = true;
-        showBlacksmithMessage("🔒 Finish one Blacksmith job first. After that, repairs use resources and never Silver.");
-        return;
-    }
-
-    if (unlock) unlock.innerHTML = '<p class="green">✅ Repairs unlocked through Blacksmith work.</p>';
+    if (unlock) unlock.innerHTML = '<p class="green">✅ Bjørn can repair any damaged profession tool for the listed materials.</p>';
 
     const displayTools = damagedTools.length ? damagedTools : repairTools;
     if (repairToolSelect) {
