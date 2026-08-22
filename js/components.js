@@ -453,6 +453,11 @@ async function loadGameLayout() {
 
     try {
 
+        if (window.midgardAuthReady) {
+            const auth = await window.midgardAuthReady;
+            if (MIDGARD_IS_PROTECTED_PAGE && !auth) return;
+        }
+
         await Promise.all([
             loadComponent(
                 "sidebar",

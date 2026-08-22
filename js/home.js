@@ -407,6 +407,11 @@ async function loadHallOfFamePreview() {
 
 async function loadHomePage() {
 
+    if (window.midgardAuthReady) {
+        const auth = await window.midgardAuthReady;
+        if (!auth) return;
+    }
+
     await loadHomePlayer();
 
     await Promise.all([

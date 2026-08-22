@@ -2,6 +2,79 @@ const SUPABASE_URL = "https://mvjwsxzmdbtwtixowjym.supabase.co";
 const SUPABASE_KEY = "sb_publishable_-Jc9ho5n63kRLK1VFc8Yxw_va8ffYVC";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+
+/* =====================================
+   PROTECTED PAGE AUTH GATE
+   Prevents bookmarked/private pages from rendering placeholder player data
+   before Supabase has restored and validated the saved browser session.
+===================================== */
+const MIDGARD_PUBLIC_PAGES = new Set(["", "index.html", "login.html", "signup.html"]);
+const MIDGARD_CURRENT_PAGE = window.location.pathname.split("/").pop() || "";
+const MIDGARD_IS_PROTECTED_PAGE = !MIDGARD_PUBLIC_PAGES.has(MIDGARD_CURRENT_PAGE);
+
+function setMidgardPageAuthState(state) {
+    document.documentElement.dataset.midgardAuth = state;
+}
+
+if (MIDGARD_IS_PROTECTED_PAGE) {
+    setMidgardPageAuthState("checking");
+
+    // Inserted from JS so every protected page gets the gate without needing
+    // a separate CSS edit on all 39 HTML files.
+    const authGateStyle = document.createElement("style");
+    authGateStyle.id = "midgard-auth-gate-style";
+    authGateStyle.textContent = `
+        html[data-midgard-auth="checking"] body { visibility: hidden !important; }
+        html[data-midgard-auth="ready"] body { visibility: visible !important; }
+    `;
+    document.head.appendChild(authGateStyle);
+}
+
+async function requireMidgardSession() {
+    if (!MIDGARD_IS_PROTECTED_PAGE) return null;
+
+    try {
+        // getSession restores the persisted browser session first. getUser then
+        // validates it with Supabase instead of trusting an IP address/cookie guess.
+        const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        if (!session) {
+            window.location.replace("login.html");
+            return null;
+        }
+
+        const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+        if (userError || !user) {
+            await supabaseClient.auth.signOut().catch(() => {});
+            window.location.replace("login.html");
+            return null;
+        }
+
+        // Make sure the matching game profile exists before any page widgets load.
+        const player = await ensureCurrentPlayerProfile();
+        if (!player) {
+            throw new Error("Your Viking profile could not be loaded.");
+        }
+
+        setMidgardPageAuthState("ready");
+        return { session, user, player };
+    } catch (error) {
+        console.error("Midgard auth gate failed:", error);
+        // A genuine network/database problem should not expose a half-loaded game.
+        // Redirecting to login gives the player a clean recovery path.
+        window.location.replace("login.html?session=error");
+        return null;
+    }
+}
+
+// Shared promise: layout/page scripts can wait for the one auth check rather
+// than racing Supabase independently when a bookmark is opened in a new tab.
+window.midgardAuthReady = MIDGARD_IS_PROTECTED_PAGE
+    ? requireMidgardSession()
+    : Promise.resolve(null);
+window.requireMidgardSession = requireMidgardSession;
+
 /* =====================================
    AUTH HELPERS
 ===================================== */
