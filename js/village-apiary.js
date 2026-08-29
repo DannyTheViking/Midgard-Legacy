@@ -66,25 +66,41 @@ function renderVillageHives() {
 }
 
 async function collectVillageHoney() {
-  const { data: { user } } = await supabaseClient.auth.getUser(); if (!user) return;
-  if (villageHoneyRemaining() > 0) return showVillageMessage("⏳ The royal honey is not ready yet.");
-  const { data: player } = await supabaseClient.from("players").select("tutorial_step,tutorial_progress,tutorial_honey_collected").eq("id", user.id).single();
-  if (!player || player.tutorial_step !== TUTORIAL_STEPS.COLLECT_HONEY || player.tutorial_honey_collected) return showVillageMessage("Ragnhild has no further tutorial honey for you.");
-  const { data: bucket } = await supabaseClient.from("inventory").select("id,quantity").eq("player_id", user.id).eq("item_id", EMPTY_BUCKET).maybeSingle();
-  if (!bucket || Number(bucket.quantity) < 1) return showVillageMessage("❌ You need one Empty Bucket.");
-  const { data: honey } = await supabaseClient.from("inventory").select("id,quantity").eq("player_id", user.id).eq("item_id", HONEY_BUCKET).maybeSingle();
-  await supabaseClient.from("inventory").update({ quantity: Number(bucket.quantity) - 1 }).eq("id", bucket.id);
-  if (honey) await supabaseClient.from("inventory").update({ quantity: Number(honey.quantity) + 1 }).eq("id", honey.id);
-  else await supabaseClient.from("inventory").insert({ player_id: user.id, item_id: HONEY_BUCKET, quantity: 1 });
-  const progress = { ...(player.tutorial_progress || {}), honey_buckets: 1 };
-  await supabaseClient.from("players").update({ tutorial_honey_collected: true, tutorial_progress: progress, tutorial_step: TUTORIAL_STEPS.FILL_WATER_BUCKET }).eq("id", user.id).eq("tutorial_step", TUTORIAL_STEPS.COLLECT_HONEY);
+  if (villageHoneyRemaining() > 0) {
+    return showVillageMessage("⏳ The royal honey is not ready yet.");
+  }
+
+  // Server-side tutorial action. This deliberately uses the shared resource
+  // pool, so an Empty Bucket in the King's Handcart counts exactly the same
+  // as one in the backpack or Storage Yard.
+  const { data, error } = await supabaseClient.rpc("collect_village_tutorial_honey");
+
+  if (error) {
+    return showVillageMessage(`❌ ${error.message}`);
+  }
+
   villageApiaryPlayer.tutorial_honey_collected = true;
-  if (typeof incrementGameStatistics === "function") await incrementGameStatistics({ honey_collected: 1, resources_gathered: 1 });
-  showVillageMessage("🍯 Ragnhild fills your bucket with royal honey. Now fill your second bucket with water.");
+  villageApiaryPlayer.tutorial_step = TUTORIAL_STEPS.FILL_WATER_BUCKET;
+  villageApiaryPlayer.tutorial_progress = data?.tutorial_progress || {
+    ...(villageApiaryPlayer.tutorial_progress || {}),
+    honey_buckets: 1
+  };
+
+  showVillageMessage(
+    "🍯 Ragnhild fills one of your Empty Buckets with royal honey. Now fill your second bucket with water."
+  );
+
+  renderVillageHives();
+
   if (typeof window.refreshTutorialAfterAction === "function") {
     await window.refreshTutorialAfterAction();
+  } else if (typeof refreshTutorialUI === "function") {
+    await refreshTutorialUI();
   }
-  setTimeout(() => window.location.href = "inventory.html", 1600);
+
+  setTimeout(() => {
+    window.location.href = "inventory.html";
+  }, 1600);
 }
 function showVillageMessage(message) { const el = document.getElementById("village-apiary-message"); if (el) el.innerHTML = message; }
 loadVillageApiary();

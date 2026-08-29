@@ -311,6 +311,9 @@ async function presentMead() {
         <p><strong>"This woodcutting axe is yours for life. Keep it repaired and it will serve you well."</strong></p>
         <p>The King points beyond the village.</p>
         <p><strong>"The old shack and the land around it are yours."</strong></p>
+        <p>He gestures to the royal handcart you borrowed for the challenge.</p>
+        <p><strong>"My men will take my cart back. Anything of yours still inside it will be delivered to the Storage Yard at your new property."</strong></p>
+        <p>The Young Mead was made for the King, so the royal barrel and its mead remain with him.</p>
         <p class="green">
             Property Unlocked<br>
             Oak Wood and Oak Barrels Unlocked<br>
