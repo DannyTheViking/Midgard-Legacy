@@ -22,7 +22,7 @@ async function loadVillageApiary() {
     showVillageMessage("📜 Finish the current King’s Challenge objective before using the royal hives.");
   }
   if (player.tutorial_step > TUTORIAL_STEPS.COLLECT_HONEY) {
-    window.location.href = player.tutorial_step === TUTORIAL_STEPS.FILL_WATER_BUCKET ? "inventory.html" : "village.html";
+    window.location.href = player.tutorial_step === TUTORIAL_STEPS.FILL_WATER_BUCKET ? "village-well.html" : "village.html";
     return;
   }
 
@@ -99,7 +99,7 @@ async function collectVillageHoney() {
   }
 
   setTimeout(() => {
-    window.location.href = "inventory.html";
+    window.location.href = "village-well.html";
   }, 1600);
 }
 function showVillageMessage(message) { const el = document.getElementById("village-apiary-message"); if (el) el.innerHTML = message; }

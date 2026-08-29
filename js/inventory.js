@@ -65,8 +65,20 @@ async function loadInventory() {
         if (!inventoryItem.items) return "";
         const unitWeight = Number(inventoryItem.items.weight_kg || 0);
         const totalWeight = unitWeight * Number(inventoryItem.quantity || 0);
-        const actionButton = inventoryItem.item_id === EMPTY_BUCKET ? `<button type="button" onclick="fillBucketWithWater(${inventoryItem.id},this)">💧 Fill With Water</button>` : "";
-        return `<div class="inventory-row"><div class="item-left"><div class="item-icon">${getInventoryIcon(inventoryItem.items.name)}</div><div><div class="item-name">${inventoryItem.items.name}</div><div class="item-description">${inventoryItem.items.description || "No description available."}</div><small>${formatWeight(unitWeight)} each · ${formatWeight(totalWeight)} total</small>${actionButton}</div></div><div class="item-right"><div class="item-quantity">${inventoryItem.quantity}</div></div></div>`;
+        return `<article class="inventory-card">
+            <div class="inventory-card-icon">${getInventoryIcon(inventoryItem.items.name)}</div>
+            <div class="inventory-card-body">
+                <div class="inventory-card-heading">
+                    <h3>${inventoryItem.items.name}</h3>
+                    <span class="inventory-quantity">× ${inventoryItem.quantity}</span>
+                </div>
+                <p>${inventoryItem.items.description || "No description available."}</p>
+                <div class="inventory-meta">
+                    <span>${formatWeight(unitWeight)} each</span>
+                    <span>${formatWeight(totalWeight)} total</span>
+                </div>
+            </div>
+        </article>`;
     }).join("");
 }
 

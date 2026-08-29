@@ -18,13 +18,26 @@
     <main class="main-area">
         <div id="topbar"></div>
 
-        <section class="quick-actions">
-            <h2>🎒 Backpack</h2>
-            <p>Carry up to 25kg. Unload heavy resources into your Storage Yard or transport.</p>
-            <div id="backpack-capacity" class="backpack-capacity">Loading weight...</div>
-            <div id="inventory-list">Loading inventory...</div>
-            <p id="inventory-message"></p>
-        </section>
+        <div class="game-page backpack-page">
+            <section class="game-page-header backpack-header">
+                <div class="game-page-heading">
+                    <h1>🎒 Backpack</h1>
+                    <p>Your personal carried items. Heavy gathering loads should travel in an active cart.</p>
+                </div>
+                <div class="game-badge">Carry Gear</div>
+            </section>
+
+            <section class="backpack-panel">
+                <div id="backpack-capacity" class="backpack-capacity">Loading weight...</div>
+                <div class="fresh-water-note">
+                    <span class="fresh-water-note-icon">💧</span>
+                    <div><strong>Need fresh water?</strong><p>Empty Buckets are filled at a fresh-water source such as the Village Well or a river — not from inside the Backpack.</p></div>
+                    <a href="village-well.html" class="small-action-button">Visit Village Well</a>
+                </div>
+                <div id="inventory-list" class="inventory-grid">Loading inventory...</div>
+                <p id="inventory-message" class="inventory-message" aria-live="polite"></p>
+            </section>
+        </div>
     </main>
 </div>
 
@@ -32,7 +45,7 @@
 <script src="../js/auth.js"></script><script src="../js/game-utils.js"></script>
 <script src="../js/components.js?v=4"></script>
 <script src="../js/config.js"></script><script src="../js/constants.js"></script>
-<script src="../js/tutorial.js?v=3"></script>
+<script src="../js/tutorial.js?v=12"></script>
 <script src="../js/inventory.js"></script>
 
 </body>
