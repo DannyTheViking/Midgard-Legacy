@@ -61,49 +61,25 @@ const craftBarrelButton =
 
 
 async function loadCarpenterCardStock() {
-    const { data: { user } } =
-        await supabaseClient.auth.getUser();
+    const { data, error } = await supabaseClient.rpc(
+        "get_my_village_carpenter_stock"
+    );
 
-    if (!user) return;
+    if (error) {
+        console.error("Unable to load Carpenter stock:", error);
+        return;
+    }
 
-    const barrelWood =
-        await getBarrelPlankForPlayer(user.id);
-
-    const quantities =
-        await getPlayerInventoryQuantities(
-            user.id,
-            [
-                BIRCH_PLANK,
-                IRON_HOOP,
-                barrelWood.id,
-                BARREL_STAVES,
-                BARREL_LID
-            ]
-        );
-
-    const birchPlanks =
-        Number(quantities[BIRCH_PLANK] || 0);
-
-    const barrelPlanks =
-        Number(quantities[barrelWood.id] || 0);
-
-    const ironHoops =
-        Number(quantities[IRON_HOOP] || 0);
-
-    const staves =
-        Number(quantities[BARREL_STAVES] || 0);
-
-    const lids =
-        Number(quantities[BARREL_LID] || 0);
+    const birchPlanks = Number(data?.birch_planks || 0);
+    const barrelPlanks = Number(data?.barrel_planks || 0);
+    const ironHoops = Number(data?.iron_hoops || 0);
+    const staves = Number(data?.barrel_staves || 0);
+    const lids = Number(data?.barrel_lids || 0);
+    const woodName = data?.wood_name || "Birch Plank";
 
     setCraftingStock(
         "shaft-stock",
-        [
-            {
-                name: "Birch Planks",
-                quantity: birchPlanks
-            }
-        ],
+        [{ name: "Birch Planks", quantity: birchPlanks }],
         "Wooden Shafts",
         birchPlanks
     );
@@ -111,67 +87,42 @@ async function loadCarpenterCardStock() {
     setCraftingStock(
         "bucket-stock",
         [
-            {
-                name: barrelWood.name,
-                quantity: barrelPlanks
-            },
-            {
-                name: "Iron Hoops",
-                quantity: ironHoops
-            }
+            { name: woodName + "s", quantity: barrelPlanks },
+            { name: "Iron Hoops", quantity: ironHoops }
         ],
         "Empty Buckets",
         Math.min(
-            Math.floor(barrelPlanks / 5),
-            Math.floor(ironHoops / 3)
+            Math.floor(barrelPlanks / BUCKET_PLANK_COST),
+            Math.floor(ironHoops / BUCKET_HOOP_COST)
         )
     );
 
     setCraftingStock(
         "staves-stock",
-        [
-            {
-                name: barrelWood.name,
-                quantity: barrelPlanks
-            }
-        ],
+        [{ name: woodName + "s", quantity: barrelPlanks }],
         "Barrel Staves",
-        Math.floor(barrelPlanks / 30) * 30
+        Math.floor(barrelPlanks / STAVES_PLANK_COST) * STAVES_CREATED
     );
 
     setCraftingStock(
         "lid-stock",
-        [
-            {
-                name: barrelWood.name,
-                quantity: barrelPlanks
-            }
-        ],
+        [{ name: woodName + "s", quantity: barrelPlanks }],
         "Barrel Lids",
-        Math.floor(barrelPlanks / 5)
+        Math.floor(barrelPlanks / LID_PLANK_COST)
     );
 
     setCraftingStock(
         "barrel-stock",
         [
-            {
-                name: "Barrel Staves",
-                quantity: staves
-            },
-            {
-                name: "Barrel Lids",
-                quantity: lids
-            },
-            {
-                name: "Iron Hoops",
-                quantity: ironHoops
-            }
+            { name: "Barrel Staves", quantity: staves },
+            { name: "Barrel Lids", quantity: lids },
+            { name: "Iron Hoops", quantity: ironHoops }
         ],
         "Empty Barrels",
         Math.min(
-            Math.floor(staves / 30),
+            Math.floor(staves / BARREL_STAVES_COST),
             lids,
-            Math.floor(ironHoops / 6)
+            Math.floor(ironHoops / BARREL_HOOP_COST)
         )
     );
 }
@@ -213,87 +164,55 @@ function getCraftAmount(inputId) {
 }
 
 
+
+async function craftAtVillageCarpenter(recipe, amount, messageId, successLabel) {
+    const { data, error } = await supabaseClient.rpc(
+        "village_carpenter_craft",
+        {
+            p_recipe: recipe,
+            p_amount: amount
+        }
+    );
+
+    if (error) {
+        showTemporaryMessage(
+            messageId,
+            "❌ " + (error.message || "The carpenter could not complete that order.")
+        );
+        await loadCarpenterCardStock();
+        return null;
+    }
+
+    showTemporaryMessage(
+        messageId,
+        "✅ " + successLabel(data)
+    );
+
+    await loadCarpenterCardStock();
+
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    }
+
+    if (typeof loadHomePage === "function") {
+        await loadHomePage();
+    }
+
+    return data;
+}
+
 /* =====================================
    CRAFT WOODEN SHAFT
 ===================================== */
 
 async function craftWoodenShaft() {
-
-    const amount =
-        getCraftAmount("shaft-amount");
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const totalPlanksNeeded =
-        PLANK_COST * amount;
-
-    const totalShaftsMade =
-        SHAFT_CREATED * amount;
-
-    const { data: plankItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BIRCH_PLANK)
-        .maybeSingle();
-
-    if (!plankItem || plankItem.quantity < totalPlanksNeeded) {
-        showTemporaryMessage(
-            "carpenter-message",
-            "❌ You need " + totalPlanksNeeded + " Birch Plank."
-        );
-        return;
-    }
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: plankItem.quantity - totalPlanksNeeded
-        })
-        .eq("id", plankItem.id);
-
-    const { data: shaftItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", WOODEN_SHAFT)
-        .maybeSingle();
-
-    if (shaftItem) {
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: shaftItem.quantity + totalShaftsMade
-            })
-            .eq("id", shaftItem.id);
-    } else {
-        await supabaseClient
-            .from("inventory")
-            .insert({
-                player_id: user.id,
-                item_id: WOODEN_SHAFT,
-                quantity: totalShaftsMade
-            });
-    }
-
-    await addCarpentryXP(totalShaftsMade * 4);
-    await addPlayerXP(Math.max(1, amount));
-    await recordCraftingStatistics({
-        itemsCrafted: totalShaftsMade,
-        carpentryItems: totalShaftsMade
-    });
-    showTemporaryMessage(
+    const amount = getCraftAmount("shaft-amount");
+    await craftAtVillageCarpenter(
+        "shaft",
+        amount,
         "carpenter-message",
-        "🪵 You craft <strong>" + totalShaftsMade + " Wooden Shaft" +
-        (totalShaftsMade > 1 ? "s" : "") + "</strong>."
+        data => `You craft <strong>${data.output_quantity} Wooden Shaft${data.output_quantity > 1 ? "s" : ""}</strong>.`
     );
-
-    loadHomePage();
-
 }
 
 /* =====================================
@@ -301,108 +220,13 @@ async function craftWoodenShaft() {
 ===================================== */
 
 async function craftEmptyBucket() {
-
     const amount = getCraftAmount("bucket-amount");
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const totalPlanksNeeded = BUCKET_PLANK_COST * amount;
-    const totalHoopsNeeded = BUCKET_HOOP_COST * amount;
-    const totalBucketsMade = EMPTY_BUCKET_CREATED * amount;
-
-    const { data: plankItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BIRCH_PLANK)
-        .maybeSingle();
-
-    const { data: hoopItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", IRON_HOOP)
-        .maybeSingle();
-
-    if (!plankItem || plankItem.quantity < totalPlanksNeeded) {
-        showTemporaryMessage(
-            "bucket-message",
-            "❌ You need " + totalPlanksNeeded + " Birch Planks."
-        );
-        return;
-    }
-
-    if (!hoopItem || hoopItem.quantity < totalHoopsNeeded) {
-        showTemporaryMessage(
-            "bucket-message",
-            "❌ You need " + totalHoopsNeeded + " Iron Hoops."
-        );
-        return;
-    }
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: plankItem.quantity - totalPlanksNeeded
-        })
-        .eq("id", plankItem.id);
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: hoopItem.quantity - totalHoopsNeeded
-        })
-        .eq("id", hoopItem.id);
-
-    const { data: bucketItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", EMPTY_BUCKET)
-        .maybeSingle();
-
-    if (bucketItem) {
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: bucketItem.quantity + totalBucketsMade
-            })
-            .eq("id", bucketItem.id);
-    } else {
-        await supabaseClient
-            .from("inventory")
-            .insert({
-                player_id: user.id,
-                item_id: EMPTY_BUCKET,
-                quantity: totalBucketsMade
-            });
-    }
-
-    await addTutorialProgress(
-    "empty_buckets",
-    amount,
-    TUTORIAL_STEPS.CRAFT_BUCKET,
-    TUTORIAL_STEPS.CRAFT_BARREL_PARTS,
-    TUTORIAL_TARGETS.empty_buckets
-);
-    await recordCraftingStatistics({
-        itemsCrafted: totalBucketsMade,
-        carpentryItems: totalBucketsMade,
-        bucketsCrafted: totalBucketsMade
-    });
-
-    await addCarpentryXP(totalBucketsMade * 10); await addPlayerXP(Math.max(1, amount));
-    showTemporaryMessage(
+    await craftAtVillageCarpenter(
+        "bucket",
+        amount,
         "bucket-message",
-        "🪣 You craft <strong>" + totalBucketsMade + " Empty Bucket" +
-        (totalBucketsMade > 1 ? "s" : "") + "</strong>."
+        data => `You craft <strong>${data.output_quantity} Empty Bucket${data.output_quantity > 1 ? "s" : ""}</strong>.`
     );
-
-    loadHomePage();
 }
 
 
@@ -414,79 +238,13 @@ async function getBarrelPlankForPlayer(userId){const {data:p}=await supabaseClie
 ===================================== */
 
 async function craftBarrelStaves() {
-
-    const amount =
-        getCraftAmount("staves-amount");
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const barrelWood = await getBarrelPlankForPlayer(user.id);
-
-    const totalPlanksNeeded =
-        STAVES_PLANK_COST * amount;
-
-    const totalStavesMade =
-        STAVES_CREATED * amount;
-
-    const { data: plankItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", barrelWood.id)
-        .maybeSingle();
-
-    if (!plankItem || plankItem.quantity < totalPlanksNeeded) {
-        showTemporaryMessage(
-            "staves-message",
-            "❌ You need " + totalPlanksNeeded + " " + barrelWood.name + "."
-        );
-        return;
-    }
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: plankItem.quantity - totalPlanksNeeded
-        })
-        .eq("id", plankItem.id);
-
-    const { data: stavesItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BARREL_STAVES)
-        .maybeSingle();
-
-    if (stavesItem) {
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: stavesItem.quantity + totalStavesMade
-            })
-            .eq("id", stavesItem.id);
-    } else {
-        await supabaseClient
-            .from("inventory")
-            .insert({
-                player_id: user.id,
-                item_id: BARREL_STAVES,
-                quantity: totalStavesMade
-            });
-    }
-
-await checkTutorialBarrelParts();
-
-    showTemporaryMessage(
+    const amount = getCraftAmount("staves-amount");
+    await craftAtVillageCarpenter(
+        "staves",
+        amount,
         "staves-message",
-        "🛢️ You craft <strong>" + totalStavesMade + " Barrel Staves</strong>."
+        data => `You craft <strong>${data.output_quantity} Barrel Staves</strong>.`
     );
-
-    loadHomePage();
-
 }
 
 
@@ -495,80 +253,13 @@ await checkTutorialBarrelParts();
 ===================================== */
 
 async function craftBarrelLid() {
-
-    const amount =
-        getCraftAmount("lid-amount");
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const barrelWood = await getBarrelPlankForPlayer(user.id);
-
-    const totalPlanksNeeded =
-        LID_PLANK_COST * amount;
-
-    const totalLidsMade =
-        LID_CREATED * amount;
-
-    const { data: plankItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", barrelWood.id)
-        .maybeSingle();
-
-    if (!plankItem || plankItem.quantity < totalPlanksNeeded) {
-        showTemporaryMessage(
-            "lid-message",
-            "❌ You need " + totalPlanksNeeded + " " + barrelWood.name + "."
-        );
-        return;
-    }
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: plankItem.quantity - totalPlanksNeeded
-        })
-        .eq("id", plankItem.id);
-
-    const { data: lidItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BARREL_LID)
-        .maybeSingle();
-
-    if (lidItem) {
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: lidItem.quantity + totalLidsMade
-            })
-            .eq("id", lidItem.id);
-    } else {
-        await supabaseClient
-            .from("inventory")
-            .insert({
-                player_id: user.id,
-                item_id: BARREL_LID,
-                quantity: totalLidsMade
-            });
-    }
-
-    await checkTutorialBarrelParts();
-
-    showTemporaryMessage(
+    const amount = getCraftAmount("lid-amount");
+    await craftAtVillageCarpenter(
+        "lid",
+        amount,
         "lid-message",
-        "🛢️ You craft <strong>" + totalLidsMade + " Barrel Lid" +
-        (totalLidsMade > 1 ? "s" : "") + "</strong>."
+        data => `You craft <strong>${data.output_quantity} Barrel Lid${data.output_quantity > 1 ? "s" : ""}</strong>.`
     );
-
-    loadHomePage();
-
 }
 
 
@@ -577,132 +268,13 @@ async function craftBarrelLid() {
 ===================================== */
 
 async function craftEmptyBarrel() {
-
-    const amount =
-        getCraftAmount("barrel-amount");
-
-    const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
-
-    if (!user) return;
-
-    const totalStavesNeeded =
-        BARREL_STAVES_COST * amount;
-
-    const totalLidsNeeded =
-        BARREL_LID_COST * amount;
-
-    const totalHoopsNeeded =
-        BARREL_HOOP_COST * amount;
-
-    const totalBarrelsMade =
-        EMPTY_BARREL_CREATED * amount;
-
-    const { data: stavesItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BARREL_STAVES)
-        .maybeSingle();
-
-    const { data: lidItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", BARREL_LID)
-        .maybeSingle();
-
-    const { data: hoopItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", IRON_HOOP)
-        .maybeSingle();
-
-    if (!stavesItem || stavesItem.quantity < totalStavesNeeded) {
-        showTemporaryMessage(
-            "barrel-message",
-            "❌ You need " + totalStavesNeeded + " Barrel Staves."
-        );
-        return;
-    }
-
-    if (!lidItem || lidItem.quantity < totalLidsNeeded) {
-        showTemporaryMessage(
-            "barrel-message",
-            "❌ You need " + totalLidsNeeded + " Barrel Lid" +
-            (totalLidsNeeded > 1 ? "s" : "") + "."
-        );
-        return;
-    }
-
-    if (!hoopItem || hoopItem.quantity < totalHoopsNeeded) {
-        showTemporaryMessage(
-            "barrel-message",
-            "❌ You need " + totalHoopsNeeded + " Iron Hoops."
-        );
-        return;
-    }
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: stavesItem.quantity - totalStavesNeeded
-        })
-        .eq("id", stavesItem.id);
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: lidItem.quantity - totalLidsNeeded
-        })
-        .eq("id", lidItem.id);
-
-    await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: hoopItem.quantity - totalHoopsNeeded
-        })
-        .eq("id", hoopItem.id);
-
-    const { data: barrelItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", EMPTY_BARREL)
-        .maybeSingle();
-
-    if (barrelItem) {
-        await supabaseClient
-            .from("inventory")
-            .update({
-                quantity: barrelItem.quantity + totalBarrelsMade
-            })
-            .eq("id", barrelItem.id);
-    } else {
-        await supabaseClient
-            .from("inventory")
-            .insert({
-                player_id: user.id,
-                item_id: EMPTY_BARREL,
-                quantity: totalBarrelsMade
-            });
-    }
-
-    await advanceTutorial(
-    TUTORIAL_STEPS.CRAFT_BIRCH_BARREL,
-    TUTORIAL_STEPS.VISIT_VILLAGE_APIARY
-);
-
-    showTemporaryMessage(
+    const amount = getCraftAmount("barrel-amount");
+    await craftAtVillageCarpenter(
+        "barrel",
+        amount,
         "barrel-message",
-        "🛢️ You craft <strong>" + totalBarrelsMade + " Empty Barrel" +
-        (totalBarrelsMade > 1 ? "s" : "") + "</strong>."
+        data => `You craft <strong>${data.output_quantity} Empty Barrel${data.output_quantity > 1 ? "s" : ""}</strong>.`
     );
-
-    loadHomePage();
-
 }
 
 
