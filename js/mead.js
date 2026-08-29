@@ -590,67 +590,38 @@ async function addBarrel(slot) {
 
     if (!user) return;
 
-    const { data: barrelItem, error } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", EMPTY_BARREL)
-        .maybeSingle();
+    /*
+       IMPORTANT:
+       Tutorial players use the King's Handcart, while normal players may
+       have the barrel in their Backpack or Storage Yard. The server RPC
+       handles all three locations atomically so this page never falls back
+       to an inventory-only check again.
+    */
+    const { data, error } = await supabaseClient.rpc(
+        "add_mead_barrel_shared",
+        { p_slot: slot }
+    );
 
     if (error) {
-        showShelfMessage(slot, error.message);
+        showShelfMessage(slot, `❌ ${error.message}`);
         return;
     }
 
-    if (!barrelItem || barrelItem.quantity < EMPTY_BARREL_COST) {
-        showShelfMessage(
-            slot,
-            "❌ You need 1 Empty Barrel."
-        );
-        return;
-    }
+    showShelfMessage(slot, "✅ Empty Barrel added to the mead shelf.");
 
-    const { error: insertError } = await supabaseClient
-        .from("mead_barrels")
-        .insert({
-            player_id: user.id,
-            slot: slot,
-            stage: "barrel_added",
-            started_at: null
-        });
-
-    if (insertError) {
-        showShelfMessage(
-            slot,
-            "❌ Barrel failed to save: " + insertError.message
-        );
-        return;
-    }
-
-    const { error: removeError } = await supabaseClient
-        .from("inventory")
-        .update({
-            quantity: barrelItem.quantity - EMPTY_BARREL_COST
-        })
-        .eq("id", barrelItem.id);
-
-    if (removeError) {
-        showShelfMessage(
-            slot,
-            "❌ Barrel failed to leave inventory: " +
-            removeError.message
-        );
-        return;
-    }
-
-    loadHomePage();
-    loadMeadHall();
     if (typeof logGameActivity === "function") {
         await logGameActivity("mead_barrel_added", {
-            slot
+            slot,
+            barrel_id: data?.barrel_id || null
         });
     }
 
+    await loadHomePage();
+    await loadMeadHall();
+
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    }
 }
 
 
@@ -673,82 +644,42 @@ async function startBrewing(barrelId) {
 
     if (!barrel) return;
 
-    const { data: honeyItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", HONEY_BUCKET)
-        .maybeSingle();
-
-    const { data: waterItem } = await supabaseClient
-        .from("inventory")
-        .select("*")
-        .eq("player_id", user.id)
-        .eq("item_id", WATER_BUCKET)
-        .maybeSingle();
-
-    if (!honeyItem || honeyItem.quantity < HONEY_BUCKET_COST) {
-        showShelfMessage(
-            barrel.slot,
-            "❌ You need 1 Honey Bucket."
-        );
-        return;
-    }
-
-    if (!waterItem || waterItem.quantity < WATER_BUCKET_COST) {
-        showShelfMessage(
-            barrel.slot,
-            "❌ You need 1 Water Bucket."
-        );
-        return;
-    }
-
-    const { error: brewError } = await supabaseClient
-        .from("mead_barrels")
-        .update({
-            stage: "brewing",
-            started_at: new Date().toISOString()
-        })
-        .eq("id", barrel.id)
-        .eq("player_id", user.id);
-
-    if (brewError) {
-        showShelfMessage(
-            barrel.slot,
-            "❌ Brewing failed: " + brewError.message
-        );
-        return;
-    }
-
-    await reduceInventoryItem(
-        honeyItem,
-        HONEY_BUCKET_COST
+    /*
+       Honey and Water Buckets can be in the Backpack, King's Handcart or
+       Storage Yard. The backend checks and consumes the shared resources in
+       one transaction, then starts the barrel.
+    */
+    const { error } = await supabaseClient.rpc(
+        "start_young_mead_shared",
+        { p_barrel_id: barrelId }
     );
 
-    await reduceInventoryItem(
-        waterItem,
-        WATER_BUCKET_COST
-    );
+    if (error) {
+        showShelfMessage(barrel.slot, `❌ ${error.message}`);
+        return;
+    }
 
     showPageMessage(
-        "🍯 Honey and water added. Your mead has started brewing."
+        "🍯 Honey and fresh water added. Your mead has started brewing."
     );
+
     if (typeof logGameActivity === "function") {
         await logGameActivity(
             "mead_brewing_started",
             {
                 barrel_id: barrel.id,
                 slot: barrel.slot,
-                ready_in_seconds:
-                    MEAD_BREW_TIME_SECONDS
+                ready_in_seconds: MEAD_BREW_TIME_SECONDS
             }
         );
     }
 
+    await loadHomePage();
+    await loadMeadHall();
 
-    loadHomePage();
-    loadMeadHall();
-
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    }
 }
 
 
