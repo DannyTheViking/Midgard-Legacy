@@ -121,6 +121,65 @@ function renderMeadShelves() {
 
 
 /* =====================================
+   BARREL CARD ROUTER
+===================================== */
+
+/*
+   Mead barrels have existed through a few database versions, so the page
+   must not assume that every row uses exactly the same stage/status value.
+   This router converts the stored state into one of the three supported
+   visual cards. Keeping the routing in one place also prevents a newly added
+   barrel from crashing the entire Mead Hall render.
+*/
+function buildBarrelCard(barrel) {
+
+    if (!barrel) {
+        return "";
+    }
+
+    const stage = String(
+        barrel.stage || barrel.status || "barrel_added"
+    ).toLowerCase();
+
+    if (
+        stage === "barrel_added" ||
+        stage === "empty" ||
+        stage === "installed" ||
+        stage === "ready_to_fill"
+    ) {
+        return buildReadyBarrelCard(barrel);
+    }
+
+    if (
+        stage === "brewing" ||
+        stage === "fermenting"
+    ) {
+        return buildBrewingCard(barrel);
+    }
+
+    if (
+        stage === "ready" ||
+        stage === "finished" ||
+        stage === "complete" ||
+        stage === "completed"
+    ) {
+        return buildFinishedCard(barrel);
+    }
+
+    /*
+       Unknown/legacy states should never make the whole page disappear.
+       Treat an existing barrel as installed and show a useful recovery card.
+    */
+    console.warn(
+        "Unknown Mead Hall barrel stage; showing installed barrel state.",
+        barrel
+    );
+
+    return buildReadyBarrelCard(barrel);
+}
+
+
+/* =====================================
    EMPTY SHELF CARD
 ===================================== */
 
