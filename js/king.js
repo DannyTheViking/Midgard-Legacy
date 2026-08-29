@@ -212,13 +212,24 @@ async function askForFreedom() {
 
 async function acceptKingsChallenge() {
 
-    const advanced =
-        await advanceTutorial(
-            TUTORIAL_STEPS.ASK_FOR_FREEDOM,
-            TUTORIAL_STEPS.CHOP_BIRCH
-        );
+    /*
+        The King owns the first tutorial tool grant.
+        This RPC advances the tutorial and gives the temporary Rusty Axe
+        in one server-side transaction so a new player cannot skip the grant.
+    */
+    const { data, error } = await supabaseClient.rpc(
+        "accept_kings_tutorial_challenge"
+    );
 
+    if (error) {
+        console.error("King challenge failed:", error);
+        return;
+    }
+
+    const advanced = Boolean(data?.advanced);
     if (!advanced) return;
+
+    await refreshTutorialUI();
 
    showTutorialNotice(
     TUTORIAL_STEPS.CHOP_BIRCH
@@ -237,16 +248,20 @@ document.getElementById("king-dialogue").innerHTML = `
 
     <p>
         <strong>
-            "Go into the Wilderness and chop Birch."
+            "Take this Rusty Axe. It will not last forever, but it will get you started."
         </strong>
     </p>
 
     <p>
-        Use the navigation menu to open:
+        The King hands you a battered Rusty Axe. When it breaks, have it repaired and continue your work.
+    </p>
+
+    <p>
+        Your first task is to gather Birch. Use the navigation menu to open:
     </p>
 
     <p class="green">
-        Wilderness → Forest
+        Gathering → Trees → Birch Tree
     </p>
 `;
 
@@ -288,8 +303,8 @@ async function presentMead() {
         <p>The hall waits in silence.</p>
         <p>He finally nods.</p>
         <p><strong>"You have kept your word. From this day forward, you are a free man."</strong></p>
-        <p>Two royal guards place an Iron Axe and Iron Pickaxe before you.</p>
-        <p><strong>"These tools are yours for life. Keep them repaired and they will serve you well."</strong></p>
+        <p>A royal guard places a permanent Iron Axe before you.</p>
+        <p><strong>"This woodcutting axe is yours for life. Keep it repaired and it will serve you well."</strong></p>
         <p>The King points beyond the village.</p>
         <p><strong>"The old shack and the land around it are yours."</strong></p>
         <p class="green">
@@ -298,7 +313,6 @@ async function presentMead() {
             Personal Bee Yard Unlocked<br>
             +100 Village Reputation<br>
             Iron Axe — 100/100 durability<br>
-            Iron Pickaxe — 100/100 durability<br>
             King's Tax: 1%
         </p>
     `;
@@ -319,9 +333,9 @@ async function presentMead() {
 
 
 async function grantFreedomRewards(playerId) {
-    const { data: rewards } = await supabaseClient.from('items').select('id,name').in('name',['Iron Axe','Iron Pickaxe']);
+    const { data: rewards } = await supabaseClient.from('items').select('id,name').in('name',['Iron Axe']);
     for (const item of rewards || []) {
-        const slot = item.name === 'Iron Pickaxe' ? 'pickaxe' : 'axe';
+        const slot = 'axe';
         const { data: existing } = await supabaseClient.from('equipment').select('id').eq('player_id',playerId).eq('slot',slot).maybeSingle();
         const payload={item_id:item.id,durability:30,max_durability:100,is_equipped:true};
         if(existing) await supabaseClient.from('equipment').update(payload).eq('id',existing.id);
