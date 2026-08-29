@@ -166,6 +166,18 @@ async function sawBirchLog() {
         showSawmillMessage(message);
 
         await loadSawmillCardStock();
+
+        /*
+           The Sawmill RPC can advance the tutorial from MAKE_PLANKS to
+           GATHER_BOG_IRON. Refresh the global tutorial manager immediately
+           after the server transaction so the old "Saw Birch Planks" popup
+           is replaced by the next objective without requiring a page change
+           or manual refresh.
+        */
+        if (typeof refreshTutorialUI === "function") {
+            await refreshTutorialUI();
+        }
+
         loadHomePage();
     } catch (error) {
         showSawmillMessage(
