@@ -299,7 +299,7 @@ const PVP_RANKS = [
 function getProfilePropertyName(player) {
 
     const propertyNames = {
-        0: "Old Shack",
+        0: "Broken Shack",
         1: "Upgraded Shack",
         2: "Small House",
         3: "Medium House",

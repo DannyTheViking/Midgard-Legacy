@@ -1,7 +1,7 @@
 "use strict";
 
 const propertyStages = [
-  { level:0,name:"Old Shack",image:"../images/property/old shack.png",alt:"A broken and run-down wooden shack",description:"An abandoned shack with damaged timbers and unsafe walls." },
+  { level:0,name:"Broken Shack",image:"../images/property/old shack.png",alt:"A broken and run-down wooden shack",description:"The broken shack granted by the King. Repair it to begin building your homestead." },
   { level:1,name:"Upgraded Shack",image:"../images/property/upgraded shack.png",alt:"A repaired wooden Viking shack",description:"A secure repaired home that unlocks space for your first Apiary." },
   { level:2,name:"Small House",image:"../images/property/small house.png",alt:"A small Viking wooden house",description:"A proper Viking house with stronger foundations and more living space." },
   { level:3,name:"Medium House",image:"../images/property/med house.png",alt:"A medium-sized Viking house",description:"A larger timber-and-stone homestead showing your growing influence." },
