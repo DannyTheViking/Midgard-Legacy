@@ -60,15 +60,36 @@ const TUTORIAL_OBJECTIVES = Object.freeze({
 async function getTutorialProgress() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return null;
+
+    /*
+       Always reconcile the tutorial against the player's real items first.
+       The backend counts Backpack + active cart + Storage Yard, so tutorial
+       progress can never get stuck simply because the item is in a different
+       carried/storage location. This applies to every player, including new
+       accounts created after this update.
+    */
+    const { error: syncError } = await supabaseClient.rpc(
+        "sync_my_tutorial_progress"
+    );
+
+    if (syncError) {
+        console.warn(
+            "Tutorial progress sync failed safely:",
+            syncError.message
+        );
+    }
+
     const { data, error } = await supabaseClient
         .from("players")
         .select("id, tutorial_step, tutorial_complete, tutorial_progress, is_free_man, kings_tax_rate")
         .eq("id", user.id)
         .single();
+
     if (error) {
         console.error("Tutorial load failed:", error);
         return null;
     }
+
     return data;
 }
 
@@ -136,24 +157,33 @@ async function setTutorialProgress(progressKey, current, expectedStep, nextStep,
 }
 
 async function checkTutorialBarrelParts() {
-    const progress = await getTutorialProgress();
-    if (!progress || progress.tutorial_step !== TUTORIAL_STEPS.CRAFT_BARREL_PARTS) return null;
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    const { data: inventory, error } = await supabaseClient.from("inventory")
-        .select("item_id, quantity").eq("player_id", user.id);
-    if (error) return null;
-    const count = id => inventory.find(row => row.item_id === id)?.quantity || 0;
-    const staves = Math.min(count(BARREL_STAVES), TUTORIAL_TARGETS.barrel_staves);
-    const lids = Math.min(count(BARREL_LID), TUTORIAL_TARGETS.barrel_lids);
-    const { data: player } = await supabaseClient.from("players").select("tutorial_progress").eq("id", user.id).single();
-    const updated = { ...(player?.tutorial_progress || {}), barrel_staves: staves, barrel_lids: lids };
-    const complete = staves >= 30 && lids >= 1;
-    await supabaseClient.from("players").update({
-        tutorial_progress: updated,
-        ...(complete ? { tutorial_step: TUTORIAL_STEPS.CRAFT_BIRCH_BARREL } : {})
-    }).eq("id", user.id);
+    /*
+       Barrel parts may live in the King's Handcart, Backpack or Storage Yard.
+       Let the server reconcile the compound objective instead of reading only
+       the Backpack table.
+    */
+    const { data, error } = await supabaseClient.rpc(
+        "sync_my_tutorial_progress"
+    );
+
+    if (error) {
+        console.error("Tutorial barrel progress sync failed:", error);
+        return null;
+    }
+
     await refreshTutorialUI();
-    return { staves, lids, completed: complete };
+
+    const progress = data?.tutorial_progress || {};
+    const staves = Number(progress.barrel_staves || 0);
+    const lids = Number(progress.barrel_lids || 0);
+
+    return {
+        staves,
+        lids,
+        completed:
+            staves >= TUTORIAL_TARGETS.barrel_staves &&
+            lids >= TUTORIAL_TARGETS.barrel_lids
+    };
 }
 
 async function completeTutorial() {

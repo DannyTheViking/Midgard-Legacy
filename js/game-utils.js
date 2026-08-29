@@ -267,26 +267,35 @@ async function getPlayerInventoryQuantities(
 
     if (!uniqueIds.length) return {};
 
-    const { data, error } = await supabaseClient
-        .from("inventory")
-        .select("item_id, quantity")
-        .eq("player_id", playerId)
-        .in("item_id", uniqueIds);
+    /*
+       Village crafting uses what the Viking is carrying, not just the
+       Backpack. The active cart is part of carried inventory too. This is
+       especially important during the tutorial because the King lends the
+       player a handcart for the required materials.
+    */
+    const entries = await Promise.all(
+        uniqueIds.map(async itemId => {
+            const { data, error } = await supabaseClient.rpc(
+                "carried_item_quantity",
+                {
+                    p_player: playerId,
+                    p_item: itemId
+                }
+            );
 
-    if (error) {
-        console.warn(
-            "Crafting inventory failed to load:",
-            error.message
-        );
-        return {};
-    }
+            if (error) {
+                console.warn(
+                    `Carried quantity failed for item ${itemId}:`,
+                    error.message
+                );
+                return [itemId, 0];
+            }
 
-    return Object.fromEntries(
-        (data || []).map(row => [
-            Number(row.item_id),
-            Number(row.quantity || 0)
-        ])
+            return [itemId, Number(data || 0)];
+        })
     );
+
+    return Object.fromEntries(entries);
 }
 
 function setCraftingStock(
@@ -335,51 +344,34 @@ async function changeInventoryQuantity(
     const safeAmount = Math.trunc(Number(amount || 0));
     if (!safeAmount) return true;
 
-    const { data: row, error: loadError } =
-        await supabaseClient
-            .from("inventory")
-            .select("id, quantity")
-            .eq("player_id", playerId)
-            .eq("item_id", itemId)
-            .maybeSingle();
-
-    if (loadError) throw loadError;
-
-    const current = Number(row?.quantity || 0);
-    const next = current + safeAmount;
-
-    if (next < 0) {
-        throw new Error("Not enough materials.");
-    }
-
-    if (row && next === 0) {
-        const { error } = await supabaseClient
-            .from("inventory")
-            .delete()
-            .eq("id", row.id);
+    if (safeAmount < 0) {
+        const { error } = await supabaseClient.rpc(
+            "consume_carried_item",
+            {
+                p_player: playerId,
+                p_item: itemId,
+                p_quantity: Math.abs(safeAmount)
+            }
+        );
 
         if (error) throw error;
         return true;
     }
 
-    if (row) {
-        const { error } = await supabaseClient
-            .from("inventory")
-            .update({ quantity: next })
-            .eq("id", row.id);
-
-        if (error) throw error;
-        return true;
-    }
-
-    const { error } = await supabaseClient
-        .from("inventory")
-        .insert({
-            player_id: playerId,
-            item_id: itemId,
-            quantity: next
-        });
+    /*
+       Crafted outputs remain carried. If an active cart exists the server
+       places them there; otherwise they go into the Backpack.
+    */
+    const { error } = await supabaseClient.rpc(
+        "grant_gathered_item",
+        {
+            p_player: playerId,
+            p_item_id: itemId,
+            p_quantity: safeAmount
+        }
+    );
 
     if (error) throw error;
     return true;
 }
+
