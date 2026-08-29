@@ -81,6 +81,9 @@ async function collectVillageHoney() {
   villageApiaryPlayer.tutorial_honey_collected = true;
   if (typeof incrementGameStatistics === "function") await incrementGameStatistics({ honey_collected: 1, resources_gathered: 1 });
   showVillageMessage("🍯 Ragnhild fills your bucket with royal honey. Now fill your second bucket with water.");
+  if (typeof window.refreshTutorialAfterAction === "function") {
+    await window.refreshTutorialAfterAction();
+  }
   setTimeout(() => window.location.href = "inventory.html", 1600);
 }
 function showVillageMessage(message) { const el = document.getElementById("village-apiary-message"); if (el) el.innerHTML = message; }

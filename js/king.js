@@ -229,7 +229,11 @@ async function acceptKingsChallenge() {
     const advanced = Boolean(data?.advanced);
     if (!advanced) return;
 
-    await refreshTutorialUI();
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    } else {
+        await refreshTutorialUI();
+    }
 
    showTutorialNotice(
     TUTORIAL_STEPS.CHOP_BIRCH

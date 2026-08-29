@@ -979,6 +979,10 @@ async function collectYoungMead(barrelId) {
     TUTORIAL_STEPS.RETURN_TO_KING
 );
 
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    }
+
     if (typeof logGameActivity === "function") {
         await logGameActivity(
             "young_mead_collected",

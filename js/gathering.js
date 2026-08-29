@@ -387,6 +387,15 @@ async function gatherFromNode(nodeKey) {
             await loadCartCard();
         }
 
+        /*
+           Gathering can complete or advance tutorial objectives.
+           Refresh immediately so the progress bar and next popup change
+           without requiring a manual page refresh.
+        */
+        if (typeof window.refreshTutorialAfterAction === "function") {
+            await window.refreshTutorialAfterAction();
+        }
+
         await Promise.all([loadGatheringNodes(), loadGatheringEquipment()]);
     } catch (error) {
         console.error("Gathering failed:", error);

@@ -283,6 +283,10 @@ async function fillBucketWithWater(
             TUTORIAL_STEPS.BREW_YOUNG_MEAD
         );
 
+        if (typeof window.refreshTutorialAfterAction === "function") {
+            await window.refreshTutorialAfterAction();
+        }
+
     }
 
 

@@ -214,11 +214,80 @@ async function refreshTutorialUI() {
         return;
     }
 
+    midgardTutorialLastRenderedStep = Number(player.tutorial_step);
     renderTutorialGuide(player);
     showTutorialReminder(player);
     applyTutorialHighlights(player.tutorial_step);
     startTutorialObserver(player.tutorial_step);
 }
+
+
+/* ============================================================
+   LIVE TUTORIAL ACTION REFRESH
+   ============================================================
+   Any gameplay system can call this after a successful action.
+   It reconciles the current tutorial step against Supabase, updates
+   progress immediately, changes the highlighted destination, and
+   automatically opens the next objective when the step advances.
+============================================================ */
+let midgardTutorialRefreshPromise = null;
+let midgardTutorialLastRenderedStep = null;
+
+async function refreshTutorialAfterAction() {
+    if (midgardTutorialRefreshPromise) {
+        return midgardTutorialRefreshPromise;
+    }
+
+    midgardTutorialRefreshPromise = (async () => {
+        const beforeStep = midgardTutorialLastRenderedStep;
+        const player = await getTutorialProgress();
+
+        if (!player || player.tutorial_complete) {
+            clearTutorialHighlights();
+            removeTutorialGuide();
+            removeTutorialReminder();
+            stopTutorialObserver();
+            midgardTutorialLastRenderedStep = player?.tutorial_step ?? null;
+            return player;
+        }
+
+        const stepChanged =
+            beforeStep !== null &&
+            Number(beforeStep) !== Number(player.tutorial_step);
+
+        midgardTutorialLastRenderedStep = Number(player.tutorial_step);
+
+        /*
+           When an objective completes, remove the new step's temporary
+           session dismissal before rendering. This guarantees the player
+           immediately sees what comes next instead of needing a refresh.
+        */
+        if (stepChanged) {
+            try {
+                sessionStorage.removeItem(tutorialPopupStorageKey(player));
+            } catch (error) {
+                // Tutorial still works when session storage is unavailable.
+            }
+        }
+
+        renderTutorialGuide(player, stepChanged);
+        showTutorialReminder(player);
+        applyTutorialHighlights(player.tutorial_step);
+        startTutorialObserver(player.tutorial_step);
+
+        return player;
+    })();
+
+    try {
+        return await midgardTutorialRefreshPromise;
+    } finally {
+        midgardTutorialRefreshPromise = null;
+    }
+}
+
+// Expose one shared hook so gathering, crafting, apiary, inventory and
+// workstation pages all use exactly the same tutorial refresh behaviour.
+window.refreshTutorialAfterAction = refreshTutorialAfterAction;
 
 function removeTutorialGuide() {
     document.getElementById("tutorial-guide")?.remove();

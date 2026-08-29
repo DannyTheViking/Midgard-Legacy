@@ -178,6 +178,12 @@ async function loadVillageForgeStatus() {
         <p><span>Delivered</span><span class="green">${Number(order.items_completed).toLocaleString()} / ${Number(order.items_total).toLocaleString()}</span></p>
     `;
     if (fill) fill.style.width = `${Math.min(100, percent)}%`;
+
+    // Village forge orders deliver in timed batches. Reconcile tutorial
+    // progress whenever the status poll sees new delivered items.
+    if (typeof window.refreshTutorialAfterAction === "function") {
+        await window.refreshTutorialAfterAction();
+    }
     updateVillageForgeCountdown(order.next_batch_at, order.status);
 
     if (order.status === "working") {

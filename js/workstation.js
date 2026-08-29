@@ -662,6 +662,10 @@ function bindClaimButtons() {
                         );
                     }
 
+                    if (typeof window.refreshTutorialAfterAction === "function") {
+                        await window.refreshTutorialAfterAction();
+                    }
+
                     await loadWorkstation();
                 }
             );
