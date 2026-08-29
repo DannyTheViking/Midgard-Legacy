@@ -42,22 +42,38 @@ async function loadSawmillCardStock() {
         oakPlankId
     } = await resolveOakItemIds();
 
+    // Birch tutorial materials can be in the Backpack, the King's
+    // Handcart, or the Storage Yard. Read the same shared total that
+    // Supabase uses when crafting.
+    const [birchLogsResult, birchPlanksResult] = await Promise.all([
+        supabaseClient.rpc("get_my_shared_item_quantity", {
+            p_name: "Birch Log"
+        }),
+        supabaseClient.rpc("get_my_shared_item_quantity", {
+            p_name: "Birch Plank"
+        })
+    ]);
+
+    if (birchLogsResult.error) {
+        console.error("Could not load shared Birch Logs:", birchLogsResult.error);
+    }
+
+    if (birchPlanksResult.error) {
+        console.error("Could not load shared Birch Planks:", birchPlanksResult.error);
+    }
+
+    const birchLogs = Number(birchLogsResult.data || 0);
+    const birchPlanks = Number(birchPlanksResult.data || 0);
+
+    // Oak remains post-tutorial content and keeps the existing stock path.
     const quantities =
         await getPlayerInventoryQuantities(
             user.id,
             [
-                BIRCH_LOG,
-                BIRCH_PLANK,
                 oakLogId,
                 oakPlankId
             ]
         );
-
-    const birchLogs =
-        quantities[BIRCH_LOG] || 0;
-
-    const birchPlanks =
-        quantities[BIRCH_PLANK] || 0;
 
     setCraftingStock(
         "birch-plank-stock",
@@ -116,58 +132,27 @@ async function sawBirchLog() {
         amount * PLANKS_CREATED;
 
     try {
-        const quantities =
-            await getPlayerInventoryQuantities(
-                user.id,
-                [BIRCH_LOG]
-            );
-
-        if (
-            Number(quantities[BIRCH_LOG] || 0) <
-            logsNeeded
-        ) {
-            showSawmillMessage(
-                `❌ You need ${logsNeeded} Birch Log${logsNeeded === 1 ? "" : "s"}.`
-            );
-            return;
-        }
-
-        await changeInventoryQuantity(
-            user.id,
-            BIRCH_LOG,
-            -logsNeeded
+        // One server-side transaction handles shared resources, output,
+        // statistics and tutorial progress. This prevents the Sawmill from
+        // disagreeing with the King's Handcart totals.
+        const { data, error } = await supabaseClient.rpc(
+            "saw_birch_logs",
+            { p_logs: logsNeeded }
         );
 
-        await changeInventoryQuantity(
-            user.id,
-            BIRCH_PLANK,
-            planksMade
-        );
-
-        if (
-            typeof recordCraftingStatistics ===
-            "function"
-        ) {
-            await recordCraftingStatistics({
-                itemsCrafted: planksMade,
-                planksSawn: planksMade
-            });
+        if (error) {
+            throw error;
         }
 
-        const tutorialResult =
-            await addTutorialProgress(
-                "birch_planks",
-                planksMade,
-                TUTORIAL_STEPS.MAKE_PLANKS,
-                TUTORIAL_STEPS.GATHER_BOG_IRON,
-                TUTORIAL_TARGETS.birch_planks
-            );
+        const actualLogsUsed = Number(data?.logs_used || logsNeeded);
+        const actualPlanksMade = Number(data?.planks_made || planksMade);
+        const tutorialResult = data?.tutorial || null;
 
         let message = `
             🪚 You cut
-            <strong>${logsNeeded} Birch Log${logsNeeded === 1 ? "" : "s"}</strong>
+            <strong>${actualLogsUsed} Birch Log${actualLogsUsed === 1 ? "" : "s"}</strong>
             into
-            <strong>${planksMade} Birch Planks</strong>.
+            <strong>${actualPlanksMade} Birch Planks</strong>.
         `;
 
         if (tutorialResult?.completed) {
@@ -322,6 +307,41 @@ async function sawOakLog() {
     }
 }
 
+
+async function prepareTutorialBirchAmount() {
+    const amountInput = document.getElementById("birch-saw-amount");
+    if (!amountInput) return;
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    const { data: player, error } = await supabaseClient
+        .from("players")
+        .select("tutorial_step, tutorial_complete, tutorial_progress")
+        .eq("id", user.id)
+        .single();
+
+    if (error || !player || player.tutorial_complete) return;
+
+    if (Number(player.tutorial_step) === Number(TUTORIAL_STEPS.MAKE_PLANKS)) {
+        const current = Number(player.tutorial_progress?.birch_planks || 0);
+        const remainingPlanks = Math.max(
+            0,
+            Number(TUTORIAL_TARGETS.birch_planks) - current
+        );
+        const logsRequired = Math.max(
+            1,
+            Math.ceil(remainingPlanks / PLANKS_CREATED)
+        );
+
+        amountInput.value = logsRequired;
+
+        showSawmillMessage(
+            `📜 Tutorial: saw <strong>${logsRequired} Birch Logs</strong> to make the remaining <strong>${remainingPlanks} Birch Planks</strong>. Materials can come from your Backpack, King's Handcart or Storage Yard.`
+        );
+    }
+}
+
 sawBirchButton?.addEventListener(
     "click",
     sawBirchLog
@@ -348,5 +368,6 @@ document
 
 Promise.all([
     loadOakSawmill(),
-    loadSawmillCardStock()
+    loadSawmillCardStock(),
+    prepareTutorialBirchAmount()
 ]);
