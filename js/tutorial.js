@@ -41,9 +41,9 @@ const TUTORIAL_TARGETS = Object.freeze({
 
 const TUTORIAL_OBJECTIVES = Object.freeze({
     0: { title: "Ask for your freedom", text: "Visit the King's Longhall and ask the King to release you from thraldom.", route: "Village → King's Longhall", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "king-building-card" },
-    1: { title: "Gather Birch Logs", text: "Chop enough Birch for two buckets and the tutorial barrel.", progressKey: "birch_logs", target: 23, unit: "Birch Logs", route: "Wilderness → Forest", href: "wildness.html", button: "🏞️ Open Wilderness", nav: "wildness.html", card: "forest-building-card" },
+    1: { title: "Gather Birch Logs", text: "Chop enough Birch for two buckets and the tutorial barrel.", progressKey: "birch_logs", target: 23, unit: "Birch Logs", route: "Gathering → Trees → Birch Tree", href: "gathering.html", button: "🧺 Open Gathering", nav: "gathering.html" },
     2: { title: "Saw Birch Planks", text: "Turn the Birch Logs into the planks needed for two buckets and the tutorial barrel.", progressKey: "birch_planks", target: 46, unit: "Birch Planks", route: "Village → Sawmill", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "sawmill-building-card" },
-    3: { title: "Gather Bog Iron", text: "Collect enough Bog Iron to forge six Iron Bars for twelve hoops.", progressKey: "bog_iron", target: 30, unit: "Bog Iron", route: "Wilderness → Mining", href: "wildness.html", button: "🏞️ Open Wilderness", nav: "wildness.html", card: "mining-building-card" },
+    3: { title: "Gather Bog Iron", text: "Collect enough Bog Iron to forge six Iron Bars for twelve hoops.", progressKey: "bog_iron", target: 30, unit: "Bog Iron", route: "Gathering → Mining → Bog Iron Deposit", href: "gathering.html", button: "🧺 Open Gathering", nav: "gathering.html" },
     4: { title: "Forge Iron Bars", text: "Forge six Iron Bars. They will become twelve hoops for two buckets and the barrel.", progressKey: "iron_bars", target: 6, unit: "Iron Bars", route: "Village → Forge", href: "village.html", button: "🏘️ Open Village", nav: "village.html", card: "forge-building-card" },
     5: { title: "Forge Iron Hoops", text: "Forge six batches to make twelve hoops: six for two buckets and six for the barrel.", progressKey: "iron_hoops", target: 12, unit: "Iron Hoops", route: "Village → Forge", href: "forge.html", button: "🔥 Open Forge", nav: "village.html", card: "forge-building-card" },
     6: { title: "Continue to Carpentry", text: "The King’s village hives are already built, so no nails are required. Continue to the Carpenter.", route: "Village → Carpenter", href: "carpenter.html", button: "🪵 Open Carpenter", nav: "village.html", card: "carpenter-building-card" },
@@ -179,11 +179,13 @@ async function refreshTutorialUI() {
     if (!player || player.tutorial_complete) {
         clearTutorialHighlights();
         removeTutorialGuide();
+        removeTutorialReminder();
         stopTutorialObserver();
         return;
     }
 
     renderTutorialGuide(player);
+    showTutorialReminder(player);
     applyTutorialHighlights(player.tutorial_step);
     startTutorialObserver(player.tutorial_step);
 }
@@ -191,6 +193,46 @@ async function refreshTutorialUI() {
 function removeTutorialGuide() {
     document.getElementById("tutorial-guide")?.remove();
 }
+
+function removeTutorialReminder() {
+    document.getElementById("tutorial-reminder")?.remove();
+}
+
+function showTutorialReminder(player) {
+    const objective = TUTORIAL_OBJECTIVES[player?.tutorial_step];
+
+    if (!objective || player?.tutorial_complete) {
+        removeTutorialReminder();
+        return;
+    }
+
+    let reminder = document.getElementById("tutorial-reminder");
+
+    if (!reminder) {
+        reminder = document.createElement("button");
+        reminder.id = "tutorial-reminder";
+        reminder.type = "button";
+        reminder.className = "tutorial-reminder-button";
+        reminder.setAttribute("aria-label", "Open tutorial objective");
+        document.body.appendChild(reminder);
+    }
+
+    reminder.innerHTML = `
+        <span class="tutorial-reminder-icon">!</span>
+        <span class="tutorial-reminder-text">${objective.title}</span>
+    `;
+
+    reminder.onclick = () => {
+        try {
+            sessionStorage.removeItem(tutorialPopupStorageKey(player));
+        } catch (error) {
+            // Reopening still works without browser storage.
+        }
+
+        renderTutorialGuide(player, true);
+    };
+}
+
 
 function getTutorialProgressDisplay(player, objective) {
     if (!objective) return "";
@@ -244,9 +286,10 @@ function dismissTutorialPopup(player) {
     }
 
     removeTutorialGuide();
+    showTutorialReminder(player);
 }
 
-function renderTutorialGuide(player) {
+function renderTutorialGuide(player, forceOpen = false) {
     const objective = TUTORIAL_OBJECTIVES[player.tutorial_step];
 
     if (!objective) {
@@ -269,8 +312,9 @@ function renderTutorialGuide(player) {
         popupAlreadySeen = false;
     }
 
-    if (popupAlreadySeen) {
+    if (popupAlreadySeen && !forceOpen) {
         removeTutorialGuide();
+        showTutorialReminder(player);
         return;
     }
 
@@ -389,9 +433,17 @@ function applyTutorialHighlights(step) {
 
     const selectorsByStep = {
         0: ["#king-dialogue-card", "#king-actions button"],
-        1: ["#birch-card", "#chop-birch"],
+        1: [
+            "[data-gathering-filter='woodcutting']",
+            "[data-gather-node='birch_tree']",
+            "[data-gather-node='birch_tree']" + " button"
+        ],
         2: ["#saw-birch-button"],
-        3: ["#bog-iron-card", "#gather-bog-iron"],
+        3: [
+            "[data-gathering-filter='mining']",
+            "[data-gather-node='bog_iron']",
+            "[data-gather-node='bog_iron']" + " button"
+        ],
         4: ["#forge-iron-bar-button"],
         5: ["#forge-hoop-button"],
         6: ["#craft-bucket-button"],
@@ -406,9 +458,16 @@ function applyTutorialHighlights(step) {
     };
 
     (selectorsByStep[step] || []).forEach(selector => {
-        document.querySelectorAll(selector).forEach(highlightTutorialElement);
+        document.querySelectorAll(selector).forEach(element => {
+            highlightTutorialElement(element);
+
+            if (element.matches?.("[data-gather-node]")) {
+                highlightTutorialElement(element.closest(".gathering-engine-card"));
+            }
+        });
     });
 }
+
 
 let tutorialMutationObserver = null;
 let observedTutorialStep = null;
