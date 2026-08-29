@@ -131,7 +131,7 @@ function renderPropertyStationCards() {
   if (CURRENT_PROPERTY_LEVEL >= 3) {
     replacePropertyCardWithLink(
       forgeCard,
-      "forge.html",
+      "property-forge.html",
       `Open Forge · Level ${CURRENT_PROPERTY_LEVEL - 2}`
     );
   } else if (forgeCard) {
