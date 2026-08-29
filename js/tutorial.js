@@ -62,7 +62,7 @@ async function getTutorialProgress() {
     if (!user) return null;
     const { data, error } = await supabaseClient
         .from("players")
-        .select("tutorial_step, tutorial_complete, tutorial_progress, is_free_man, kings_tax_rate")
+        .select("id, tutorial_step, tutorial_complete, tutorial_progress, is_free_man, kings_tax_rate")
         .eq("id", user.id)
         .single();
     if (error) {
@@ -228,9 +228,48 @@ function getTutorialProgressDisplay(player, objective) {
     `;
 }
 
+function tutorialPopupStorageKey(player) {
+    const playerKey = player?.id || "player";
+    return `midgard-tutorial-popup:${playerKey}:${player?.tutorial_step}`;
+}
+
+function dismissTutorialPopup(player) {
+    try {
+        sessionStorage.setItem(
+            tutorialPopupStorageKey(player),
+            "seen"
+        );
+    } catch (error) {
+        // The tutorial still works if browser storage is unavailable.
+    }
+
+    removeTutorialGuide();
+}
+
 function renderTutorialGuide(player) {
     const objective = TUTORIAL_OBJECTIVES[player.tutorial_step];
+
     if (!objective) {
+        removeTutorialGuide();
+        return;
+    }
+
+    /*
+       The old tutorial felt like a guided adventure rather than
+       another permanent panel on the page. Restore that behaviour:
+       show one popup when each tutorial step is first reached, then
+       leave the relevant navigation/card flashing after dismissal.
+    */
+    let popupAlreadySeen = false;
+
+    try {
+        popupAlreadySeen =
+            sessionStorage.getItem(tutorialPopupStorageKey(player)) === "seen";
+    } catch (error) {
+        popupAlreadySeen = false;
+    }
+
+    if (popupAlreadySeen) {
         removeTutorialGuide();
         return;
     }
@@ -238,45 +277,88 @@ function renderTutorialGuide(player) {
     let guide = document.getElementById("tutorial-guide");
 
     if (!guide) {
-        guide = document.createElement("section");
+        guide = document.createElement("div");
         guide.id = "tutorial-guide";
-        guide.className = "tutorial-guide";
-
-        const mainArea = document.querySelector("main.main-area") || document.querySelector("main");
-        const topbar = document.getElementById("topbar");
-        const pageHeader = document.querySelector(".page-header");
-
-        if (pageHeader?.parentNode) {
-            pageHeader.parentNode.insertBefore(guide, pageHeader);
-        } else if (topbar?.parentNode) {
-            topbar.insertAdjacentElement("afterend", guide);
-        } else if (mainArea) {
-            mainArea.prepend(guide);
-        } else {
-            document.body.prepend(guide);
-        }
+        guide.className = "tutorial-popup-backdrop";
+        guide.setAttribute("role", "dialog");
+        guide.setAttribute("aria-modal", "true");
+        guide.setAttribute("aria-labelledby", "tutorial-popup-title");
+        document.body.appendChild(guide);
     }
 
-    const currentPage = window.location.pathname.split("/").pop() || "home.html";
-    const destinationPage = String(objective.href || "").split("/").pop();
-    const alreadyAtDestination = currentPage === destinationPage;
+    const currentPage =
+        window.location.pathname.split("/").pop() || "home.html";
+
+    const destinationPage =
+        String(objective.href || "").split("/").pop();
+
+    const alreadyAtDestination =
+        currentPage === destinationPage;
 
     guide.innerHTML = `
-        <div class="tutorial-guide-icon">📜</div>
-        <div class="tutorial-guide-content">
-            <div class="tutorial-guide-kicker">THE KING'S CHALLENGE</div>
-            <h2>${objective.title}</h2>
-            <p>${objective.text}</p>
+        <section class="tutorial-popup-card">
+            <div class="tutorial-popup-seal" aria-hidden="true">📜</div>
+
+            <div class="tutorial-guide-kicker">
+                THE KING'S CHALLENGE
+            </div>
+
+            <h2 id="tutorial-popup-title">
+                ${objective.title}
+            </h2>
+
+            <p class="tutorial-popup-message">
+                ${objective.text}
+            </p>
+
             ${getTutorialProgressDisplay(player, objective)}
+
             <div class="tutorial-guide-route">
-                <span>Next location:</span>
+                <span>Next location</span>
                 <strong>${objective.route}</strong>
             </div>
-        </div>
-        <a class="tutorial-guide-button${alreadyAtDestination ? " current-location" : ""}" href="${objective.href}">
-            ${alreadyAtDestination ? "📍 You are here" : objective.button}
-        </a>
+
+            <div class="tutorial-popup-actions">
+                <button
+                    type="button"
+                    class="tutorial-popup-secondary"
+                    id="tutorial-popup-dismiss"
+                >
+                    Got it
+                </button>
+
+                <a
+                    class="tutorial-guide-button${alreadyAtDestination ? " current-location" : ""}"
+                    href="${alreadyAtDestination ? "#" : objective.href}"
+                    id="tutorial-popup-go"
+                >
+                    ${alreadyAtDestination ? "📍 You are here" : objective.button}
+                </a>
+            </div>
+
+            <p class="tutorial-popup-hint">
+                The next place you need will keep glowing after this message closes.
+            </p>
+        </section>
     `;
+
+    const dismissButton =
+        document.getElementById("tutorial-popup-dismiss");
+
+    dismissButton?.addEventListener("click", () => {
+        dismissTutorialPopup(player);
+    });
+
+    const goButton =
+        document.getElementById("tutorial-popup-go");
+
+    goButton?.addEventListener("click", event => {
+        dismissTutorialPopup(player);
+
+        if (alreadyAtDestination) {
+            event.preventDefault();
+        }
+    });
 }
 
 function clearTutorialHighlights() {

@@ -55,6 +55,7 @@ async function updateNavigation() {
         .select(`
             tutorial_complete,
             is_free_man,
+            property_level,
             hospital_until
         `)
         .eq("id", user.id)
@@ -71,41 +72,44 @@ async function updateNavigation() {
     }
 
 
-    /* Property lock */
+    /* =====================================
+       PROPERTY OWNERSHIP
 
-    const propertyLink =
-        document.getElementById(
-            "property-nav"
-        );
+       A Thrall does not own a homestead.
+       The entire Property menu stays hidden until the
+       King grants freedom at the end of the tutorial.
+    ===================================== */
+
+    const propertyGroup =
+        document.getElementById("property-nav-group");
 
     const propertyUnlocked =
-        player?.tutorial_complete &&
-        player?.is_free_man;
-
-    if (
-        propertyLink &&
-        !propertyUnlocked
-    ) {
-
-        propertyLink.href = "#";
-
-        propertyLink.innerHTML =
-            "🔒 Property";
-
-        propertyLink.classList.add(
-            "locked-nav"
+        Boolean(
+            player?.tutorial_complete &&
+            player?.is_free_man
         );
 
-        propertyLink.onclick = event => {
+    if (propertyGroup) {
+        propertyGroup.hidden = !propertyUnlocked;
+    }
 
-            event.preventDefault();
+    /* Do not allow an unfinished tutorial player to bypass
+       the hidden navigation with an old bookmark/direct URL. */
+    const propertyOnlyPages = new Set([
+        "property.html",
+        "storage.html",
+        "wagon-shed.html"
+    ]);
 
-            alert(
-                "Earn your freedom from King Harald before claiming land."
-            );
+    const currentPropertyPage =
+        window.location.pathname.split("/").pop() || "home.html";
 
-        };
-
+    if (
+        !propertyUnlocked &&
+        propertyOnlyPages.has(currentPropertyPage)
+    ) {
+        window.location.replace("home.html");
+        return;
     }
 
 
