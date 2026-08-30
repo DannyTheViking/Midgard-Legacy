@@ -116,29 +116,83 @@ function renderResult() {
     const existing = document.getElementById("combat-result");
     existing?.remove();
     if (combatState?.status === "active") return;
-    const { you } = getYouAndThem();
+
+    const { you, them } = getYouAndThem();
     const won = combatState.winner_id && combatState.winner_id === you?.id;
     const fled = String(combatState.status || "").includes("fled");
     const crowd = combatState.status === "crowd_intervened";
+    const resolved = Boolean(combatState.resolution);
+    const loot = Array.isArray(combatState.stolen_loot) ? combatState.stolen_loot : [];
     const result = document.createElement("section");
     result.id = "combat-result";
     result.className = "combat-result";
-    result.innerHTML = crowd
-        ? `<h2>👥 The Crowd Intervened</h2><p>Thirty attacks were enough. Villagers flooded the fight and pulled both Vikings apart.</p>`
-        : fled
-            ? `<h2>🏃 Fight Ended</h2><p>The battle ended when a fighter escaped.</p>`
-        : won
-            ? `<h2>⚔️ Victory</h2><p>You won the battle. The complete attack log is saved in your notifications.</p>`
-            : `<h2>🛡️ Defeat</h2><p>You were defeated. The complete attack log has been saved.</p>`;
+
+    if (crowd) {
+        result.innerHTML = `<h2>👥 The Crowd Intervened</h2><p>Thirty attacks were enough. Villagers flooded the fight and pulled both Vikings apart.</p>`;
+    } else if (fled) {
+        result.innerHTML = `<h2>🏃 Fight Ended</h2><p>The battle ended when a fighter escaped.</p>`;
+    } else if (won) {
+        const lootHtml = loot.length
+            ? `<div class="combat-loot-summary"><strong>👜 Stolen loot</strong>${loot.map(item => `<span>${Number(item.quantity || 0).toLocaleString()} × ${combatEscape(item.name)} <em>(${combatEscape(item.source)})</em></span>`).join("")}</div>`
+            : "";
+        const choiceHtml = resolved
+            ? `<p class="combat-resolution-done">${combatState.resolution === "steal" ? "👜 You searched their Backpack and active cart." : "🚶 You abandoned them and left with the successful win only."}</p>${lootHtml}`
+            : `<div class="combat-victory-actions">
+                    <button type="button" class="combat-resolution-button abandon" data-resolution="abandon">🚶 Abandon</button>
+                    <button type="button" class="combat-resolution-button steal" data-resolution="steal">👜 Steal 10%</button>
+               </div>
+               <p class="combat-resolution-note">Abandon keeps only your successful win. Steal also takes 10% of each eligible stack in their Backpack and active cart. Storage Yard items are safe.</p>`;
+        result.innerHTML = `<h2>⚔️ Victory</h2><p>You defeated ${combatEscape(them?.username || "your opponent")}.</p>${choiceHtml}`;
+    } else {
+        result.innerHTML = `<h2>🛡️ Defeat</h2><p>You were defeated. The complete attack log has been saved.</p>`;
+    }
+
     document.getElementById("combat-controls").after(result);
+    result.querySelectorAll("[data-resolution]").forEach(button => {
+        button.addEventListener("click", () => resolveVictory(button.dataset.resolution));
+    });
+}
+
+async function resolveVictory(choice) {
+    if (combatBusy || !combatFightId) return;
+    combatBusy = true;
+    document.querySelectorAll(".combat-resolution-button").forEach(button => button.disabled = true);
+    combatMessage(choice === "steal" ? "Searching their Backpack and cart..." : "Leaving the defeated Viking behind...");
+    const { data, error } = await supabaseClient.rpc("resolve_combat_victory", {
+        p_fight_id: Number(combatFightId),
+        p_choice: choice
+    });
+    combatBusy = false;
+    if (error) {
+        combatMessage(error.message || "Could not finish the victory action.", "error");
+        document.querySelectorAll(".combat-resolution-button").forEach(button => button.disabled = false);
+        return;
+    }
+    combatState = data;
+    combatMessage(choice === "steal" ? "Loot taken." : "You left with the win.", "success");
+    renderCombat();
+    if (typeof loadTopBarPlayer === "function") await loadTopBarPlayer();
 }
 
 function setActionAvailability() {
     const { you, youAreAttacker } = getYouAndThem();
     const active = combatState?.status === "active" && youAreAttacker;
     document.querySelectorAll(".combat-action-button").forEach(button => button.disabled = combatBusy || !active);
+
+    const hasMelee = Boolean(you?.equipment?.main_hand);
+    ["slash", "stab"].forEach(action => {
+        const button = document.querySelector(`[data-action="${action}"]`);
+        if (button && active && !hasMelee) {
+            button.disabled = true;
+            button.title = "Equip a melee weapon first";
+        }
+    });
+
     const shoot = document.querySelector('[data-action="shoot"]');
-    if (shoot && active && (!you?.equipment?.ranged || Number(you?.equipment?.arrow_count || 0) < 1)) shoot.disabled = true;
+    if (shoot && active && (!you?.equipment?.ranged || Number(you?.equipment?.arrow_count || 0) < 1)) {
+        shoot.disabled = true;
+        shoot.title = !you?.equipment?.ranged ? "Equip a bow first" : "You have no Arrows";
+    }
 }
 
 function renderCombat() {
