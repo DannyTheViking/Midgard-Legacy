@@ -1569,12 +1569,12 @@ async function loadOtherPlayerActions(
 
             <button
                 type="button"
+                id="attack-player-button"
                 class="profile-action-button"
-                disabled
             >
                 <span>⚔️</span>
                 Attack
-                <small>Coming soon</small>
+                <small>Enter battle</small>
             </button>
 
             <button
@@ -1599,6 +1599,12 @@ async function loadOtherPlayerActions(
 
         </div>
     `;
+
+    document
+        .getElementById("attack-player-button")
+        ?.addEventListener("click", function () {
+            window.location.href = `combat.html?target=${encodeURIComponent(viewedPlayerId)}`;
+        });
 
     document
         .getElementById(

@@ -53,7 +53,10 @@ function renderPlayerRows(players) {
                 <div class="player-directory-stat"><span>Total Skill</span><strong>${Number(player.total_skill || 1).toLocaleString()}</strong></div>
                 <div class="player-directory-stat"><span>Status</span><strong>${playerEscape(player.freedom_status)}</strong></div>
                 <div class="player-directory-stat"><span>Reputation</span><strong>${Number(player.reputation || 0).toLocaleString()}</strong></div>
-                <a class="player-profile-button" href="profile.html?id=${encodeURIComponent(player.player_number)}">View Profile</a>
+                <div class="player-directory-actions">
+                    <a class="player-profile-button" href="profile.html?id=${encodeURIComponent(player.player_number)}">View Profile</a>
+                    ${player.freedom_status === "Freeman" ? `<a class="player-attack-button" href="combat.html?player=${encodeURIComponent(player.player_number)}">⚔️ Attack</a>` : ""}
+                </div>
             </article>`;
     }).join("");
 }

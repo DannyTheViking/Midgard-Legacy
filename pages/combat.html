@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-midgard-auth="checking">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Midgard Legacy - Battle</title>
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=9">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/combat.css?v=1">
+</head>
+<body>
+<div class="game-layout">
+    <div id="sidebar"></div>
+    <main class="main-area">
+        <div id="topbar"></div>
+        <div class="game-page combat-page">
+            <section class="game-page-header combat-header">
+                <div class="game-page-heading">
+                    <p class="combat-kicker">⚔️ PLAYER BATTLE</p>
+                    <h1 id="combat-title">Preparing battle...</h1>
+                    <p>Choose where to aim, choose your attack, and watch the fight unfold turn by turn.</p>
+                </div>
+                <div id="combat-status-badge" class="game-badge">Loading...</div>
+            </section>
+
+            <div id="combat-message" class="combat-message" role="status" aria-live="polite"></div>
+
+            <section id="combat-arena" class="combat-arena" hidden>
+                <article id="fighter-you" class="fighter-card fighter-you"></article>
+
+                <div class="combat-versus" aria-hidden="true">VS</div>
+
+                <article id="fighter-them" class="fighter-card fighter-them"></article>
+            </section>
+
+            <section id="combat-controls" class="combat-controls" hidden>
+                <div class="combat-aim-panel">
+                    <div>
+                        <span class="combat-control-label">Aim at</span>
+                        <strong id="combat-aim-label">Torso</strong>
+                    </div>
+                    <div class="combat-body-targets" id="combat-body-targets">
+                        <button type="button" data-part="head">Head</button>
+                        <button type="button" data-part="torso" class="active">Torso</button>
+                        <button type="button" data-part="left_arm">L Arm</button>
+                        <button type="button" data-part="right_arm">R Arm</button>
+                        <button type="button" data-part="left_hand">L Hand</button>
+                        <button type="button" data-part="right_hand">R Hand</button>
+                        <button type="button" data-part="left_leg">L Leg</button>
+                        <button type="button" data-part="right_leg">R Leg</button>
+                        <button type="button" data-part="left_foot">L Foot</button>
+                        <button type="button" data-part="right_foot">R Foot</button>
+                    </div>
+                </div>
+
+                <div class="combat-action-bar">
+                    <button type="button" class="combat-action-button" data-action="slash"><span>🪓</span><strong>Slash</strong></button>
+                    <button type="button" class="combat-action-button" data-action="stab"><span>🗡️</span><strong>Stab</strong></button>
+                    <button type="button" class="combat-action-button" data-action="shoot"><span>🏹</span><strong>Shoot</strong></button>
+                    <button type="button" class="combat-action-button" data-action="use_item"><span>🩹</span><strong>Use Bandage</strong></button>
+                    <button type="button" class="combat-action-button combat-flee-button" data-action="flee"><span>🏃</span><strong>Flee</strong></button>
+                </div>
+            </section>
+
+            <section id="combat-loadout" class="combat-loadout" hidden></section>
+
+            <section class="combat-log-panel">
+                <header>
+                    <div>
+                        <span>📜</span>
+                        <div><h2>Attack Log</h2><p>Every hit, miss, arrow and counterattack.</p></div>
+                    </div>
+                    <button id="combat-refresh" type="button">↻ Refresh</button>
+                </header>
+                <div id="combat-log" class="combat-log"><p class="combat-log-empty">No attacks yet.</p></div>
+            </section>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/constants.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/game-utils.js"></script>
+<script src="../js/components.js?v=5"></script>
+<script src="../js/tutorial.js?v=12"></script>
+<script src="../js/combat.js?v=1"></script>
+</body>
+</html>
