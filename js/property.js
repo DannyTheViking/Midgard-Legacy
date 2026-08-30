@@ -115,17 +115,29 @@ function replacePropertyCardWithLink(card, href, statusText) {
 
 function renderPropertyStationCards() {
   const workbenchCard = document.getElementById("workbench-building-card");
+  const cookingFireCard = document.getElementById("cooking-fire-building-card");
   const forgeCard = document.getElementById("forge-building-card");
 
-  if (CURRENT_PROPERTY_LEVEL >= 0) {
+  if (CURRENT_PROPERTY_LEVEL >= 1) {
     replacePropertyCardWithLink(
       workbenchCard,
       "workbench.html",
       `Open Workbench · Level ${Math.max(1, CURRENT_PROPERTY_LEVEL)}`
     );
-  } else if (workbenchCard) {
-    const status = workbenchCard.querySelector(".homestead-work-status");
-    if (status) status.textContent = "🔒 Requires Property Level 1";
+    replacePropertyCardWithLink(
+      cookingFireCard,
+      "cooking-fire.html",
+      "Open Cooking Fire"
+    );
+  } else {
+    if (workbenchCard) {
+      const status = workbenchCard.querySelector(".homestead-work-status");
+      if (status) status.textContent = "🔒 Requires Upgraded Shack";
+    }
+    if (cookingFireCard) {
+      const status = cookingFireCard.querySelector(".homestead-work-status");
+      if (status) status.textContent = "🔒 Requires Upgraded Shack";
+    }
   }
 
   if (CURRENT_PROPERTY_LEVEL >= 3) {

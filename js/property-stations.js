@@ -88,3 +88,35 @@ async function requirePropertyStation(stationName, requiredLevel = 1) {
 
     return true;
 }
+
+
+function lockPropertyLevelPage(displayName, requiredPropertyLevel, currentPropertyLevel) {
+    document.querySelectorAll("button, input, select").forEach(element => {
+        if (element.closest("#sidebar") || element.closest("#topbar")) return;
+        element.disabled = true;
+    });
+
+    const page = document.querySelector(".game-page");
+    if (!page || document.getElementById("property-level-lock")) return;
+
+    const notice = document.createElement("section");
+    notice.id = "property-level-lock";
+    notice.className = "game-panel";
+    notice.innerHTML = `
+        <h2>🔒 ${displayName} Locked</h2>
+        <p>This area unlocks when your Broken Shack is repaired into an Upgraded Shack.</p>
+        <p>Your current property level is ${currentPropertyLevel}. Property Level ${requiredPropertyLevel} is required.</p>
+        <a class="forge-button" href="property.html">🏡 Open Your Property</a>
+    `;
+    page.prepend(notice);
+}
+
+async function requirePropertyLevel(displayName, requiredPropertyLevel = 1) {
+    const stations = await loadMyPropertyStations();
+    if (!stations) return false;
+    if (stations.propertyLevel < requiredPropertyLevel) {
+        lockPropertyLevelPage(displayName, requiredPropertyLevel, stations.propertyLevel);
+        return false;
+    }
+    return true;
+}
