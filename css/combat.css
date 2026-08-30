@@ -22,6 +22,8 @@
 .combat-resolution-done{color:#e0c17b;font-weight:700}
 .combat-loot-summary{display:flex;flex-direction:column;gap:4px;max-width:620px;margin:12px auto 0;padding:12px;border:1px solid #5d4425;border-radius:8px;background:#18130f;text-align:left}
 .combat-loot-summary span{display:block;color:#dfcba5}.combat-loot-summary em{color:#9e8f76;font-style:normal}
+.combat-return-link{display:inline-flex;margin-top:14px;padding:11px 16px;border:1px solid #80602c;border-radius:8px;background:#3b2a16;color:#f0d18d;text-decoration:none;font-weight:700}
+.combat-return-link:hover{border-color:#d4a644;color:#fff1bd}
 @media(max-width:640px){.combat-victory-actions{grid-template-columns:1fr}}
 
 /* Update 057: full-body equipment figures. These rules intentionally override

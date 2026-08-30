@@ -6,6 +6,7 @@ let combatState = null;
 let combatFightId = null;
 let combatBusy = false;
 let combatCurrentUserId = null;
+let combatMode = "pvp";
 
 function combatEscape(value) {
     return String(value ?? "")
@@ -116,19 +117,28 @@ function renderResult() {
     } else if (fled) {
         result.innerHTML = `<h2>🏃 Fight Ended</h2><p>The battle ended when a fighter escaped.</p>`;
     } else if (won) {
+        const patronJob = combatMode === "patron";
+        const recoveryQuantity = Number(combatState?.job?.recovery_quantity || 0);
+        const recoveryItem = combatState?.job?.recovery_item_name || "mission goods";
         const lootHtml = loot.length
             ? `<div class="combat-loot-summary"><strong>👜 Stolen loot</strong>${loot.map(item => `<span>${Number(item.quantity || 0).toLocaleString()} × ${combatEscape(item.name)} <em>(${combatEscape(item.source)})</em></span>`).join("")}</div>`
             : "";
         const choiceHtml = resolved
-            ? `<p class="combat-resolution-done">${combatState.resolution === "steal" ? "👜 You searched their Backpack and active cart." : "🚶 You abandoned them and left with the successful win only."}</p>${lootHtml}`
+            ? `<p class="combat-resolution-done">${combatState.resolution === "steal"
+                ? patronJob
+                    ? `👜 You recovered ${recoveryQuantity.toLocaleString()} ${combatEscape(recoveryItem)} for the client.`
+                    : "👜 You searched their Backpack and active cart."
+                : "🚶 You abandoned them and left with the successful win only."}</p>${lootHtml}${patronJob && combatState.resolution === "steal" ? '<a class="combat-return-link" href="missions.html">Return to your patron</a>' : ""}`
             : `<div class="combat-victory-actions">
                     <button type="button" class="combat-resolution-button abandon" data-resolution="abandon">🚶 Abandon</button>
-                    <button type="button" class="combat-resolution-button steal" data-resolution="steal">👜 Steal 10%</button>
+                    <button type="button" class="combat-resolution-button steal" data-resolution="steal">👜 ${patronJob ? `Steal ${recoveryQuantity.toLocaleString()} ${combatEscape(recoveryItem)}` : "Steal 10%"}</button>
                </div>
-               <p class="combat-resolution-note">Abandon keeps only your successful win. Steal also takes 10% of each eligible stack in their Backpack and active cart. Storage Yard items are safe.</p>`;
-        result.innerHTML = `<h2>⚔️ Victory</h2><p>You defeated ${combatEscape(them?.username || "your opponent")}.</p>${choiceHtml}`;
+               <p class="combat-resolution-note">${patronJob
+                    ? `Your patron guaranteed that ${recoveryQuantity.toLocaleString()} ${combatEscape(recoveryItem)} are on this target. Choose Steal to recover them and progress the favour.`
+                    : "Abandon keeps only your successful win. Steal also takes 10% of each eligible stack in their Backpack and active cart. Storage Yard items are safe."}</p>`;
+        result.innerHTML = `<h2>⚔️ Victory</h2><p>You defeated ${combatEscape(them?.username || "your opponent")}.${patronJob ? " Finish the collection for your patron." : ""}</p>${choiceHtml}`;
     } else {
-        result.innerHTML = `<h2>🛡️ Defeat</h2><p>You were defeated. The complete attack log has been saved.</p>`;
+        result.innerHTML = `<h2>🛡️ Defeat</h2><p>You were defeated. ${combatMode === "patron" ? "Recover in the healer hut, then return to the patron and try the target again." : "The complete attack log has been saved."}</p>`;
     }
 
     document.getElementById("combat-controls").after(result);
@@ -142,7 +152,8 @@ async function resolveVictory(choice) {
     combatBusy = true;
     document.querySelectorAll(".combat-resolution-button").forEach(button => button.disabled = true);
     combatMessage(choice === "steal" ? "Searching their Backpack and cart..." : "Leaving the defeated Viking behind...");
-    const { data, error } = await supabaseClient.rpc("resolve_combat_victory", {
+    const rpcName = combatMode === "patron" ? "resolve_patron_enforcement_victory" : "resolve_combat_victory";
+    const { data, error } = await supabaseClient.rpc(rpcName, {
         p_fight_id: Number(combatFightId),
         p_choice: choice
     });
@@ -153,7 +164,7 @@ async function resolveVictory(choice) {
         return;
     }
     combatState = data;
-    combatMessage(choice === "steal" ? "Loot taken." : "You left with the win.", "success");
+    combatMessage(choice === "steal" ? (combatMode === "patron" ? "The client's goods were recovered." : "Loot taken.") : "You left with the win.", "success");
     renderCombat();
     if (typeof loadTopBarPlayer === "function") await loadTopBarPlayer();
 }
@@ -188,9 +199,9 @@ function renderCombat() {
     if (!combatState) return;
     const { you, them, youAreAttacker } = getYouAndThem();
     document.getElementById("combat-title").textContent = `${you.username} vs ${them.username}`;
-    document.getElementById("combat-status-badge").textContent = combatState.status === "active" ? "⚔️ Battle Active" : "📜 Battle Ended";
+    document.getElementById("combat-status-badge").textContent = combatState.status === "active" ? (combatMode === "patron" ? "🗝️ Patron Job" : "⚔️ Battle Active") : "📜 Battle Ended";
     renderFighter("fighter-you", you, "YOU");
-    renderFighter("fighter-them", them, "OPPONENT");
+    renderFighter("fighter-them", them, combatMode === "patron" ? "JOB TARGET" : "OPPONENT");
     document.getElementById("combat-arena").hidden = false;
     document.getElementById("combat-controls").hidden = !youAreAttacker;
     renderLoadout();
@@ -201,7 +212,8 @@ function renderCombat() {
 
 async function loadFight() {
     if (!combatFightId) return;
-    const { data, error } = await supabaseClient.rpc("get_combat_fight", { p_fight_id: Number(combatFightId) });
+    const rpcName = combatMode === "patron" ? "get_patron_enforcement_fight" : "get_combat_fight";
+    const { data, error } = await supabaseClient.rpc(rpcName, { p_fight_id: Number(combatFightId) });
     if (error) {
         combatMessage(error.message || "Could not load fight.", "error");
         return;
@@ -259,7 +271,8 @@ async function doCombatAction(action) {
     combatBusy = true;
     setActionAvailability();
     combatMessage(action === "shoot" ? "Loose arrow..." : action === "flee" ? "Trying to escape..." : "Attacking...");
-    const { data, error } = await supabaseClient.rpc("perform_combat_action", {
+    const rpcName = combatMode === "patron" ? "perform_patron_enforcement_action" : "perform_combat_action";
+    const { data, error } = await supabaseClient.rpc(rpcName, {
         p_fight_id: Number(combatFightId),
         p_action: action,
         p_body_part: null
@@ -294,9 +307,17 @@ function setupCombatControls() {
     setupCombatControls();
     const params = new URLSearchParams(window.location.search);
     const fight = Number(params.get("fight") || 0);
+    const patronFight = Number(params.get("patron_fight") || 0);
     const target = params.get("target");
     const playerNumber = Number(params.get("player") || 0);
+    if (patronFight > 0) {
+        combatMode = "patron";
+        combatFightId = patronFight;
+        await loadFight();
+        return;
+    }
     if (fight > 0) {
+        combatMode = "pvp";
         combatFightId = fight;
         await loadFight();
         return;

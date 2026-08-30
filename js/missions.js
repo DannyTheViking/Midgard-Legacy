@@ -119,6 +119,11 @@ function renderMainMission(contact) {
     const enough = owned >= required;
     const dailyFull = Number(missionState.daily_completed || 0) >= Number(missionState.daily_limit || 5);
 
+    if (mission.mission_type === "enforcement") {
+        renderEnforcementMission(contact, mission, { owned, required, enough, dailyFull });
+        return;
+    }
+
     card.innerHTML = `
         <header class="mission-contract-heading">
             <div>
@@ -144,6 +149,50 @@ function renderMainMission(contact) {
     `;
 
     document.getElementById("complete-main-mission")?.addEventListener("click", () => completeMainMission(contact.contact_no));
+}
+
+function renderEnforcementMission(contact, mission, { owned, required, enough, dailyFull }) {
+    const card = document.getElementById("mission-main-card");
+    const recovered = mission.enforcement_state === "recovered";
+    const fightId = Number(mission.enforcement_fight_id || 0);
+    const targetName = mission.target_name || "the assigned target";
+    const actionLabel = fightId > 0 ? "Continue the Fight" : `Confront ${targetName}`;
+
+    card.innerHTML = `
+        <header class="mission-contract-heading">
+            <div>
+                <p>ENFORCEMENT FAVOUR ${mission.mission_no} / 100</p>
+                <h2>${missionEscape(mission.title)}</h2>
+            </div>
+            <span class="mission-difficulty enforcement">Enforcement</span>
+        </header>
+        <div class="mission-story">${missionEscape(mission.story_text)}</div>
+        <section class="mission-enforcement-target">
+            <div class="mission-target-mark" aria-hidden="true">⚔️</div>
+            <div>
+                <p class="mission-section-label">TARGET</p>
+                <h3>${missionEscape(targetName)}</h3>
+                <p>Their Strength, Defence, Agility, Accuracy and starting Health will match yours when the fight begins.</p>
+            </div>
+        </section>
+        <section class="mission-task-box">
+            <p class="mission-section-label">RECOVER FOR THE CLIENT</p>
+            <h3>${required.toLocaleString()} ${missionEscape(mission.request_item_name)}</h3>
+            ${recovered
+                ? `<p class="mission-recovered">✅ Goods recovered. You have <strong>${owned.toLocaleString()} / ${required.toLocaleString()}</strong> ready to hand over.</p>`
+                : `<p>Beat ${missionEscape(targetName)}, then choose <strong>Steal ${required.toLocaleString()} ${missionEscape(mission.request_item_name)}</strong>. The assigned goods are guaranteed to be on this mission target.</p>`}
+        </section>
+        <section class="mission-reward-box">
+            <p class="mission-section-label">PAYMENT</p>
+            ${rewardHTML(mission)}
+        </section>
+        ${recovered
+            ? `<button id="complete-main-mission" class="mission-accept-button" type="button" ${(!enough || dailyFull) ? "disabled" : ""}>${dailyFull ? "Daily Limit Reached" : enough ? `Hand the Goods to ${missionEscape(contact.name)}` : "Recovered Goods Missing"}</button>`
+            : `<button id="start-enforcement-fight" class="mission-accept-button enforcement-button" type="button">${missionEscape(actionLabel)}</button>`}
+    `;
+
+    document.getElementById("complete-main-mission")?.addEventListener("click", () => completeMainMission(contact.contact_no));
+    document.getElementById("start-enforcement-fight")?.addEventListener("click", () => startEnforcementFight(contact.contact_no));
 }
 
 function renderBonuses(contact) {
@@ -193,13 +242,27 @@ function renderMissions() {
 
 async function loadMissions({ quiet = false } = {}) {
     if (!quiet) missionMessage("Loading patron favours...");
-    const { data, error } = await supabaseClient.rpc("get_my_viking_missions");
-    if (error) {
+    const [missionResult, enforcementResult] = await Promise.all([
+        supabaseClient.rpc("get_my_viking_missions"),
+        supabaseClient.rpc("get_my_patron_enforcement_jobs")
+    ]);
+    if (missionResult.error || enforcementResult.error) {
+        const error = missionResult.error || enforcementResult.error;
         console.error("Mission load failed:", error);
         missionMessage(error.message || "Could not load Viking Missions.", "error");
         return;
     }
-    missionState = data;
+    missionState = missionResult.data;
+    const enforcementByContact = new Map(
+        (Array.isArray(enforcementResult.data) ? enforcementResult.data : [])
+            .map(job => [Number(job.contact_no), job])
+    );
+    (missionState?.contacts || []).forEach(contact => {
+        const enforcement = enforcementByContact.get(Number(contact.contact_no));
+        if (enforcement && contact.current_mission) {
+            contact.current_mission = { ...contact.current_mission, ...enforcement };
+        }
+    });
     missionMessage("");
     renderMissions();
 }
@@ -218,6 +281,21 @@ async function completeMainMission(contactNo) {
     missionMessage(`Job complete. You earned ${Number(data.reward_silver || 0)} Silver.${debtText}${bonusText}`, "success");
     await loadMissions({ quiet: true });
     if (typeof loadTopBarPlayer === "function") await loadTopBarPlayer();
+}
+
+async function startEnforcementFight(contactNo) {
+    missionMessage("Your patron is arranging the meeting...");
+    const button = document.getElementById("start-enforcement-fight");
+    if (button) button.disabled = true;
+    const { data, error } = await supabaseClient.rpc("start_patron_enforcement", {
+        p_contact_no: Number(contactNo)
+    });
+    if (error) {
+        missionMessage(error.message, "error");
+        if (button) button.disabled = false;
+        return;
+    }
+    window.location.href = `combat.html?patron_fight=${encodeURIComponent(data.fight_id)}`;
 }
 
 async function acceptPatronAdvance(contactNo) {
