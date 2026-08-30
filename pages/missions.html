@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/style.css?v=9">
     <link rel="stylesheet" href="../css/game-panels.css?v=1">
     <link rel="stylesheet" href="../css/missions.css?v=1">
+    <link rel="stylesheet" href="../css/mission-patron.css?v=1">
 </head>
 <body>
 <div class="game-layout">
@@ -17,12 +18,12 @@
         <div class="game-page mission-page">
             <section class="game-page-header mission-header">
                 <div class="game-page-heading">
-                    <p class="mission-kicker">📜 VILLAGE CONTRACTS</p>
-                    <h1>Viking Missions</h1>
-                    <p>Build trust with ten people across Midgard. Only the next main mission is shown, and you may complete five main missions each day.</p>
+                    <p class="mission-kicker">🗝️ VILLAGE PATRONS</p>
+                    <h1>Patron Favours</h1>
+                    <p>Powerful Vikings help people who are short of silver, food or protection. Ask a patron for help, then repay the favour by doing jobs for them.</p>
                 </div>
                 <div class="mission-daily-box">
-                    <span>Today's contracts</span>
+                    <span>Today's favours</span>
                     <strong id="mission-daily-count">0 / 5</strong>
                     <div class="mission-daily-track"><span id="mission-daily-fill"></span></div>
                     <small>Resets at midnight</small>
@@ -31,10 +32,10 @@
 
             <div id="mission-message" class="mission-message" role="status" aria-live="polite"></div>
 
-            <section class="mission-contact-strip-wrap" aria-label="Mission contacts">
-                <button id="mission-contact-prev" class="mission-strip-arrow" type="button" aria-label="Previous contacts">‹</button>
+            <section class="mission-contact-strip-wrap" aria-label="Village patrons">
+                <button id="mission-contact-prev" class="mission-strip-arrow" type="button" aria-label="Previous patrons">‹</button>
                 <div id="mission-contact-strip" class="mission-contact-strip"></div>
-                <button id="mission-contact-next" class="mission-strip-arrow" type="button" aria-label="Next contacts">›</button>
+                <button id="mission-contact-next" class="mission-strip-arrow" type="button" aria-label="Next patrons">›</button>
             </section>
 
             <section class="mission-workspace">
@@ -54,6 +55,6 @@
 <script src="../js/game-utils.js"></script>
 <script src="../js/components.js?v=5"></script>
 <script src="../js/tutorial.js?v=12"></script>
-<script src="../js/missions.js?v=1"></script>
+<script src="../js/missions.js?v=2"></script>
 </body>
 </html>

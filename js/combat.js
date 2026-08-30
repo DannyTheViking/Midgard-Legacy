@@ -26,16 +26,6 @@ function prettyPart(part) {
     return String(part || "torso").replaceAll("_", " ").replace(/\b\w/g, letter => letter.toUpperCase());
 }
 
-function fighterAvatar(player) {
-    return player.avatar_url
-        ? `<img src="${combatEscape(player.avatar_url)}" alt="${combatEscape(player.username)} avatar">`
-        : `<span class="fighter-avatar-fallback">🧔</span>`;
-}
-
-function gearChip(label, item, emptyText = "None") {
-    return `<div class="gear-chip"><b>${combatEscape(label)}</b>${combatEscape(item?.name || emptyText)}</div>`;
-}
-
 function renderFighter(targetId, player, label) {
     const node = document.getElementById(targetId);
     const hp = Math.max(0, Number(player.health || 0));
@@ -49,18 +39,12 @@ function renderFighter(targetId, player, label) {
             <span>${combatEscape(label)}</span>
         </header>
         <div class="fighter-stage">
-            <div class="fighter-gear left">
-                ${gearChip("Head", eq.head)}
-                ${gearChip("Shield", eq.defence)}
-                ${gearChip("Melee", eq.main_hand, "Bare hands")}
-            </div>
-            <div class="fighter-avatar-wrap">
-                <div class="fighter-avatar">${fighterAvatar(player)}</div>
-            </div>
-            <div class="fighter-gear">
-                ${gearChip("Body", eq.body)}
-                ${gearChip("Bow", eq.ranged)}
-                ${gearChip("Ammo", eq.ammo, `${Number(eq.arrow_count || 0)} Arrows`)}
+            <div class="fighter-figure-wrap">
+                ${window.MidgardCharacterDoll.render({
+                    bodyType: player.character_body_type,
+                    equipment: eq,
+                    label: `${player.username} wearing their equipped armour and weapons`
+                })}
             </div>
         </div>
         <div class="fighter-health">
@@ -91,7 +75,7 @@ function renderLoadout() {
     if (!you) return;
     const eq = you.equipment || {};
     area.innerHTML = `
-        <div class="loadout-card"><span>🗡️ Melee Weapon</span><strong>${combatEscape(eq.main_hand?.name || "Bare hands")}</strong><em>${eq.main_hand ? `Damage ${Number(eq.main_hand.damage || 0)}` : "Low damage"}</em></div>
+        <div class="loadout-card"><span>🗡️ Melee Weapon</span><strong>${combatEscape(eq.main_hand?.name || "No weapon equipped")}</strong><em>${eq.main_hand ? `Damage ${Number(eq.main_hand.damage || 0)}` : "Slash and Stab locked"}</em></div>
         <div class="loadout-card"><span>🏹 Ranged Weapon</span><strong>${combatEscape(eq.ranged?.name || "No bow equipped")}</strong><em>${eq.ranged ? `Damage ${Number(eq.ranged.damage || 0)}` : "Shoot unavailable"}</em></div>
         <div class="loadout-card"><span>🏹 Ammunition</span><strong>${Number(eq.arrow_count || 0).toLocaleString()} Arrows</strong><em>1 Arrow used per shot</em></div>
         <div class="loadout-card"><span>🛡️ Defence</span><strong>${combatEscape(eq.defence?.name || "No shield")}</strong><em>${combatEscape(eq.head?.name || "No helmet")}</em></div>`;
@@ -180,11 +164,16 @@ function setActionAvailability() {
     document.querySelectorAll(".combat-action-button").forEach(button => button.disabled = combatBusy || !active);
 
     const hasMelee = Boolean(you?.equipment?.main_hand);
+    const warning = document.getElementById("combat-weapon-warning");
+    if (warning) warning.hidden = !active || hasMelee;
     ["slash", "stab"].forEach(action => {
         const button = document.querySelector(`[data-action="${action}"]`);
-        if (button && active && !hasMelee) {
-            button.disabled = true;
-            button.title = "Equip a melee weapon first";
+        if (button) {
+            button.title = "";
+            if (active && !hasMelee) {
+                button.disabled = true;
+                button.title = "Equip a melee weapon first";
+            }
         }
     });
 
@@ -261,6 +250,12 @@ async function startFightByNumber(playerNumber) {
 
 async function doCombatAction(action) {
     if (combatBusy || !combatFightId) return;
+    const { you } = getYouAndThem();
+    if (["slash", "stab"].includes(action) && !you?.equipment?.main_hand) {
+        combatMessage("Equip a melee weapon in your Bedroom before using Slash or Stab.", "error");
+        setActionAvailability();
+        return;
+    }
     combatBusy = true;
     setActionAvailability();
     combatMessage(action === "shoot" ? "Loose arrow..." : action === "flee" ? "Trying to escape..." : "Attacking...");

@@ -46,7 +46,7 @@ function renderMissionContacts() {
         button.innerHTML = `
             <span class="mission-contact-portrait">${unlocked ? missionEscape(contact.icon) : "🔒"}</span>
             <strong>${unlocked ? missionEscape(contact.name) : "Locked"}</strong>
-            <small>${unlocked ? `${Number(contact.main_completed || 0)}/100` : `Contact ${contact.contact_no}`}</small>
+            <small>${unlocked ? `${Number(contact.main_completed || 0)}/100` : `Patron ${contact.contact_no}`}</small>
         `;
         button.addEventListener("click", () => {
             selectedMissionContact = Number(contact.contact_no);
@@ -59,23 +59,33 @@ function renderMissionContacts() {
 function renderMissionContactCard(contact) {
     const target = document.getElementById("mission-contact-card");
     if (!contact) {
-        target.innerHTML = "<p>No mission contact available.</p>";
+        target.innerHTML = "<p>No village patron is available.</p>";
         return;
     }
 
     target.innerHTML = `
         <div class="mission-contact-large-icon">${missionEscape(contact.icon)}</div>
-        <p class="mission-contact-number">CONTACT ${contact.contact_no} OF 10</p>
+        <p class="mission-contact-number">PATRON ${contact.contact_no} OF 10</p>
         <h2>${missionEscape(contact.name)}</h2>
         <h3>${missionEscape(contact.role_title)}</h3>
         <p class="mission-personality">${missionEscape(contact.personality)}</p>
         <p>${missionEscape(contact.intro_text)}</p>
         <div class="mission-contact-progress">
-            <div><span>Main missions</span><strong>${Number(contact.main_completed || 0)} / 100</strong></div>
+            <div><span>Favours completed</span><strong>${Number(contact.main_completed || 0)} / 100</strong></div>
             <div class="mission-progress-track"><span style="width:${Math.min(100, Number(contact.main_completed || 0))}%"></span></div>
         </div>
-        <div class="mission-contact-pay">Normal pay: <strong>🪙 ${Number(contact.base_silver || 0)} Silver + an extra item reward</strong></div>
+        <div class="mission-contact-pay">Job pay: <strong>🪙 ${Number(contact.base_silver || 0)} Silver + an extra item reward</strong></div>
+        <section class="mission-patron-account ${Number(contact.patron_jobs_owed || 0) > 0 ? "owes-favour" : ""}">
+            <p class="mission-section-label">PATRON HELP</p>
+            ${Number(contact.patron_jobs_owed || 0) > 0
+                ? `<h4>You owe ${Number(contact.patron_jobs_owed)} more ${Number(contact.patron_jobs_owed) === 1 ? "job" : "jobs"}</h4><p>${missionEscape(contact.name)} helped you when you needed silver. Each main job reduces the favour you owe by one.</p>`
+                : `<h4>Need silver now?</h4><p>${missionEscape(contact.name)} will advance you <strong>🪙 ${Number(contact.patron_advance_amount || 0).toLocaleString()} Silver</strong>. Your next ${Number(contact.patron_jobs_per_advance || 10)} main jobs for this patron repay the favour.</p><button id="request-patron-advance" type="button" ${contact.patron_advance_available ? "" : "disabled"}>Ask ${missionEscape(contact.name)} for Help</button>`}
+        </section>
     `;
+
+    document.getElementById("request-patron-advance")?.addEventListener("click", () => {
+        acceptPatronAdvance(contact.contact_no);
+    });
 }
 
 function rewardHTML(contract) {
@@ -95,12 +105,12 @@ function renderMainMission(contact) {
     const mission = contact?.current_mission;
 
     if (!contact?.unlocked) {
-        card.innerHTML = `<div class="mission-locked-panel"><span>🔒</span><h2>Contact Locked</h2><p>Complete all 100 missions for the previous contact to earn this introduction.</p></div>`;
+        card.innerHTML = `<div class="mission-locked-panel"><span>🔒</span><h2>Patron Locked</h2><p>Complete all 100 favours for the previous patron to earn this introduction.</p></div>`;
         return;
     }
 
     if (!mission) {
-        card.innerHTML = `<div class="mission-complete-panel"><span>🏆</span><h2>${missionEscape(contact.name)}'s Story Complete</h2><p>You completed all 100 of this contact's missions. The next contact is now available.</p></div>`;
+        card.innerHTML = `<div class="mission-complete-panel"><span>🏆</span><h2>${missionEscape(contact.name)}'s Story Complete</h2><p>You completed all 100 of this patron's favours. The next patron is now available.</p></div>`;
         return;
     }
 
@@ -112,7 +122,7 @@ function renderMainMission(contact) {
     card.innerHTML = `
         <header class="mission-contract-heading">
             <div>
-                <p>MISSION ${mission.mission_no} / 100</p>
+                <p>FAVOUR ${mission.mission_no} / 100</p>
                 <h2>${missionEscape(mission.title)}</h2>
             </div>
             <span class="mission-difficulty">${mission.mission_no >= 80 ? "Hard" : mission.mission_no >= 40 ? "Medium" : "Standard"}</span>
@@ -129,7 +139,7 @@ function renderMainMission(contact) {
             ${rewardHTML(mission)}
         </section>
         <button id="complete-main-mission" class="mission-accept-button" type="button" ${(!enough || dailyFull) ? "disabled" : ""}>
-            ${dailyFull ? "Daily Limit Reached" : enough ? "Complete Contract" : `Need ${(required-owned).toLocaleString()} More ${missionEscape(mission.request_item_name)}`}
+            ${dailyFull ? "Daily Limit Reached" : enough ? "Finish the Job" : `Need ${(required-owned).toLocaleString()} More ${missionEscape(mission.request_item_name)}`}
         </button>
     `;
 
@@ -182,7 +192,7 @@ function renderMissions() {
 }
 
 async function loadMissions({ quiet = false } = {}) {
-    if (!quiet) missionMessage("Loading contracts...");
+    if (!quiet) missionMessage("Loading patron favours...");
     const { data, error } = await supabaseClient.rpc("get_my_viking_missions");
     if (error) {
         console.error("Mission load failed:", error);
@@ -195,14 +205,34 @@ async function loadMissions({ quiet = false } = {}) {
 }
 
 async function completeMainMission(contactNo) {
-    missionMessage("Handing in contract...");
+    missionMessage("Reporting back to your patron...");
     const { data, error } = await supabaseClient.rpc("complete_viking_mission", { p_contact_no: Number(contactNo) });
     if (error) {
         missionMessage(error.message, "error");
         return;
     }
-    const bonusText = data?.bonus_unlocked ? " A bonus favour has also appeared." : "";
-    missionMessage(`Contract complete. You earned ${Number(data.reward_silver || 0)} Silver.${bonusText}`, "success");
+    const bonusText = data?.bonus_unlocked ? " A private bonus favour has also appeared." : "";
+    const debtText = data?.favour_job_repaid
+        ? ` You now owe ${Number(data.patron_jobs_owed || 0)} more ${Number(data.patron_jobs_owed || 0) === 1 ? "job" : "jobs"}.`
+        : "";
+    missionMessage(`Job complete. You earned ${Number(data.reward_silver || 0)} Silver.${debtText}${bonusText}`, "success");
+    await loadMissions({ quiet: true });
+    if (typeof loadTopBarPlayer === "function") await loadTopBarPlayer();
+}
+
+async function acceptPatronAdvance(contactNo) {
+    missionMessage("Asking your patron for help...");
+    const button = document.getElementById("request-patron-advance");
+    if (button) button.disabled = true;
+    const { data, error } = await supabaseClient.rpc("accept_viking_patron_advance", {
+        p_contact_no: Number(contactNo)
+    });
+    if (error) {
+        missionMessage(error.message, "error");
+        if (button) button.disabled = false;
+        return;
+    }
+    missionMessage(`${data.patron_name} gave you ${Number(data.advance_silver || 0).toLocaleString()} Silver. You now owe ${Number(data.jobs_owed || 0)} jobs.`, "success");
     await loadMissions({ quiet: true });
     if (typeof loadTopBarPlayer === "function") await loadTopBarPlayer();
 }

@@ -128,12 +128,29 @@ function renderBedroom() {
     const summary = document.getElementById("equipped-summary");
     const totals = document.getElementById("equipment-totals");
     const list = document.getElementById("equipment-list");
+    const figure = document.getElementById("bedroom-character-doll");
+
+    const bodyType = window.MidgardCharacterDoll.normaliseBodyType(
+        bedroomData.character_body_type
+    );
+    document.querySelectorAll("[data-body-type]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.bodyType === bodyType);
+        button.setAttribute("aria-pressed", String(button.dataset.bodyType === bodyType));
+    });
+
+    if (figure) {
+        figure.innerHTML = window.MidgardCharacterDoll.render({
+            bodyType,
+            equipment: equipped,
+            label: "Your Viking wearing currently equipped items"
+        });
+    }
 
     if (summary) {
         summary.innerHTML = equipped.length
             ? equipped
                 .map((item) => `
-                    <div class="equipped-line">
+                    <div class="equipped-line" title="${equipmentEscape(item.name)}">
                         <strong>${equipmentEscape(item.slot_label)}:</strong>
                         <span>${equipmentEscape(item.name)}</span>
                     </div>
@@ -211,6 +228,31 @@ function renderBedroom() {
     });
 }
 
+function setupCharacterBodyPicker() {
+    document.querySelectorAll("[data-body-type]").forEach((button) => {
+        button.addEventListener("click", async () => {
+            const bodyType = button.dataset.bodyType;
+            if (!bedroomData || bodyType === bedroomData.character_body_type) return;
+
+            document.querySelectorAll("[data-body-type]").forEach((item) => item.disabled = true);
+            showBedroomMessage(`Changing to the ${bodyType} Viking...`);
+            const { error } = await supabaseClient.rpc("set_my_character_body_type", {
+                p_body_type: bodyType
+            });
+            document.querySelectorAll("[data-body-type]").forEach((item) => item.disabled = false);
+
+            if (error) {
+                showBedroomMessage(error.message, true);
+                return;
+            }
+
+            bedroomData.character_body_type = bodyType;
+            renderBedroom();
+            showBedroomMessage("Your Viking appearance has been updated.");
+        });
+    });
+}
+
 async function initialiseBedroomPage() {
     // The equipment RPC is deliberately not blocked by the shared sidebar and
     // top-bar loader. If a component has a temporary problem, the Bedroom can
@@ -221,6 +263,7 @@ async function initialiseBedroomPage() {
         })
         : Promise.resolve();
 
+    setupCharacterBodyPicker();
     await Promise.allSettled([
         componentPromise,
         loadBedroom()

@@ -23,3 +23,11 @@
 .combat-loot-summary{display:flex;flex-direction:column;gap:4px;max-width:620px;margin:12px auto 0;padding:12px;border:1px solid #5d4425;border-radius:8px;background:#18130f;text-align:left}
 .combat-loot-summary span{display:block;color:#dfcba5}.combat-loot-summary em{color:#9e8f76;font-style:normal}
 @media(max-width:640px){.combat-victory-actions{grid-template-columns:1fr}}
+
+/* Update 057: full-body equipment figures. These rules intentionally override
+   the older portrait-and-text loadout layout above. */
+.fighter-stage{min-height:430px;display:grid;place-items:center;grid-template-columns:1fr;padding:12px}
+.fighter-figure-wrap{width:min(100%,245px)}
+.combat-weapon-warning{margin:12px 0 0;padding:10px 12px;border:1px solid #8b5a2c;border-radius:7px;background:#2c1d13;color:#efc777;text-align:center}
+@media(max-width:1050px){.fighter-stage{min-height:390px}}
+@media(max-width:640px){.fighter-stage{min-height:360px}.fighter-figure-wrap{width:min(100%,210px)}}

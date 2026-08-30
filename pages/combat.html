@@ -7,7 +7,8 @@
     <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
     <link rel="stylesheet" href="../css/style.css?v=9">
     <link rel="stylesheet" href="../css/game-panels.css?v=1">
-    <link rel="stylesheet" href="../css/combat.css?v=3">
+    <link rel="stylesheet" href="../css/character-doll.css?v=1">
+    <link rel="stylesheet" href="../css/combat.css?v=4">
 </head>
 <body>
 <div class="game-layout">
@@ -48,6 +49,7 @@
                     <button type="button" class="combat-action-button" data-action="shoot"><span>🏹</span><strong>Shoot</strong></button>
                     <button type="button" class="combat-action-button combat-flee-button" data-action="flee"><span>🏃</span><strong>Flee</strong></button>
                 </div>
+                <p id="combat-weapon-warning" class="combat-weapon-warning" hidden>⚠️ Equip a melee weapon in your Bedroom before using Slash or Stab.</p>
             </section>
 
             <section id="combat-loadout" class="combat-loadout" hidden></section>
@@ -72,6 +74,7 @@
 <script src="../js/game-utils.js"></script>
 <script src="../js/components.js?v=5"></script>
 <script src="../js/tutorial.js?v=12"></script>
-<script src="../js/combat.js?v=3"></script>
+<script src="../js/character-doll.js?v=1"></script>
+<script src="../js/combat.js?v=4"></script>
 </body>
 </html>
