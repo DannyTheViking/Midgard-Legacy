@@ -33,7 +33,7 @@
 
     <link
         rel="stylesheet"
-        href="../css/village-healer.css?v=4"
+        href="../css/village-healer.css?v=5"
     >
 
 </head>
@@ -69,8 +69,7 @@
                         </h1>
 
                         <p>
-                            Recover naturally, or use your training
-                            to get another Viking back on their feet.
+                            Recover naturally, or revive another Viking who has allowed other players to help them.
                         </p>
 
                     </div>
@@ -224,6 +223,17 @@
                 </section>
 
 
+                <section class="page-panel revive-preference-panel">
+                    <div>
+                        <h2>🤝 Player Revives</h2>
+                        <p>Choose whether other Vikings are allowed to revive you when you are in the Healer Hut.</p>
+                    </div>
+                    <label class="revive-toggle">
+                        <input id="allow-player-revives" type="checkbox" checked>
+                        <span>Allow other players to revive me</span>
+                    </label>
+                </section>
+
                 <!-- =========================
                      PATIENT WARD
                 ========================= -->
@@ -245,7 +255,7 @@
                     <div class="panel-body">
 
                         <p class="patient-sort-note">
-                            The longest recovery time is shown first.
+                            Players are listed with their name, reason for being here and revive option.
                         </p>
 
                         <div
@@ -326,7 +336,7 @@
     <script src="../js/components.js?v=4"></script>
     <script src="../js/tutorial.js?v=12"></script>
 
-    <script src="../js/village-healer.js?v=3?v=3"></script>
+    <script src="../js/village-healer.js?v=5"></script>
 
 </body>
 

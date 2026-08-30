@@ -68,19 +68,22 @@ async function loadVillageHealer() {
 
     const [playersResult, npcVisitsResult, meResult] = await Promise.all([
       supabaseClient.from("players")
-        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
+        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute,allow_player_revives")
         .not("hospital_until", "is", null).gt("hospital_until", new Date().toISOString()),
       supabaseClient.from("npc_hospital_visits")
         .select("id,npc_id,injury_text,start_health,regen_per_minute,admitted_at,recovery_at,status,village_npcs(*)")
         .eq("status", "recovering").gt("recovery_at", new Date().toISOString()),
       supabaseClient.from("players")
-        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute")
+        .select("id,player_number,username,avatar_url,health,max_health,hospital_started_at,hospital_until,hospital_reason,hospital_start_health,hospital_regen_per_minute,allow_player_revives")
         .eq("id", user.id).single()
     ]);
 
     for (const result of [playersResult, npcVisitsResult, meResult]) if (result.error) throw result.error;
 
     renderMyHospital(meResult.data);
+    const reviveToggle = document.getElementById("allow-player-revives");
+    if (reviveToggle && meResult.data) reviveToggle.checked = meResult.data.allow_player_revives !== false;
+
     preparePatients(playersResult.data || [], npcVisitsResult.data || []);
     startLiveUpdates();
     subscribeToHospitalChanges();
@@ -133,32 +136,29 @@ function patientCard(patient) {
   const isPlayer = patient.kind === "player";
   const npc = patient.npc || {};
   const name = isPlayer ? patient.username : npc.name;
-  const subtitle = isPlayer ? "Recovering patient" : (npc.profession || "Village resident");
-  const start = isPlayer ? (patient.hospital_start_health || 1) : patient.start_health;
-  const admitted = isPlayer ? patient.hospital_started_at : patient.admitted_at;
-  const regen = isPlayer ? patient.hospital_regen_per_minute : patient.regen_per_minute;
-  const until = isPlayer ? patient.hospital_until : patient.recovery_at;
-  const max = Number(isPlayer ? patient.max_health : npc.max_health) || 500;
   const injury = isPlayer ? patient.hospital_reason : patient.injury_text;
   const target = patient.id;
+  const isSelf = isPlayer && patient.id === healerUser.id;
+  const allowsRevive = !isPlayer || patient.allow_player_revives !== false;
   const profileHref = isPlayer && patient.player_number
     ? `profile.html?id=${encodeURIComponent(patient.player_number)}`
     : (!isPlayer && npc.id ? `profile.html?npc=${encodeURIComponent(npc.id)}` : "#");
-  const portraitContent = isPlayer
-    ? (patient.avatar_url ? `<img src="${safe(patient.avatar_url)}" alt="${safe(name)}">` : "🛡️")
-    : (npc.avatar_url ? `<img src="${safe(npc.avatar_url)}" alt="${safe(name)}">` : safe(npc.icon || "🧑"));
 
-  return `<article class="patient-card" data-start="${start}" data-admitted="${safe(admitted)}" data-regen="${regen}" data-until="${safe(until)}" data-max="${max}" data-self="${isPlayer && patient.id === healerUser.id}">
-    <header>
-      <a class="patient-icon" href="${profileHref}" aria-label="View ${safe(name)} profile">${portraitContent}</a>
-      <div><h3><a href="${profileHref}">${safe(name)}</a></h3><p>${safe(subtitle)}</p></div>
-    </header>
-    <p class="injury">${safe(injury || "Recovering under Yrsa's care.")}</p>
-    <div class="health-row"><span>❤️ <strong data-live-health>1/${max}</strong></span><span>⏳ <strong data-live-time>--</strong></span></div>
-    <div class="health-track"><div data-health-bar></div></div>
-    ${locked
-      ? `<button disabled>🔒 Complete 10 healer jobs</button>`
-      : `<button class="heal-button" data-kind="${patient.kind}" data-target="${target}">Heal to ${level}%</button>`}
+  let action = "";
+  if (isSelf) {
+    action = `<button disabled>Your Bed</button>`;
+  } else if (!allowsRevive) {
+    action = `<button disabled title="This player has disabled player revives">🔒 Revive Blocked</button>`;
+  } else if (locked) {
+    action = `<button disabled>🔒 Revive Locked</button>`;
+  } else {
+    action = `<button class="heal-button" data-kind="${patient.kind}" data-target="${target}">🩹 Revive</button>`;
+  }
+
+  return `<article class="patient-card patient-row" data-self="${isSelf}">
+    <div class="patient-name"><strong>Name</strong><a href="${profileHref}">${safe(name)}</a></div>
+    <div class="patient-reason"><strong>Reason</strong><span>${safe(injury || "Recovering under Yrsa's care.")}</span></div>
+    <div class="patient-revive"><strong>Revive</strong>${action}</div>
   </article>`;
 }
 
@@ -224,14 +224,6 @@ function updateLiveValues() {
   let shouldReload = false;
   document.querySelectorAll(".patient-card").forEach(card => {
     if (remainingMilliseconds(card.dataset.until) <= 0) shouldReload = true;
-    const health = liveHealth(card.dataset.start, card.dataset.admitted, card.dataset.regen, card.dataset.max);
-    card.querySelector("[data-live-health]").textContent = `${health}/${card.dataset.max}`;
-    card.querySelector("[data-live-time]").textContent = remainingText(card.dataset.until);
-    card.querySelector("[data-health-bar]").style.width = `${Math.max(1, health / Number(card.dataset.max) * 100)}%`;
-    if (card.dataset.self === "true") {
-      const topHealth = document.getElementById("health");
-      if (topHealth) topHealth.textContent = `${health} / ${card.dataset.max}`;
-    }
   });
 
   const mine = document.getElementById("my-hospital-card");

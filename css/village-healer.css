@@ -700,3 +700,30 @@
         text-align: center;
     }
 }
+
+
+/* Update 056: compact patient rows + revive privacy preference. */
+.revive-preference-panel {
+    display: flex; justify-content: space-between; align-items: center; gap: 18px;
+    margin: 12px 0; padding: 14px 16px;
+}
+.revive-preference-panel h2 { margin: 0 0 4px; }
+.revive-preference-panel p { margin: 0; color: #bfae8f; }
+.revive-toggle { display: flex; align-items: center; gap: 9px; color: #f0d89d; white-space: nowrap; }
+.revive-toggle input { width: 20px; height: 20px; accent-color: #b77a2d; }
+.hospital-grid { grid-template-columns: 1fr; }
+.patient-row {
+    display: grid; grid-template-columns: minmax(160px,.8fr) minmax(260px,2fr) minmax(140px,.55fr);
+    align-items: center; gap: 14px; padding: 12px 14px;
+}
+.patient-row > div { display: grid; gap: 4px; min-width: 0; }
+.patient-row > div > strong { color: #aa8d58; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.patient-name a { color: #f4e4c3; font-weight: 700; text-decoration: none; }
+.patient-name a:hover { color: gold; }
+.patient-reason span { color: #d6c7aa; }
+.patient-revive button { width: 100%; }
+@media (max-width:800px) {
+  .revive-preference-panel { align-items:flex-start; flex-direction:column; }
+  .revive-toggle { white-space:normal; }
+  .patient-row { grid-template-columns:1fr; gap:10px; }
+}

@@ -4,7 +4,6 @@
 
 let combatState = null;
 let combatFightId = null;
-let combatSelectedPart = "torso";
 let combatBusy = false;
 let combatCurrentUserId = null;
 
@@ -120,11 +119,14 @@ function renderResult() {
     const { you } = getYouAndThem();
     const won = combatState.winner_id && combatState.winner_id === you?.id;
     const fled = String(combatState.status || "").includes("fled");
+    const crowd = combatState.status === "crowd_intervened";
     const result = document.createElement("section");
     result.id = "combat-result";
     result.className = "combat-result";
-    result.innerHTML = fled
-        ? `<h2>🏃 Fight Ended</h2><p>The battle ended when a fighter escaped.</p>`
+    result.innerHTML = crowd
+        ? `<h2>👥 The Crowd Intervened</h2><p>Thirty attacks were enough. Villagers flooded the fight and pulled both Vikings apart.</p>`
+        : fled
+            ? `<h2>🏃 Fight Ended</h2><p>The battle ended when a fighter escaped.</p>`
         : won
             ? `<h2>⚔️ Victory</h2><p>You won the battle. The complete attack log is saved in your notifications.</p>`
             : `<h2>🛡️ Defeat</h2><p>You were defeated. The complete attack log has been saved.</p>`;
@@ -207,11 +209,11 @@ async function doCombatAction(action) {
     if (combatBusy || !combatFightId) return;
     combatBusy = true;
     setActionAvailability();
-    combatMessage(action === "shoot" ? "Loose arrow..." : action === "use_item" ? "Using bandage..." : action === "flee" ? "Trying to escape..." : "Attacking...");
+    combatMessage(action === "shoot" ? "Loose arrow..." : action === "flee" ? "Trying to escape..." : "Attacking...");
     const { data, error } = await supabaseClient.rpc("perform_combat_action", {
         p_fight_id: Number(combatFightId),
         p_action: action,
-        p_body_part: combatSelectedPart
+        p_body_part: null
     });
     combatBusy = false;
     if (error) {
@@ -229,14 +231,9 @@ async function doCombatAction(action) {
 }
 
 function setupCombatControls() {
-    document.getElementById("combat-body-targets")?.querySelectorAll("button[data-part]").forEach(button => {
-        button.addEventListener("click", () => {
-            combatSelectedPart = button.dataset.part;
-            document.querySelectorAll("#combat-body-targets button").forEach(item => item.classList.toggle("active", item === button));
-            document.getElementById("combat-aim-label").textContent = prettyPart(combatSelectedPart);
-        });
+    document.querySelectorAll(".combat-action-button[data-action]").forEach(button => {
+        button.addEventListener("click", () => doCombatAction(button.dataset.action));
     });
-    document.querySelectorAll(".combat-action-button[data-action]").forEach(button => button.addEventListener("click", () => doCombatAction(button.dataset.action)));
     document.getElementById("combat-refresh")?.addEventListener("click", loadFight);
 }
 

@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
     <link rel="stylesheet" href="../css/style.css?v=9">
     <link rel="stylesheet" href="../css/game-panels.css?v=1">
-    <link rel="stylesheet" href="../css/combat.css?v=1">
+    <link rel="stylesheet" href="../css/combat.css?v=2">
 </head>
 <body>
 <div class="game-layout">
@@ -19,7 +19,7 @@
                 <div class="game-page-heading">
                     <p class="combat-kicker">⚔️ PLAYER BATTLE</p>
                     <h1 id="combat-title">Preparing battle...</h1>
-                    <p>Choose where to aim, choose your attack, and watch the fight unfold turn by turn.</p>
+                    <p>Choose your attack and watch the fight unfold. Hit location is decided randomly each strike.</p>
                 </div>
                 <div id="combat-status-badge" class="game-badge">Loading...</div>
             </section>
@@ -35,30 +35,17 @@
             </section>
 
             <section id="combat-controls" class="combat-controls" hidden>
-                <div class="combat-aim-panel">
-                    <div>
-                        <span class="combat-control-label">Aim at</span>
-                        <strong id="combat-aim-label">Torso</strong>
-                    </div>
-                    <div class="combat-body-targets" id="combat-body-targets">
-                        <button type="button" data-part="head">Head</button>
-                        <button type="button" data-part="torso" class="active">Torso</button>
-                        <button type="button" data-part="left_arm">L Arm</button>
-                        <button type="button" data-part="right_arm">R Arm</button>
-                        <button type="button" data-part="left_hand">L Hand</button>
-                        <button type="button" data-part="right_hand">R Hand</button>
-                        <button type="button" data-part="left_leg">L Leg</button>
-                        <button type="button" data-part="right_leg">R Leg</button>
-                        <button type="button" data-part="left_foot">L Foot</button>
-                        <button type="button" data-part="right_foot">R Foot</button>
-                    </div>
+                <div class="combat-rule-strip">
+                    <span>🎯 Hit location: <strong>Random</strong></span>
+                    <span>🏆 Fight ends at <strong>1 Health</strong></span>
+                    <span>👥 Crowd stops the fight after <strong>30 attacks</strong></span>
+                    <span>🔥 Cost: <strong>50 Courage</strong> per action · <strong>25</strong> for Donators</span>
                 </div>
 
                 <div class="combat-action-bar">
                     <button type="button" class="combat-action-button" data-action="slash"><span>🪓</span><strong>Slash</strong></button>
                     <button type="button" class="combat-action-button" data-action="stab"><span>🗡️</span><strong>Stab</strong></button>
                     <button type="button" class="combat-action-button" data-action="shoot"><span>🏹</span><strong>Shoot</strong></button>
-                    <button type="button" class="combat-action-button" data-action="use_item"><span>🩹</span><strong>Use Bandage</strong></button>
                     <button type="button" class="combat-action-button combat-flee-button" data-action="flee"><span>🏃</span><strong>Flee</strong></button>
                 </div>
             </section>
@@ -85,6 +72,6 @@
 <script src="../js/game-utils.js"></script>
 <script src="../js/components.js?v=5"></script>
 <script src="../js/tutorial.js?v=12"></script>
-<script src="../js/combat.js?v=1"></script>
+<script src="../js/combat.js?v=2"></script>
 </body>
 </html>
