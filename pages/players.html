@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-midgard-auth="checking">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Midgard Legacy - Players</title>
+    <link rel="icon" type="image/png" href="../images/Logo/favicon.png">
+    <link rel="stylesheet" href="../css/style.css?v=9">
+    <link rel="stylesheet" href="../css/game-panels.css?v=1">
+    <link rel="stylesheet" href="../css/players.css?v=1">
+</head>
+<body>
+<div class="game-layout">
+    <div id="sidebar"></div>
+    <main class="main-area">
+        <div id="topbar"></div>
+        <div class="game-page players-page">
+            <section class="game-page-header">
+                <div class="game-page-heading">
+                    <p class="players-kicker">🔎 MIDGARD DIRECTORY</p>
+                    <h1>Players</h1>
+                    <p>Search the people of Midgard by username and open any public Viking profile.</p>
+                </div>
+                <div class="game-badge" id="player-result-count">Loading...</div>
+            </section>
+
+            <section class="player-search-panel">
+                <form id="player-search-form" class="player-search-form">
+                    <label for="player-search-input">Search username</label>
+                    <div class="player-search-row">
+                        <input id="player-search-input" type="search" maxlength="40" autocomplete="off" placeholder="Search DannyTheViking, Odin...">
+                        <button type="submit">🔎 Search</button>
+                    </div>
+                    <label class="player-online-filter"><input id="player-online-only" type="checkbox"> Online players only</label>
+                </form>
+            </section>
+
+            <div id="players-message" class="players-message" role="status" aria-live="polite"></div>
+            <section id="players-list" class="players-list"></section>
+            <nav id="players-pagination" class="players-pagination" aria-label="Player pages"></nav>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/constants.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/game-utils.js"></script>
+<script src="../js/components.js?v=5"></script>
+<script src="../js/tutorial.js?v=12"></script>
+<script src="../js/players.js?v=1"></script>
+</body>
+</html>
